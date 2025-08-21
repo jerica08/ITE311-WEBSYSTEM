@@ -6,38 +6,49 @@
     </head>
     <style>
         .button{
-            background-color: #1338BE;
+            background-color:#DAA520;
             color : black;
             border:none;
             padding: 10px 20px;
             cursor: pointer;
             transition: background 0.3s;
-        }
+        }   
         .button:hover{
-            background-color: #0057b3a0;
+            background-color: #D2B55B;
+        }
+        .blog-box{
+            height: auto;
+            align-items:center;
         }
 
     </style>
     <body>
-        <header>
-            <nav class="navbar" style="background-color:#1338BE;">
-                <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
-                    <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Sign Up</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
-                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
-                    </ul>
-                </div>
-            
-</nav>
-        </header>
-         <section>
-        <div class="container" style="text-align:center; margin-top: 50px;">
-            <h1 >It will Display here the About Us</h1>
-        </div>
-    </section>
+        
+            <nav class="navigationbar">
+                <nav class="top-navbar" style="background-color:#000000;padding: 10px;">
+                    <p style="color: white;"> Purok 3, Kawas,Alabel, Sarangani Province, 9501, Philippines</p>
+                </nav>       
+                <nav class="btm-navbar" style="background-color:#DAA520;">
+                    <div class="container-fluid d-flex justify-content-between align-items-center">
+                        <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
+                        <ul class="nav d-flex align-items-center gap-3">
+                            <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Sign Up</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                        </ul>
+                    </div>       
+               </nav>
+           </nav>
+           <nav class="blog-box" style>
+                <nav class="blog" >
+                    <p class="blog-title"><h1>ABOUT US</h1></p>
+                    <img style="height: 500px; width: 1000px;" src="<?= base_url('/img/kawas.jpg') ?>">
+                
+                </nav>
+           </nav>
+    
+     
     </body>
    
 </html>

@@ -6,7 +6,7 @@
     </head>
     <style>
         .button{
-            background-color: #1338BE;
+            background-color: #DAA520;
             color : black;
             border:none;
             padding: 10px 20px;
@@ -20,7 +20,14 @@
     </style>
     <body>
         <header>
-            <nav class="navbar" style="background-color:#1338BE;">
+            <nav class="navigationbar">
+                <nav class="top-navbar">
+                    <nav class="top-navbar" style="background-color:#000000;padding: 10px;">
+                    <p style="color: white;"> This top navigation bar!</p>
+
+                </nav>    
+                </nav>
+                <nav class="btm-navbar" style="background-color:#DAA520;">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
@@ -28,10 +35,12 @@
                         <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
                          <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+
                     </ul>
-                </div>
-            
-</nav>
+                </div>            
+            </nav>
+        </nav>
         </header>
          <section>
         <div class="container" style="text-align:center; margin-top: 50px;">
