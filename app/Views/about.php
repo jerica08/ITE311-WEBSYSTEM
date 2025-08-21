@@ -26,13 +26,16 @@
                     <ul class="nav d-flex align-items-center gap-3">
                         <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Sign Up</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
+                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                     </ul>
                 </div>
+            
 </nav>
         </header>
          <section>
         <div class="container" style="text-align:center; margin-top: 50px;">
-            <h1 >Welcome to the Learning Management System!</h1>
+            <h1 >Welcome to the About!</h1>
         </div>
     </section>
     </body>
