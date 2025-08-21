@@ -35,7 +35,7 @@
         </header>
          <section>
         <div class="container" style="text-align:center; margin-top: 50px;">
-            <h1 >Welcome to the About!</h1>
+            <h1 >It will Display here the About Us</h1>
         </div>
     </section>
     </body>
