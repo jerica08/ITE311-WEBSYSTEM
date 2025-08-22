@@ -32,7 +32,7 @@
             <nav class="navigationbar">
                 <nav class="top-navbar">
                     <nav class="top-navbar" style="background-color:#000000;padding: 10px;">
-                    <p style="color: white;"> This top navigation bar!</p>  
+                    <p style="color: white;text-align:right;"> Purok 3, Kawas,Alabel, Sarangani Province, 9501, Philippines</p>
                 </nav>
                 <nav class="btm-navbar" style="background-color:#DAA520;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">

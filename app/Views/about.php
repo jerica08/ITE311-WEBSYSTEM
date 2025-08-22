@@ -20,13 +20,43 @@
             height: auto;
             align-items:center;
         }
-
+       
+        .vision{
+            margin-top: 100px;
+            margin-left:100px;
+        }
+        .vision-title{
+            font-size:50px;
+        }
+        .mission-content{
+            padding:20px;
+        }
+        .mission{
+            margin-top: 100px;
+            margin-left:100px;
+        }
+        h1{
+            text-align:center;
+        }
+        .coreValues-title{
+            font-size:50px;
+        }
+        .coreValues{
+            margin-top: 100px;
+            margin-left:100px;
+        }
+        h1{
+            text-align:center;
+        }
+        
+        
     </style>
     <body>
         
             <nav class="navigationbar">
                 <nav class="top-navbar" style="background-color:#000000;padding: 10px;">
-                    <p style="color: white;"> Purok 3, Kawas,Alabel, Sarangani Province, 9501, Philippines</p>
+                    <p style="color: white;text-align:left;margin-botto:;"> Kawas National High School</p>
+                    <p style="color: white;text-align:right;"> Purok 3, Kawas,Alabel, Sarangani Province, 9501, Philippines</p>
                 </nav>       
                 <nav class="btm-navbar" style="background-color:#DAA520;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -43,7 +73,53 @@
            </nav>
            <nav class="blog-box" style>
                 <nav class="blog" >
-                    <p class="blog-title"><h1>ABOUT US</h1></p>
+                    <p class="blog-title" style="font-weight: 900;"><h1>ABOUT US</h1></p>
+
+                    <div class="vision">
+                        <p class="vision-title"><h2>DEPED VISION</h2></p>   
+                        <p class="vision-content">
+                            <p><h5>We dream of Filipinos</h5></p>
+                            <p><h5>who passionately love their country</h5></p>
+                            <p><h5>and whose values and competencies</h5></p>
+                            <p><h5>enable them to realize their full potential</h5></p>
+                            <p><h5>and contribute meaningfully to building the nation.</h5></p><br>
+
+                            <p><h5>As a learner-centered public institution,</h5></p>
+                            <p><h5>the Department of Education</h5></p>
+                            <p><h5>continuously improves itself</h5></p>
+                            <p><h5>to better serve its stakeholders.</h5></p>
+                        </p>
+                    </div>
+                      <div class="mission">
+                        <p class="mission-title"><h2>DEPED MISION</h2></p>
+                        <p class="mision-content">
+                            <p><h5>To protect and promote the right of every Filipino to quality, 
+                            <p><h5>equitable, culture-based, and complete basic education where:</h5></p>
+                            <p><h5>Students learn in a child-friendly, 
+                            <p><h5>gender-sensitive, safe, and motivating environment.</h5></p>
+                            <p><h5>Teachers facilitate learning and constantly nurture every learner.</h5></p>
+                            <p><h5>Administrators and staff, as stewards of the institution,
+                            <p><h5>ensure an enabling and supportive environment for effective learning to happen.</h5></p>
+                            <p><h5>Family, community, and other stakeholders are actively engaged and share responsibility</h5></p>
+                            </p><h5>for developing life-long learners.</h5></p>
+
+                            <p><h5>As a learner-centered public institution,</h5></p>
+                            <p><h5>the Department of Education</h5></p>
+                            <p><h5>continuously improves itself</h5></p>
+                            <p><h5>to better serve its stakeholders.</h5></p>
+                        </p>
+                    </div>
+                     <div class="coreValues">
+                        <p class="coreValues-title"><h2>CORE VALUES</h2></p>   
+                        <p class="coreValues-content">
+                            <p><h5>Maka-Diyos</h5></p>
+                            <p><h5>Maka-Tao</h5></p>
+                            <p><h5>Makakalikasan</h5></p>
+                            <p><h5>Makabansa</h5></p>
+                            
+                        </p>
+                    </div>
+
 
                     
                 </nav>
