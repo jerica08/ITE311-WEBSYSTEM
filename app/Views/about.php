@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>About Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     </head>
@@ -80,7 +81,7 @@
                      <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
                      <img src="<?= base_url('img/kawas.jpg') ?>" alt="Kawas National High School" style="max-width: 500px; height: auto; justify-content:center;margin-left:50px;filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));">
                     <div class="vision">
-                        <p class="vision-title"><h2>DEPED VISION</h2></p>   
+                        <p class="vision-title"><h2>DepEd VISION</h2></p>   
                         <p class="vision-content">
                             <p><h5>We dream of Filipinos</h5></p>
                             <p><h5>who passionately love their country</h5></p>
@@ -95,7 +96,7 @@
                         </p>
                     </div>
                       <div class="mission">
-                        <p class="mission-title"><h2>DEPED MISION</h2></p>
+                        <p class="mission-title"><h2>DepEd MISION</h2></p>
                         <p class="mision-content">
                             <p><h5>To protect and promote the right of every Filipino to quality, 
                             <p><h5>equitable, culture-based, and complete basic education where:</h5></p><br>
