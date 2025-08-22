@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
         <style>
@@ -30,10 +32,9 @@
     <body>
         <header>
             <nav class="navigationbar">
-                <nav class="top-navbar">
-                    <nav class="top-navbar" style="background-color:#000000;padding: 10px;">
-                    <p style="color: white;text-align:right;"> Purok 3, Kawas,Alabel, Sarangani Province, 9501, Philippines</p>
-                </nav>
+               <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
+                    <p><h4 style="color: white;text-align:left;margin-bottom:none;">Kawas National High School</h4></p>
+                </nav>  
                 <nav class="btm-navbar" style="background-color:#DAA520;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
@@ -52,6 +53,7 @@
         <main class="main-content">
             <div class="container" style="text-align:center; margin-top: 50px;">
                 <h1>Welcome to the Learning Management System!</h1>
+                <img style="height: 500px; width: 1000px;" src="<?= base_url(relativePath: '/img/kawas.jpg') ?>">
             </div>
         </main>
     </body>
