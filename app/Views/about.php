@@ -43,7 +43,7 @@
            <nav class="blog-box" style>
                 <nav class="blog" >
                     <p class="blog-title"><h1>ABOUT US</h1></p>
-                    <img style="height: 500px; width: 1000px;" src="<?= base_url('/img/kawas.jpg') ?>">
+                    <img style="height: 500px; width: 1000px;" src="<?= base_url('http://localhost/ITE311-MARQUEZ/public/img/kawas.jpg') ?>">
                 
                 </nav>
            </nav>
