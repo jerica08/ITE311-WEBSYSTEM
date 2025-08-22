@@ -24,9 +24,9 @@
         <header>
             <nav class="navigationbar">
                 <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                    <p><h4 style="color: white;text-align:left;margin-bottom:none;">Kawas National High School</h4></p>
+                    <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
                 </nav>    
-                <nav class="btm-navbar" style="background-color:#DAA520;">
+                <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
@@ -43,7 +43,7 @@
         </header>
          <section>
         <div class="container" style="text-align:center; margin-top: 50px;">
-            <h1 >It will Display here the contact!</h1>
+            <h1 >It will display here the contact info.</h1>
         </div>
     </section>
     </body>

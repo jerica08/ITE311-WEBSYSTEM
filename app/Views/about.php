@@ -50,10 +50,7 @@
         h1{
             text-align:center;
         }
-        .image{
-            filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));
-
-        }
+        
         
         
         
@@ -79,9 +76,9 @@
            </nav>
            <nav class="blog-box" style>
                 <nav class="blog" >
-                    <p class="blog-title" style="font-weight: 900;"><h1>ABOUT US</h1></p>
-                    <img style="height: 500px; width: 1000px;" src="<?= base_url('\img\kawas.jpg') ?>"> 
-
+                    <p class="blog-title" style="font-weight: 900;justify-content:left;"><h1>ABOUT US</h1></p>
+                     <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
+                     <img src="<?= base_url('img/kawas.jpg') ?>" alt="Kawas National High School" style="max-width: 500px; height: auto; justify-content:center;margin-left:50px;filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));">
                     <div class="vision">
                         <p class="vision-title"><h2>DEPED VISION</h2></p>   
                         <p class="vision-content">
