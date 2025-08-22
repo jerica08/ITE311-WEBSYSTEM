@@ -35,6 +35,7 @@
                             <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Sign Up</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>
                     </div>       
@@ -43,8 +44,8 @@
            <nav class="blog-box" style>
                 <nav class="blog" >
                     <p class="blog-title"><h1>ABOUT US</h1></p>
-                    <img style="height: 500px; width: 1000px;" src="<?= base_url('http://localhost/ITE311-MARQUEZ/public/img/kawas.jpg') ?>">
-                
+
+                    
                 </nav>
            </nav>
     
