@@ -27,15 +27,16 @@
             .button:hover {
                 background-color: #D2B55B;
             }
+            
         </style>
     </head>
     <body>
         <header>
             <nav class="navigationbar">
                <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                    <p><h4 style="color: white;text-align:left;margin-bottom:none;">Kawas National High School</h4></p>
+                    <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
                 </nav>  
-                <nav class="btm-navbar" style="background-color:#DAA520;">
+                <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul class="nav d-flex align-items-center gap-3">
@@ -52,8 +53,8 @@
         
         <main class="main-content">
             <div class="container" style="text-align:center; margin-top: 50px;">
-                <h1>Welcome to the Learning Management System!</h1>
-                <img style="height: 500px; width: 1000px;" src="<?= base_url(relativePath: '/img/kawas.jpg') ?>">
+              <h1 style="font-weight:1000; font-family: 'Times New Roman', serif;">Kawas National High School</h1>
+              <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; margin-top: 20px;">
             </div>
         </main>
     </body>
