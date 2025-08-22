@@ -59,9 +59,9 @@
         
             <nav class="navigationbar">
                 <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                    <p><h4 style="color: white;text-align:left;margin-bottom:none;">Kawas National High School</h4></p>
+                    <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
                 </nav>       
-                <nav class="btm-navbar" style="background-color:#DAA520;">
+                <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul class="nav d-flex align-items-center gap-3" style="">
@@ -75,8 +75,8 @@
                </nav>
            </nav>
            <nav class="blog-box" style>
-                <nav class="blog" >
-                    <p class="blog-title" style="font-weight: 900;justify-content:left;"><h1>ABOUT US</h1></p>
+                <nav class="blog" style="font-family: 'Times New Roman', serif;">
+                    <p class="blog-title" style="font-weight: 900;justify-content:left;font-family: 'Times New Roman', serif;"><h1>ABOUT US</h1></p>
                      <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
                      <img src="<?= base_url('img/kawas.jpg') ?>" alt="Kawas National High School" style="max-width: 500px; height: auto; justify-content:center;margin-left:50px;filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));">
                     <div class="vision">
@@ -98,14 +98,14 @@
                         <p class="mission-title"><h2>DEPED MISION</h2></p>
                         <p class="mision-content">
                             <p><h5>To protect and promote the right of every Filipino to quality, 
-                            <p><h5>equitable, culture-based, and complete basic education where:</h5></p>
+                            <p><h5>equitable, culture-based, and complete basic education where:</h5></p><br>
                             <p><h5>Students learn in a child-friendly, 
                             <p><h5>gender-sensitive, safe, and motivating environment.</h5></p>
                             <p><h5>Teachers facilitate learning and constantly nurture every learner.</h5></p>
                             <p><h5>Administrators and staff, as stewards of the institution,
                             <p><h5>ensure an enabling and supportive environment for effective learning to happen.</h5></p>
                             <p><h5>Family, community, and other stakeholders are actively engaged and share responsibility</h5></p>
-                            </p><h5>for developing life-long learners.</h5></p>
+                            </p><h5>for developing life-long learners.</h5></p><br>
 
                             <p><h5>As a learner-centered public institution,</h5></p>
                             <p><h5>the Department of Education</h5></p>
@@ -123,10 +123,8 @@
                             
                         </p>
                     </div>
-
-
-                    
-                    </nav>
+  
+                </nav>
            </nav>
     
      

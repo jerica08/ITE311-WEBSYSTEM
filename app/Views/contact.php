@@ -42,8 +42,8 @@
         </nav>
         </header>
          <section>
-        <div class="container" style="text-align:center; margin-top: 50px;">
-            <h1 >It will display here the contact info.</h1>
+        <div class="container" style="text-align:center; margin-top: 50px;font-family: 'Times New Roman', serif;">
+            <h1 >Display here the contact info.</h1>
         </div>
     </section>
     </body>
