@@ -3,69 +3,49 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use Config\Database;
 
 class Auth extends BaseController
 {
     public function register()
-    {
+    {   
+        $session = session();
         helper(['form']);
-        $db = \Config\Database::connect();
-        $data = [];
 
         if ($this->request->getMethod() === 'post') {
-            // Debug: Log form submission
-            log_message('info', 'Registration form submitted');
-            log_message('info', 'POST data: ' . json_encode($this->request->getPost()));
-
+            
             $rules = [
                 'name'     => 'required|min_length[3]|max_length[100]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
                 'role'     => 'required|in_list[student,teacher,admin]',
-                'password' => 'required|min_length[6]',
-                'password_confirm' => 'required|matches[password]'
+                'password' => 'required|min_length[6]|max_length[255]',
+                'password_confirm' => 'matches[password]'
             ];
-            
-            if ($this->validate($rules)) {
-                try {
-                    // Hash password
-                    $hashedPassword = password_hash($this->request->getVar('password'), PASSWORD_DEFAULT);
 
-                    // Prepare user data
-                    $userData = [
-                        'name'       => $this->request->getVar('name'),
-                        'email'      => $this->request->getVar('email'),
-                        'password'   => $hashedPassword,
-                        'role'       => $this->request->getVar('role'),
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ];
+            if (!$this->validate($rules)){
+                return view('auth/register',["validation" => $this->validator]);
+            }else{
+                $db = Database::connect();
+                $builder = $db->table('users');
 
-                    // Save user data
-                    $builder = $db->table('users');
-                    $result = $builder->insert($userData);
+                $data =[
+                     
+                    'name' => $this->request->getVar('name'),
+                    'email' => $this->request->getVar('email'),
+                    'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
+                    'role' => 'user'
+                ];
 
-                    if ($result) {
-                        $insertedId = $db->insertID();
-                        log_message('info', 'User registered successfully with ID: ' . $insertedId);
-                        
-                        session()->setFlashdata('success', 'Registration successful! Please log in.');
-                        return redirect()->to('login');
-                    } else {
-                        $error = $db->error();
-                        log_message('error', 'Database insert failed: ' . json_encode($error));
-                        $data['error'] = 'Failed to create account. Database error: ' . ($error['message'] ?? 'Unknown error');
-                    }
-                } catch (\Exception $e) {
-                    log_message('error', 'Registration exception: ' . $e->getMessage());
-                    $data['error'] = 'Database error: ' . $e->getMessage();
-                }
-            } else {
-                log_message('info', 'Validation failed: ' . json_encode($this->validator->getErrors()));
-                $data['validation'] = $this->validator;
+                $builder->insert($data);
+
+                $session->setFlashdata('success', 'Registration successful. You can now login.');
+                return redirect()->to('/login');
             }
+            
+           
         }
 
-        return view('auth/register', $data);
+        return view('auth/register');
     }
     
     
