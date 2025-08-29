@@ -112,7 +112,7 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <form method="post" action="<?= base_url('register') ?>">
+                                <form method="post" action="<?= site_url('register') ?>">
                                     <?= csrf_field() ?>
                                     
                                     <div class="mb-3">

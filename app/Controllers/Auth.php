@@ -2,10 +2,9 @@
 
 namespace App\Controllers;
 
-
 use CodeIgniter\Controller;
 
-class Auth extends Controller
+class Auth extends BaseController
 {
     public function register()
     {
@@ -40,9 +39,6 @@ class Auth extends Controller
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ];
-
-                    // Debug: Log data being inserted
-                    log_message('info', 'Inserting user data: ' . json_encode($userData));
 
                     // Save user data
                     $builder = $db->table('users');

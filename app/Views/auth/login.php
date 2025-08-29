@@ -107,7 +107,7 @@
                             <div class="card-header text-center" style="background-color: #DAA520; color: black;">
                                 <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas Logo" class="school-logo">
                                 <h3 class="mb-0" style="font-family: 'Times New Roman', serif;">Welcome Back</h3>
-                                <p class="mb-0 small">Sign in to your LMS account</p>
+                                <p class="mb-0 small">Login in to your LMS account</p>
                             </div>
                             <div class="card-body p-4">
                                 <?php if (isset($validation)): ?>
@@ -128,7 +128,7 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <form method="post" action="<?= base_url('auth/login') ?>">
+                                <form method="post" action="<?= base_url('login') ?>">
                                     <?= csrf_field() ?>
                                     
                                     <div class="mb-3">
