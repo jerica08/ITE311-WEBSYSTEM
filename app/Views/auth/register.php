@@ -77,7 +77,10 @@
                 <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
-                    </div>
+                        <ul>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                        </ul>   
+                    </div>                  
                 </nav>
             </nav>
         </header>
@@ -117,6 +120,26 @@
                                         <input type="email" class="form-control form-control-lg" id="email" name="email" 
                                                value="<?= set_value('email') ?>" placeholder="Enter your email address" required>
                                     </div>
+    
+                                    <div class="mb-3">
+                                        <label for="role" class="form-label fw-bold">Role</label>
+                                        <select class="form-control form-control-lg" id="role" name="role" required>
+                                            <option value="">Select your role</option>
+                                            <option value="student" <?= set_select('role', 'student') ?>>Student</option>
+                                            <option value="teacher" <?= set_select('role', 'teacher') ?>>Teacher</option>
+                                            <option value="admin" <?= set_select('role', 'admin') ?>>Administrator</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="role" class="form-label fw-bold">Role</label>
+                                        <select class="form-control form-control-lg" id="role" name="role" required>
+                                            <option value="">Select your role</option>
+                                            <option value="student" <?= set_select('role', 'student') ?>>Student</option>
+                                            <option value="teacher" <?= set_select('role', 'teacher') ?>>Teacher</option>
+                                            <option value="admin" <?= set_select('role', 'admin') ?>>Administrator</option>
+                                        </select>
+                                    </div>
 
                                     <div class="mb-3">
                                         <label for="password" class="form-label fw-bold">Password</label>
@@ -139,7 +162,7 @@
 
                                 <div class="text-center mt-4">
                                     <p class="mb-0">Already have an account? 
-                                        <a href="<?= base_url('auth/login') ?>" style="color: #DAA520; font-weight: bold;">Sign In</a>
+                                        <a href="<?= base_url('login') ?>" style="color: #DAA520; font-weight: bold;">Log In</a>
                                     </p>
                                 </div>
                             </div>

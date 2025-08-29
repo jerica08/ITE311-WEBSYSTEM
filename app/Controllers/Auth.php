@@ -18,6 +18,7 @@ class Auth extends Controller
             $rules = [
                'name'     => 'required|min_length[3]|max_length[20]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
+                'role'     => 'required|in_list[student,teacher,admin]',
                 'password' => 'required|min_length[6]|max_length[200]',
                 'password_confirm'=> 'matches[password]'
                  
@@ -33,7 +34,7 @@ class Auth extends Controller
                     'name'     => $this->request->getVar('name'),
                     'email'    => $this->request->getVar('email'),
                     'password' => $hashedPassword,
-                    'role'     => 'user'
+                    'role'     => $this->request->getVar('role')
                 ]);
 
                 session()->setFlashdata('success','Registration successful! Please log in.');
@@ -80,7 +81,7 @@ class Auth extends Controller
                         'userID' => $user['id'],
                         'name' => $user['name'],
                         'email' => $user['email'],
-                        'role' => $user['role'],
+                        'role'     => 'required|in_list[student,teacher,admin]',
                         'isLoggedIn' => true
                     ];
 
