@@ -17,16 +17,23 @@ class Auth extends Controller
                'name'     => 'required|min_length[3]|max_length[20]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
                 'password' => 'required|min_length[6]|max_length[200]',
+                'password_confirm'=> 'matches[password]'
             ];
             if ($this->validate($rules)) {
                 $model = new UserModel();
+                
+                //HASH PASSWORD
+                $hashedPassword = password-hash($this->request->getVar('password'), PASSWORD_DEFAULT);
 
+                //SAVE USERDATA
                 $model->save([
                     'name'     => $this->request->getVar('name'),
                     'email'    => $this->request->getVar('email'),
-                    'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT)
+                    'password' => $hashedPassword,
+                    'role'     => 'user'
                 ]);
-
+                
+                session()->setFlashdata('success','Registration successful! Please log in.');
                 return redirect()->to('/auth/login');
             } else {
                 $data['validation'] = $this->validator;
@@ -38,7 +45,8 @@ class Auth extends Controller
     }
 
     public function login(){
-
+        helper(['form']);
+        $data = [];
     }
 
     public function logout(){
