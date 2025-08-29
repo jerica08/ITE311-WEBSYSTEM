@@ -14,6 +14,7 @@ class Auth extends Controller
         $data = [];
 
          if ($this->request->getMethod() === 'post'){
+
             $rules = [
                'name'     => 'required|min_length[3]|max_length[20]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
@@ -45,10 +46,44 @@ class Auth extends Controller
         return view('auth/register', $data);
     }
     
+    
 
     public function login(){
+
         helper(['form']);
+        $db =\Config\Database::connect();
         $data = [];
+
+         if ($this->request->getMethod() === 'post'){
+
+            $rules = [
+               
+                'email'    => 'required|valid_email|is_unique[users.email]',
+                'password' => 'required|min_length[6]|max_length[200]',
+                                
+            ];
+
+            if ($this->validate($rules)) {
+                                
+                
+                $email    = $this->request->getVar('email'),
+                $password = $this->request->getVar('password');
+
+                //CHECK THE DATABASE FOR USER
+                $builder = $db->table('users');
+                $builder = $builder->where('email', $email)->get()->getRowArray();
+                
+            
+
+                session()->setFlashdata('success','Registration successful! Please log in.');
+                return redirect()->to('/auth/login');
+            } else {
+                $data['validation'] = $this->validator;
+            }
+        }
+
+        return view('auth/register', $data);
+       
     }
 
     public function logout(){
