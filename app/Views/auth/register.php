@@ -132,16 +132,6 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="role" class="form-label fw-bold">Role</label>
-                                        <select class="form-control form-control-lg" id="role" name="role" required>
-                                            <option value="">Select your role</option>
-                                            <option value="student" <?= set_select('role', 'student') ?>>Student</option>
-                                            <option value="teacher" <?= set_select('role', 'teacher') ?>>Teacher</option>
-                                            <option value="admin" <?= set_select('role', 'admin') ?>>Administrator</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
                                         <label for="password" class="form-label fw-bold">Password</label>
                                         <input type="password" class="form-control form-control-lg" id="password" name="password" 
                                                placeholder="Create a password (min. 6 characters)" required>
