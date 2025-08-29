@@ -102,10 +102,17 @@ class Auth extends Controller
     }
 
     public function logout(){
-        
+        session()->destroy();
+
+        return redirect()->to('/auth/login');
     }
 
     public function dashboard(){
-        
+        if (!session()->get('isLoggedIn')){
+            return redirect()->to('auth/login');
+        }
+
+        return view('auth/dashboard');
     }
+
 }
