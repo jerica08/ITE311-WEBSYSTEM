@@ -52,54 +52,48 @@ class Auth extends BaseController
 
     public function login(){
 
+        $session = session();
         helper(['form']);
-        $db =\Config\Database::connect();
-        $data = [];
-
+       
          if ($this->request->getMethod() === 'post'){
 
-            $rules = [
-               
+            $rules = [            
                 'email'    => 'required|valid_email',
-                'password' => 'required|min_length[6]|max_length[200]',
-                                
+                'password' => 'required|min_length[6]|max_length[200]',                              
             ];
 
-            if ($this->validate($rules)) {
-                                
-                
-                $email    = $this->request->getVar('email');
-                $password = $this->request->getVar('password');
-
-                //CHECK THE DATABASE FOR USER
+           if (!$this->validate($rules)){
+            return view('auth/login',["validation" => $this->validator]);
+           }else{
+                $db = Database:: connect();
                 $builder = $db->table('users');
-                $user = $builder->where('email', $email)->get()->getRowArray();
-                
-                if($user && password_verify($password,$user['password'])){
+                $user = $builder->where('email', $this->request->getVar('email'))->get()->getRowArray();
 
-                    //CREATE USER SESSION
-                    $sessionData = [
-                        'userID' => $user['id'],
-                        'name' => $user['name'],
-                        'email' => $user['email'],
-                        'role' => $user['role'],
-                        'isLoggedIn' => true
-                    ];
-
-                    session()->set($sessionData);
-
-                    //FLASH MESSAGE AND REDIRECT
-                    session()->setFlashdata('success','Welcome back, '. $user['name'] . '!');
-                    return redirect()->to('/dashboard');
+                if ($user) {
+                    $pass = $this->request->getVar('password');
+                    if (password_verify($pass, $user['password'])) {
+                        $sessionData = [
+                            'user_id' => $user['id'],
+                            'name' => $user['name'],
+                            'email' => $user['email'],
+                            'role' => $user['role'],
+                            'isLoggedIn' => true
+                        ];
+                        $session->set($sessionData);
+                        $session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                        return redirect()->to('/dashboard');
+                    } else {
+                        $session->setFlashdata('error', 'Wrong password.');
+                        return redirect()->to('/login');
+                    }
                 } else {
-                    $data['error'] = 'Invalid email or password.';
+                    $session->setFlashdata('error', 'Email not found.');
+                    return redirect()->to('/login');
                 }
-            } else {
-                $data['validation'] = $this->validator;
-            }
+           }
                         
          }
-        return view('auth/login', $data);
+        return view('auth/login');
        
     }
 
