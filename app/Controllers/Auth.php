@@ -58,7 +58,7 @@ class Auth extends Controller
 
             $rules = [
                
-                'email'    => 'required|valid_email|is_unique[users.email]',
+                'email'    => 'required|valid_email',
                 'password' => 'required|min_length[6]|max_length[200]',
                                 
             ];
@@ -66,23 +66,37 @@ class Auth extends Controller
             if ($this->validate($rules)) {
                                 
                 
-                $email    = $this->request->getVar('email'),
+                $email    = $this->request->getVar('email');
                 $password = $this->request->getVar('password');
 
                 //CHECK THE DATABASE FOR USER
                 $builder = $db->table('users');
-                $builder = $builder->where('email', $email)->get()->getRowArray();
+                $user = $builder->where('email', $email)->get()->getRowArray();
                 
-            
+                if($user && password_verify($password,$user['password'])){
 
-                session()->setFlashdata('success','Registration successful! Please log in.');
-                return redirect()->to('/auth/login');
+                    //CREATE USER SESSION
+                    $sessionData = [
+                        'userID' => $user['id'],
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'role' => $user['role'],
+                        'isLoggedIn' => true
+                    ];
+                    session()->set($sessionData);
+
+                    //FLASH MESSAGE AND REDIRECT
+                    session()->setFlashdata('success','Welcome back, '. $user['name'] . '!');
+                    return redirect()->to('/auth/dashboard');
             } else {
+                $data['error'] = 'Invalid email or password.';
+            }
+        } else {
                 $data['validation'] = $this->validator;
             }
-        }
-
-        return view('auth/register', $data);
+                        
+         }
+        return view('auth/login', $data);
        
     }
 
