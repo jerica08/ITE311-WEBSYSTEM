@@ -106,7 +106,13 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <form method="post" action="<?= base_url('auth/register') ?>">
+                                <?php if (isset($error)): ?>
+                                    <div class="alert alert-danger">
+                                        <?= $error ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <form method="post" action="<?= base_url('register') ?>">
                                     <?= csrf_field() ?>
                                     
                                     <div class="mb-3">

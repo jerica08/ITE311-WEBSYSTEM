@@ -10,36 +10,61 @@ class Auth extends Controller
     public function register()
     {
         helper(['form']);
-        $db =\Config\Database::connect();
+        $db = \Config\Database::connect();
         $data = [];
 
-         if ($this->request->getMethod() === 'post'){
+        if ($this->request->getMethod() === 'post') {
+            // Debug: Log form submission
+            log_message('info', 'Registration form submitted');
+            log_message('info', 'POST data: ' . json_encode($this->request->getPost()));
 
             $rules = [
-               'name'     => 'required|min_length[3]|max_length[20]',
+                'name'     => 'required|min_length[3]|max_length[100]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
                 'role'     => 'required|in_list[student,teacher,admin]',
-                'password' => 'required|min_length[6]|max_length[200]',
-                'password_confirm'=> 'matches[password]'
-                 
+                'password' => 'required|min_length[6]',
+                'password_confirm' => 'required|matches[password]'
             ];
+            
             if ($this->validate($rules)) {
-                
-                //HASH PASSWORD
-                $hashedPassword = password_hash($this->request->getVar('password'), PASSWORD_DEFAULT);
+                try {
+                    // Hash password
+                    $hashedPassword = password_hash($this->request->getVar('password'), PASSWORD_DEFAULT);
 
-                //SAVE USERDATA
-                $builder = $db->table('users');
-                $builder->insert([
-                    'name'     => $this->request->getVar('name'),
-                    'email'    => $this->request->getVar('email'),
-                    'password' => $hashedPassword,
-                    'role'     => $this->request->getVar('role')
-                ]);
+                    // Prepare user data
+                    $userData = [
+                        'name'       => $this->request->getVar('name'),
+                        'email'      => $this->request->getVar('email'),
+                        'password'   => $hashedPassword,
+                        'role'       => $this->request->getVar('role'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ];
 
-                session()->setFlashdata('success','Registration successful! Please log in.');
-                return redirect()->to('/auth/login');
+                    // Debug: Log data being inserted
+                    log_message('info', 'Inserting user data: ' . json_encode($userData));
+
+                    // Save user data
+                    $builder = $db->table('users');
+                    $result = $builder->insert($userData);
+
+                    if ($result) {
+                        $insertedId = $db->insertID();
+                        log_message('info', 'User registered successfully with ID: ' . $insertedId);
+                        
+                        session()->setFlashdata('success', 'Registration successful! Please log in.');
+                        return redirect()->to('login');
+                    } else {
+                        $error = $db->error();
+                        log_message('error', 'Database insert failed: ' . json_encode($error));
+                        $data['error'] = 'Failed to create account. Database error: ' . ($error['message'] ?? 'Unknown error');
+                    }
+                } catch (\Exception $e) {
+                    log_message('error', 'Registration exception: ' . $e->getMessage());
+                    $data['error'] = 'Database error: ' . $e->getMessage();
+                }
             } else {
+                log_message('info', 'Validation failed: ' . json_encode($this->validator->getErrors()));
                 $data['validation'] = $this->validator;
             }
         }
@@ -81,7 +106,7 @@ class Auth extends Controller
                         'userID' => $user['id'],
                         'name' => $user['name'],
                         'email' => $user['email'],
-                        'role'     => 'required|in_list[student,teacher,admin]',
+                        'role' => $user['role'],
                         'isLoggedIn' => true
                     ];
 
@@ -89,11 +114,11 @@ class Auth extends Controller
 
                     //FLASH MESSAGE AND REDIRECT
                     session()->setFlashdata('success','Welcome back, '. $user['name'] . '!');
-                    return redirect()->to('/auth/dashboard');
+                    return redirect()->to('/dashboard');
+                } else {
+                    $data['error'] = 'Invalid email or password.';
+                }
             } else {
-                $data['error'] = 'Invalid email or password.';
-            }
-        } else {
                 $data['validation'] = $this->validator;
             }
                         
@@ -105,12 +130,12 @@ class Auth extends Controller
     public function logout(){
         session()->destroy();
 
-        return redirect()->to('/auth/login');
+        return redirect()->to('/login');
     }
 
     public function dashboard(){
         if (!session()->get('isLoggedIn')){
-            return redirect()->to('auth/login');
+            return redirect()->to('/login');
         }
 
         return view('auth/dashboard');
