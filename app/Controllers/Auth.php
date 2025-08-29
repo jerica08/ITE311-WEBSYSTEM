@@ -98,13 +98,13 @@ class Auth extends BaseController
     }
 
     public function logout(){
-        session()->destroy();
-
+         session()->destroy();
         return redirect()->to('/login');
     }
 
     public function dashboard(){
-        if (!session()->get('isLoggedIn')){
+        $session = session();
+        if (!$session->get('isLoggedIn')) {
             return redirect()->to('/login');
         }
 
