@@ -83,6 +83,7 @@ class Auth extends Controller
                         'role' => $user['role'],
                         'isLoggedIn' => true
                     ];
+
                     session()->set($sessionData);
 
                     //FLASH MESSAGE AND REDIRECT
