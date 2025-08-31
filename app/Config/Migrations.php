@@ -14,7 +14,7 @@ class Migrations extends BaseConfig
      * Migrations are enabled by default.
      *
      * You should enable migrations whenever you intend to do a schema migration
-     * and disable it back when you're done.
+     * and disable it back when you're done. property
      */
     public bool $enabled = true;
 
