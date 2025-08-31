@@ -91,6 +91,26 @@ class Auth extends BaseController
          return view ('auth/login');
     }
 
+    public function logout(){
+        session()->destroy();
+        session()->setFlashdata('succes','You have been logged out successfully.');
+        return redirect()->to('/login');
+    }
+
+public function dashboard(){
+    // Check if user is logged in using helper function
+        if (!is_logged_in()) {
+            session()->setFlashdata('error', 'Please login to access the dashboard.');
+            return redirect()->to('/login');
+        }
+
+        $data = [
+            'user' => current_user()
+        ];
+
+        return view('auth/dashboard', $data);
+    }
+}
 
 
 
