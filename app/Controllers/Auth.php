@@ -51,10 +51,50 @@ class Auth extends BaseController
          return view ('auth/register');
     }
 
+     public function login()
+    {
+        if ($this->request->getMethod() === 'post'){
+            //set validation
+            $rules = [
+                'email' => 'required|valid_email',
+                'password' => 'required',
+            ];
+            //if validation passes
+            if ($this->validate($rules)){
+                $email = $this->request->getPost('email');
+                $password = $this->request->getPost('password');
+
+                //find user email
+                $user = $this->userModel->where('email', $email)->first();
+
+                if ($user && password_verify($password,$user['password'])){
+                    //create user session
+                     $sessionData = [
+                        'user_id' => $user['id'],
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'role' => $user['role'],
+                        'logged_in' => true
+                    ];
+                    session()->set($sessionData);
+
+                    session()->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                    return redirect()->to('/dashboard');
+                }else{
+                    session()->setFlashdata('error', 'Invalid email or password.');                 
+                }
+            } else {
+                ///Validation failed
+                session()->setFlashData('errors',$this->validator->getErrors());                  
+            }
+        }
+         return view ('auth/login');
+    }
 
 
 
 
 
-    
+
+
 }
