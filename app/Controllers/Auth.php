@@ -110,7 +110,7 @@ class Auth extends BaseController
             } else {
                 try {
                     // Direct database connection using PDO (same as registration)
-                    $dsn = "mysql:host=localhost;dbname=lms_latangga;charset=utf8mb4";
+                    $dsn = "mysql:host=localhost;dbname=lms_marquez;charset=utf8mb4";
                     $pdo = new \PDO($dsn, 'root', '', [
                         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
@@ -237,6 +237,62 @@ class Auth extends BaseController
         return view('dashboards/admin', $data);
     }
 
+    public function debug()
+    {
+        $data = [
+            'method' => $this->request->getMethod(),
+            'uri' => $this->request->getUri(),
+            'post_data' => $this->request->getPost(),
+            'get_data' => $this->request->getGet(),
+            'headers' => $this->request->getHeaders()
+        ];
+        return $this->response->setJSON($data);
+    }
 
-
+    public function testDb()
+    {
+        try {
+            $db = \Config\Database::connect();
+            
+            // Test connection
+            if (!$db->connID) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to connect to database']);
+            }
+            
+            // Test table exists
+            $tableExists = $db->tableExists('users');
+            
+            // Test insert capability
+            $testData = [
+                'name' => 'Test User ' . time(),
+                'email' => 'test' . time() . '@example.com',
+                'password' => password_hash('testpass', PASSWORD_DEFAULT),
+                'role' => 'student',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            
+            $insertResult = $db->table('users')->insert($testData);
+            
+            // Clean up test data
+            if ($insertResult) {
+                $db->table('users')->where('email', $testData['email'])->delete();
+            }
+            
+            return $this->response->setJSON([
+                'status' => 'success',
+                'database_connected' => true,
+                'table_exists' => $tableExists,
+                'insert_test' => $insertResult ? 'success' : 'failed',
+                'database_name' => $db->getDatabase()
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
 }
