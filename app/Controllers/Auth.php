@@ -83,5 +83,84 @@ class Auth extends BaseController
 
         return view('auth/register', $data);
     }
-    
+
+     public function login()
+    {
+        $data = [];
+        
+        // Enhanced debug info
+        $method = $this->request->getMethod();
+        $postData = $this->request->getPost();
+        $rawPost = $_POST;
+        
+        $data['debug_message'] = "Method: $method | Time: " . date('H:i:s') . " | POST data: " . json_encode($postData) . " | Raw POST: " . json_encode($rawPost);
+        
+        if ($this->request->getMethod() === 'post' || strtolower($this->request->getMethod()) === 'post') {
+            $data['debug_message'] .= ' | POST REQUEST RECEIVED';
+            $email = $this->request->getPost('email');
+            $password = $this->request->getPost('password');
+            
+            // Simple validation
+            if (empty($email) || empty($password)) {
+                $data['error'] = 'Email and password are required.';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $data['error'] = 'Please enter a valid email address.';
+            } elseif (strlen($password) < 6) {
+                $data['error'] = 'Password must be at least 6 characters.';
+            } else {
+                try {
+                    // Direct database connection using PDO (same as registration)
+                    $dsn = "mysql:host=localhost;dbname=lms_latangga;charset=utf8mb4";
+                    $pdo = new \PDO($dsn, 'root', '', [
+                        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+                    ]);
+                    
+                    // Find user by email
+                    $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE email = ?");
+                    $stmt->execute([$email]);
+                    $user = $stmt->fetch();
+                    
+                    if ($user && password_verify($password, $user['password'])) {
+                        // Set session data
+                        $sessionData = [
+                            'id'        => $user['id'],
+                            'name'      => $user['name'],
+                            'email'     => $user['email'],
+                            'role'      => $user['role'],
+                            'isLoggedIn'=> true
+                        ];
+                        session()->set($sessionData);
+                        
+                        // Debug: Check if session was set
+                        $data['debug_message'] = 'Login successful! Session set. Role: ' . $user['role'] . ' | Redirecting...';
+                        
+                        // Add success message and redirect
+                        session()->setFlashdata('success', 'Login successful! Welcome ' . $user['name']);
+                        
+                        // Redirect based on role using CodeIgniter's redirect
+                        if ($user['role'] === 'admin') {
+                            return redirect()->to('/admin/dashboard');
+                        } elseif ($user['role'] === 'instructor') {
+                            return redirect()->to('/instructor/dashboard');
+                        } else {
+                            return redirect()->to('/student/dashboard');
+                        }
+                    } else {
+                        $data['error'] = 'Invalid email or password.';
+                    }
+                    
+                } catch (\PDOException $e) {
+                    $data['error'] = 'Database error: ' . $e->getMessage();
+                } catch (\Exception $e) {
+                    $data['error'] = 'System error: ' . $e->getMessage();
+                }
+            }
+        } else {
+            $data['debug_message'] .= ' | GET REQUEST - FORM LOADED';
+        }
+        
+        return view('auth/login', $data);
+    }
+
 }
