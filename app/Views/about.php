@@ -58,17 +58,17 @@
     </style>
     <body>
         
-            <nav class="navigationbar">
-                <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                    <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
-                </nav>       
+        <nav class="navigationbar">
+            <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
+                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
+            </nav>       
                 <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul class="nav d-flex align-items-center gap-3" style="">
-                            <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Sign Up</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="#"><button class="button"> Log-In</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('register') ?>"><button class="button"> Sign Up</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('login') ?>"><button class="button"> Log-In</button></a></li>                           
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>
