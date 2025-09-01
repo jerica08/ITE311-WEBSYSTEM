@@ -35,7 +35,7 @@ class Auth extends BaseController
             } else {
                 try {
                     // Direct database connection using PDO
-                    $dsn = "mysql:host=localhost;dbname=lms_latangga;charset=utf8mb4";
+                    $dsn = "mysql:host=localhost;dbname=lms_marquez;charset=utf8mb4";
                     $pdo = new \PDO($dsn, 'root', '', [
                         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
