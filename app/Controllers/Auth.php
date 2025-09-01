@@ -163,4 +163,18 @@ class Auth extends BaseController
         return view('auth/login', $data);
     }
 
+     public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/auth/login');
+    }
+
+    public function dashboard()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/auth/login');
+        }
+        return view('dashboard');
+    }
+
 }
