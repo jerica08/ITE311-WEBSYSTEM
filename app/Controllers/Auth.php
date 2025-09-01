@@ -177,4 +177,66 @@ class Auth extends BaseController
         return view('dashboard');
     }
 
+     public function studentDashboard()
+    {
+        // Debug session data
+        $sessionData = [
+            'isLoggedIn' => session()->get('isLoggedIn'),
+            'role' => session()->get('role'),
+            'name' => session()->get('name'),
+            'email' => session()->get('email')
+        ];
+        
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'student') {
+            return redirect()->to('/auth/login');
+        }
+        
+        $data = [
+            'user' => [
+                'name' => session()->get('name') ?: 'Test User',
+                'email' => session()->get('email') ?: 'test@example.com',
+                'role' => session()->get('role') ?: 'student'
+            ],
+            'debug_session' => $sessionData
+        ];
+        
+        return view('dashboards/student', $data);
+    }
+
+     public function instructorDashboard()
+    {
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'instructor') {
+            return redirect()->to('/auth/login');
+        }
+        
+        $data = [
+            'user' => [
+                'name' => session()->get('name'),
+                'email' => session()->get('email'),
+                'role' => session()->get('role')
+            ]
+        ];
+        
+        return view('dashboards/instructor', $data);
+    }
+
+     public function adminDashboard()
+    {
+        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+        
+        $data = [
+            'user' => [
+                'name' => session()->get('name'),
+                'email' => session()->get('email'),
+                'role' => session()->get('role')
+            ]
+        ];
+        
+        return view('dashboards/admin', $data);
+    }
+
+
+
 }
