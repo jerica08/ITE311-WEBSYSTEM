@@ -30,7 +30,7 @@ class CreateUsersTable extends Migration
             ],
             'role' => [
                 'type' => 'ENUM',
-                'constraint' => ['student', 'instructor', 'admin'],
+                'constraint' => ['admin', 'instructor', 'student'],
                 'default' => 'student',
             ],
             'created_at' => [
@@ -42,7 +42,7 @@ class CreateUsersTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addPrimaryKey('id');
         $this->forge->createTable('users');
     }
 
