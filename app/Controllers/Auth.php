@@ -14,7 +14,7 @@ class Auth extends BaseController
         if ($this->request->getMethod() === 'post') {
             $rules = [
                 'name' => 'required|min_length[3]|max_length[255]',
-                'email' => 'required|valid_email|max_length[255]',
+                'email' => 'required|valid_email|max_length[255]|is_unique[users.email]',
                 'password' => 'required|min_length[6]|max_length[255]',
                 'password_confirm' => 'required|matches[password]',
                 'role' => 'required|in_list[student,instructor,admin]'
@@ -35,10 +35,11 @@ class Auth extends BaseController
                     session()->setFlashdata('success', 'Registration successful. Please log in.');
                     return redirect()->to('/login');
                 } catch (\Throwable $e) {
-                    $data['error'] = 'Failed to register. The email may already be in use.';
+                    log_message('error', 'Registration error: {message}', ['message' => $e->getMessage()]);
+                    return redirect()->back()->withInput()->with('errors', ['general' => 'Failed to register. Please try again.']);
                 }
             } else {
-                $data['validation'] = $this->validator;
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
         }
 
@@ -75,9 +76,9 @@ class Auth extends BaseController
                     return redirect()->to('/dashboard');
                 }
 
-                $data['error'] = 'Invalid email or password.';
+                return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
             } else {
-                $data['validation'] = $this->validator;
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
         }
 

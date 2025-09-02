@@ -51,15 +51,14 @@
                             </div>
                         <?php endif; ?>
 
-                        <?php if (!empty($error)): ?>
+                        <?php $errors = session('errors'); ?>
+                        <?php if (!empty($errors)): ?>
                             <div class="alert alert-danger" role="alert">
-                                <?= esc($error) ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (isset($validation)): ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?= $validation->listErrors() ?>
+                                <ul class="mb-0">
+                                    <?php foreach ($errors as $msg): ?>
+                                        <li><?= esc($msg) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
                             </div>
                         <?php endif; ?>
 
