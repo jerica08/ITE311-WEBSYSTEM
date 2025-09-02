@@ -85,14 +85,20 @@ class Auth extends BaseController
 
     public function logout(): RedirectResponse
     {
-        // Session destruction will be implemented in Step 6
+        session()->destroy();
         return redirect()->to('/login');
     }
 
     public function dashboard()
     {
-        // Session check will be implemented in Step 6
-        return 'Dashboard (protected)';
+        if (! session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        return view('auth/dashboard', [
+            'name' => session()->get('name'),
+            'role' => session()->get('role'),
+        ]);
     }
 }
 
