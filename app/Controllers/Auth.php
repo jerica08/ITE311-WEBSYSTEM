@@ -13,8 +13,8 @@ class Auth extends BaseController
 
         if ($this->request->getMethod() === 'post') {
             $rules = [
-                'name' => 'required|min_length[3]|max_length[255]',
-                'email' => 'required|valid_email|max_length[255]|is_unique[users.email]',
+                'name' => 'required|min_length[3]|max_length[100]',
+                'email' => 'required|valid_email|max_length[100]|is_unique[users.email]',
                 'password' => 'required|min_length[6]|max_length[255]',
                 'password_confirm' => 'required|matches[password]',
                 'role' => 'required|in_list[student,instructor,admin]'
@@ -31,14 +31,22 @@ class Auth extends BaseController
                 ];
 
                 try {
-                    $userModel->insert($userData);
-                    session()->setFlashdata('success', 'Registration successful. Please log in.');
-                    return redirect()->to('/login');
+                    $result = $userModel->insert($userData);
+                    if ($result) {
+                        log_message('info', 'User registered successfully: ' . $this->request->getPost('email'));
+                        session()->setFlashdata('success', 'Registration successful. Please log in.');
+                        return redirect()->to('/login');
+                    } else {
+                        $errors = $userModel->errors();
+                        log_message('error', 'Registration failed: ' . json_encode($errors));
+                        return redirect()->back()->withInput()->with('errors', $errors ?: ['general' => 'Failed to register. Please try again.']);
+                    }
                 } catch (\Throwable $e) {
                     log_message('error', 'Registration error: {message}', ['message' => $e->getMessage()]);
-                    return redirect()->back()->withInput()->with('errors', ['general' => 'Failed to register. Please try again.']);
+                    return redirect()->back()->withInput()->with('errors', ['general' => 'Database error: ' . $e->getMessage()]);
                 }
             } else {
+                log_message('info', 'Registration validation failed: ' . json_encode($this->validator->getErrors()));
                 return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
         }
@@ -63,20 +71,30 @@ class Auth extends BaseController
 
                 $user = $userModel->where('email', $email)->first();
 
-                if ($user && isset($user['password']) && password_verify($password, $user['password'])) {
-                    $sessionData = [
-                        'userId' => $user['id'] ?? null,
-                        'name' => $user['name'] ?? '',
-                        'email' => $user['email'] ?? '',
-                        'role' => $user['role'] ?? 'student',
-                        'isLoggedIn' => true
-                    ];
-                    session()->set($sessionData);
-                    session()->setFlashdata('success', 'Welcome back, ' . ($user['name'] ?? 'User') . '!');
-                    return redirect()->to('/dashboard');
+                if ($user) {
+                    // Debug logging
+                    log_message('info', 'Login attempt for email: ' . $email);
+                    log_message('info', 'User found: ' . json_encode($user));
+                    
+                    if (password_verify($password, $user['password'])) {
+                        $sessionData = [
+                            'userId' => $user['id'],
+                            'name' => $user['name'],
+                            'email' => $user['email'],
+                            'role' => $user['role'],
+                            'isLoggedIn' => true
+                        ];
+                        session()->set($sessionData);
+                        session()->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                        return redirect()->to('/dashboard');
+                    } else {
+                        log_message('info', 'Password verification failed for: ' . $email);
+                        return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
+                    }
+                } else {
+                    log_message('info', 'No user found with email: ' . $email);
+                    return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
                 }
-
-                return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
             } else {
                 return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
