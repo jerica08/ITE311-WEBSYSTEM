@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Controllers;
+
 use App\Models\UserModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -8,14 +11,7 @@ class Auth extends BaseController
     {
         $data = [];
         
-        // Force debug output to see what's happening
-        $method = $this->request->getMethod();
-        $postData = $this->request->getPost();
-        $allData = $_POST;
-        
-        $data['debug_message'] = "Method: $method | CodeIgniter POST: " . json_encode($postData) . " | Raw POST: " . json_encode($allData);
-        
-        if ($this->request->getMethod() === 'post' || $this->request->getMethod() === 'POST') {
+        if ($this->request->getMethod() === 'post') {
             $name = $this->request->getPost('name');
             $email = $this->request->getPost('email');
             $password = $this->request->getPost('password');
@@ -77,8 +73,6 @@ class Auth extends BaseController
                     $data['debug_message'] = 'General Exception: ' . $e->getMessage();
                 }
             }
-        } else {
-            $data['debug_message'] = 'Registration form loaded.';
         }
 
         return view('auth/register', $data);

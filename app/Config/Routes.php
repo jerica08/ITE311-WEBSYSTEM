@@ -21,6 +21,6 @@ $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/dashboard', 'Auth::dashboard');
 
 //Dashboard Routes by Role
-$routes->get('/student/dashboard', 'auth::studentDashboard');
-$routes->get('/instructor/dashboard', 'auth::instructorDashboard');
-$routes->get('/admin/dashboard', 'auth::adminDashboard');
+$routes->get('/student/dashboard', 'Auth::studentDashboard');
+$routes->get('/instructor/dashboard', 'Auth::instructorDashboard');
+$routes->get('/admin/dashboard', 'Auth::adminDashboard');

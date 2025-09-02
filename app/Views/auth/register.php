@@ -112,7 +112,7 @@
                                     </div>
                                 <?php endif; ?>
 
-                                <form method="post" action="<?= site_url('register') ?>">
+                                <form method="post" action="<?= base_url('auth/register') ?>">
                                     <?= csrf_field() ?>
                                     
                                     <div class="mb-3">
@@ -132,7 +132,7 @@
                                         <select class="form-control form-control-lg" id="role" name="role" required>
                                             <option value="">Select your role</option>
                                             <option value="student" <?= set_select('role', 'student') ?>>Student</option>
-                                            <option value="teacher" <?= set_select('role', 'teacher') ?>>Teacher</option>
+                                            <option value="instructor" <?= set_select('role', 'instructor') ?>>Instructor</option>
                                             <option value="admin" <?= set_select('role', 'admin') ?>>Administrator</option>
                                         </select>
                                     </div>
@@ -158,7 +158,7 @@
 
                                 <div class="text-center mt-4">
                                     <p class="mb-0">Already have an account? 
-                                        <a href="<?= base_url('login') ?>" style="color: #DAA520; font-weight: bold;">Log In</a>
+                                        <a href="<?= base_url('auth/login') ?>" style="color: #DAA520; font-weight: bold;">Log In</a>
                                     </p>
                                 </div>
                             </div>

@@ -115,7 +115,7 @@
                                 <h5>Welcome to your Learning Management System!</h5>
                                 <p>You have successfully logged into the Kawas National High School Learning Management System.</p>
                                 
-                                <?php elseif (session()->get('role') === 'admin'): ?>
+                                <?php if (session()->get('role') === 'admin'): ?>
                                     <div class="alert alert-danger">
                                         <h6>Administrator Features:</h6>
                                         <ul class="mb-0">

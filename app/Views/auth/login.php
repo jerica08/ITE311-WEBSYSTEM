@@ -127,8 +127,8 @@
                                         <?= session()->getFlashdata('success') ?>
                                     </div>
                                 <?php endif; ?>
-
-                                <form method="post" action="<?= base_url('login') ?>">
+                                    
+                                <form method="post" action="<?= base_url('auth/login') ?>">
                                     <?= csrf_field() ?>
                                     
                                     <div class="mb-3">
