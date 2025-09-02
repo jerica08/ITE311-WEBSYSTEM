@@ -31,12 +31,28 @@
         </header>
 
         <main class="container mt-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h3 class="mb-2">Welcome, <?= esc($name ?? 'User') ?>!</h3>
-                    <p class="mb-0">Your role: <strong><?= esc($role ?? 'student') ?></strong></p>
+            <?php if (($role ?? 'student') === 'admin'): ?>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h3 class="mb-2">Admin Dashboard</h3>
+                        <p class="mb-0">Welcome, <?= esc($name) ?>. Manage users and system settings.</p>
+                    </div>
                 </div>
-            </div>
+            <?php elseif (($role ?? 'student') === 'instructor'): ?>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h3 class="mb-2">Instructor Dashboard</h3>
+                        <p class="mb-0">Welcome, <?= esc($name) ?>. Manage your classes and content.</p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h3 class="mb-2">Student Dashboard</h3>
+                        <p class="mb-0">Welcome, <?= esc($name) ?>. View your courses and activities.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
         </main>
     </body>
 </html>

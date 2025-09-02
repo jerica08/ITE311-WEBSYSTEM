@@ -86,6 +86,15 @@
                                 <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
                             </div>
 
+                            <div class="mb-3 text-start">
+                                <label for="role" class="form-label">Role</label>
+                                <select id="role" name="role" class="form-select" required>
+                                    <option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
+                                    <option value="instructor" <?= old('role') === 'instructor' ? 'selected' : '' ?>>Instructor</option>
+                                    <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
+                                </select>
+                            </div>
+
                             <button type="submit" class="button w-100">Register</button>
                         </form>
 

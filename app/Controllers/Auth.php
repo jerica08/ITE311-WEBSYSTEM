@@ -16,7 +16,8 @@ class Auth extends BaseController
                 'name' => 'required|min_length[3]|max_length[255]',
                 'email' => 'required|valid_email|max_length[255]',
                 'password' => 'required|min_length[6]|max_length[255]',
-                'password_confirm' => 'required|matches[password]'
+                'password_confirm' => 'required|matches[password]',
+                'role' => 'required|in_list[student,instructor,admin]'
             ];
 
             if ($this->validate($rules)) {
@@ -26,7 +27,7 @@ class Auth extends BaseController
                     'name' => $this->request->getPost('name'),
                     'email' => $this->request->getPost('email'),
                     'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                    'role' => 'student'
+                    'role' => $this->request->getPost('role')
                 ];
 
                 try {
@@ -95,7 +96,53 @@ class Auth extends BaseController
             return redirect()->to('/login');
         }
 
-        return view('auth/dashboard', [
+        $role = session()->get('role');
+        if ($role === 'admin') {
+            return redirect()->to('/dashboard/admin');
+        }
+        if ($role === 'instructor') {
+            return redirect()->to('/dashboard/instructor');
+        }
+        return redirect()->to('/dashboard/student');
+    }
+
+    public function dashboardStudent()
+    {
+        if (! session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+        if (session()->get('role') !== 'student') {
+            return redirect()->to('/dashboard');
+        }
+        return view('auth/dashboard_student', [
+            'name' => session()->get('name'),
+            'role' => session()->get('role'),
+        ]);
+    }
+
+    public function dashboardInstructor()
+    {
+        if (! session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+        if (session()->get('role') !== 'instructor') {
+            return redirect()->to('/dashboard');
+        }
+        return view('auth/dashboard_instructor', [
+            'name' => session()->get('name'),
+            'role' => session()->get('role'),
+        ]);
+    }
+
+    public function dashboardAdmin()
+    {
+        if (! session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/dashboard');
+        }
+        return view('auth/dashboard_admin', [
             'name' => session()->get('name'),
             'role' => session()->get('role'),
         ]);
