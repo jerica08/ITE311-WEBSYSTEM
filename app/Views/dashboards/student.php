@@ -77,7 +77,7 @@
                                 <span class="text-white">Welcome, <?= session()->get('name') ?>!</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="<?= site_url('logout') ?>">
+                                <a class="nav-link text-white" href="<?= site_url('auth/logout') ?>">
                                     <button class="button">Logout</button>
                                 </a>
                             </li>

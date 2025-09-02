@@ -78,7 +78,7 @@
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/') ?>"><button class="button"> Home</button></a></li>
                         </ul>   
                     </div>                  
                 </nav>
@@ -109,6 +109,12 @@
                                 <?php if (isset($error)): ?>
                                     <div class="alert alert-danger">
                                         <?= $error ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (isset($debug_message)): ?>
+                                    <div class="alert alert-info">
+                                        <strong>Debug:</strong> <?= $debug_message ?>
                                     </div>
                                 <?php endif; ?>
 

@@ -12,6 +12,11 @@ $routes->get('/about', 'Home::about');
 $routes->get('/contact', 'Home::contact');
 $routes->setAutoRoute(true);
 
+// Test route
+$routes->get('/test', function() {
+    return 'Routes are working!';
+});
+
 //Authentication Routes
 $routes->get('/auth/login', 'Auth::login');
 $routes->post('/auth/login', 'Auth::login');
