@@ -46,11 +46,41 @@ class Auth extends BaseController
 
     public function login()
     {
+        $data = [];
+
         if ($this->request->getMethod() === 'post') {
-            // Login processing will be implemented in Step 5
+            $rules = [
+                'email' => 'required|valid_email',
+                'password' => 'required'
+            ];
+
+            if ($this->validate($rules)) {
+                $userModel = new UserModel();
+                $email = $this->request->getPost('email');
+                $password = $this->request->getPost('password');
+
+                $user = $userModel->where('email', $email)->first();
+
+                if ($user && isset($user['password']) && password_verify($password, $user['password'])) {
+                    $sessionData = [
+                        'userId' => $user['id'] ?? null,
+                        'name' => $user['name'] ?? '',
+                        'email' => $user['email'] ?? '',
+                        'role' => $user['role'] ?? 'student',
+                        'isLoggedIn' => true
+                    ];
+                    session()->set($sessionData);
+                    session()->setFlashdata('success', 'Welcome back, ' . ($user['name'] ?? 'User') . '!');
+                    return redirect()->to('/dashboard');
+                }
+
+                $data['error'] = 'Invalid email or password.';
+            } else {
+                $data['validation'] = $this->validator;
+            }
         }
 
-        return view('auth/login');
+        return view('auth/login', $data);
     }
 
     public function logout(): RedirectResponse
