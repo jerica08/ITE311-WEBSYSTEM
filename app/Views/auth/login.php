@@ -51,7 +51,7 @@
                             </div>
                         <?php endif; ?>
 
-                        <?php $errors = session('errors'); ?>
+                        <?php $errors = isset($errors) ? $errors : session('errors'); ?>
                         <?php if (!empty($errors)): ?>
                             <div class="alert alert-danger" role="alert">
                                 <ul class="mb-0">
