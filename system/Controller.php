@@ -116,7 +116,7 @@ class Controller
     /**
      * How long to cache the current page for.
      *
-     * @params int $time time to live in seconds.
+     * @param int $time time to live in seconds.
      *
      * @return void
      */
