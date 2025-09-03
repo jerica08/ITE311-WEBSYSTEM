@@ -30,8 +30,13 @@ class CreateUsersTable extends Migration
             ],
             'role' => [
                 'type' => 'ENUM',
+<<<<<<< HEAD:app/Database/Migrations/2025-09-03-024523_CreateUsersTable.php
                 'constraint' => ['admin', 'user',],
                 'default' => 'user',
+=======
+                'constraint' => ['admin', 'instructor', 'student'],
+                'default' => 'student',
+>>>>>>> 878f8212430edcd4a230eacc45a9e4b068e6ea80:app/Database/Migrations/2025-08-20-000323_CreateUsersTable.php
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -42,7 +47,11 @@ class CreateUsersTable extends Migration
                 'null' => true,
             ],
         ]);
+<<<<<<< HEAD:app/Database/Migrations/2025-09-03-024523_CreateUsersTable.php
         $this->forge->addKey('id');
+=======
+        $this->forge->addPrimaryKey('id');
+>>>>>>> 878f8212430edcd4a230eacc45a9e4b068e6ea80:app/Database/Migrations/2025-08-20-000323_CreateUsersTable.php
         $this->forge->createTable('users');
     }
 
