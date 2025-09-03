@@ -10,6 +10,7 @@ class Auth extends BaseController
     public function register()
     {
         $data = [];
+        log_message('info', 'Register request method: {method}', ['method' => $this->request->getMethod()]);
 
         if ($this->request->getMethod() === 'post') {
             $rules = [
@@ -20,6 +21,7 @@ class Auth extends BaseController
                 'role' => 'required|in_list[student,instructor,admin]'
             ];
 
+            log_message('info', 'Register POST data: {data}', ['data' => json_encode($this->request->getPost())]);
             if ($this->validate($rules)) {
                 $userModel = new UserModel();
                 $email = $this->request->getPost('email');
@@ -38,14 +40,22 @@ class Auth extends BaseController
                 ];
 
                 try {
-                    $userModel->insert($userData);
-                    session()->setFlashdata('success', 'Registration successful. Please log in.');
-                    return redirect()->to('/login');
+                    $result = $userModel->insert($userData);
+                    if ($result) {
+                        log_message('info', 'User registered successfully: ' . $this->request->getPost('email'));
+                        session()->setFlashdata('success', 'Registration successful. Please log in.');
+                        return redirect()->to('/login');
+                    } else {
+                        $errors = $userModel->errors();
+                        log_message('error', 'Registration failed: ' . json_encode($errors));
+                        return redirect()->back()->withInput()->with('errors', $errors ?: ['general' => 'Failed to register. Please try again.']);
+                    }
                 } catch (\Throwable $e) {
                     log_message('error', 'Registration error: {message}', ['message' => $e->getMessage()]);
-                    return redirect()->back()->withInput()->with('errors', ['general' => 'Failed to register. Please try again.']);
+                    return redirect()->back()->withInput()->with('errors', ['general' => 'Database error: ' . $e->getMessage()]);
                 }
             } else {
+                log_message('info', 'Registration validation failed: ' . json_encode($this->validator->getErrors()));
                 return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
         }
@@ -56,6 +66,7 @@ class Auth extends BaseController
     public function login()
     {
         $data = [];
+        log_message('info', 'Login request method: {method}', ['method' => $this->request->getMethod()]);
 
         if ($this->request->getMethod() === 'post') {
             $rules = [
@@ -63,29 +74,43 @@ class Auth extends BaseController
                 'password' => 'required'
             ];
 
+            log_message('info', 'Login POST data email: {email}', ['email' => $this->request->getPost('email')]);
             if ($this->validate($rules)) {
                 $userModel = new UserModel();
                 $email = $this->request->getPost('email');
                 $password = $this->request->getPost('password');
 
                 $user = $userModel->where('email', $email)->first();
+                log_message('info', 'Login user lookup found: {found}', ['found' => $user ? 'yes' : 'no']);
 
-                if ($user && isset($user['password']) && password_verify($password, $user['password'])) {
-                    $sessionData = [
-                        'userId' => $user['id'] ?? null,
-                        'name' => $user['name'] ?? '',
-                        'email' => $user['email'] ?? '',
-                        'role' => $user['role'] ?? 'student',
-                        'isLoggedIn' => true
-                    ];
-                    session()->set($sessionData);
-                    session()->setFlashdata('success', 'Welcome back, ' . ($user['name'] ?? 'User') . '!');
-                    return redirect()->to('/dashboard');
+                if ($user) {
+                    // Debug logging
+                    log_message('info', 'Login attempt for email: ' . $email);
+                    log_message('info', 'User found: ' . json_encode($user));
+                    
+                    if (password_verify($password, $user['password'])) {
+                        $sessionData = [
+                            'userId' => $user['id'],
+                            'name' => $user['name'],
+                            'email' => $user['email'],
+                            'role' => $user['role'],
+                            'isLoggedIn' => true
+                        ];
+                        session()->set($sessionData);
+                        session()->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                        return redirect()->to('/dashboard');
+                    } else {
+                        log_message('info', 'Password verification failed for: ' . $email);
+                        return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
+                    }
+                } else {
+                    log_message('info', 'No user found with email: ' . $email);
+                    return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
                 }
-
-                return redirect()->back()->withInput()->with('errors', ['credentials' => 'Invalid email or password.']);
             } else {
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+                log_message('error', 'Login validation failed: {errors}', ['errors' => json_encode($this->validator->getErrors())]);
+                $data['errors'] = $this->validator->getErrors();
+                return view('auth/login', $data);
             }
         }
 
@@ -95,32 +120,32 @@ class Auth extends BaseController
     public function logout(): RedirectResponse
     {
         session()->destroy();
-        return redirect()->to('/login');
+        return redirect()->to(site_url('login'));
     }
 
     public function dashboard()
     {
         if (! session()->get('isLoggedIn')) {
-            return redirect()->to('/login');
+            return redirect()->to(site_url('login'));
         }
 
         $role = session()->get('role');
         if ($role === 'admin') {
-            return redirect()->to('/dashboard/admin');
+            return redirect()->to(site_url('dashboard/admin'));
         }
         if ($role === 'instructor') {
-            return redirect()->to('/dashboard/instructor');
+            return redirect()->to(site_url('dashboard/instructor'));
         }
-        return redirect()->to('/dashboard/student');
+        return redirect()->to(site_url('dashboard/student'));
     }
 
     public function dashboardStudent()
     {
         if (! session()->get('isLoggedIn')) {
-            return redirect()->to('/login');
+            return redirect()->to(site_url('login'));
         }
         if (session()->get('role') !== 'student') {
-            return redirect()->to('/dashboard');
+            return redirect()->to(site_url('dashboard'));
         }
         return view('auth/dashboard_student', [
             'name' => session()->get('name'),
@@ -131,10 +156,10 @@ class Auth extends BaseController
     public function dashboardInstructor()
     {
         if (! session()->get('isLoggedIn')) {
-            return redirect()->to('/login');
+            return redirect()->to(site_url('login'));
         }
         if (session()->get('role') !== 'instructor') {
-            return redirect()->to('/dashboard');
+            return redirect()->to(site_url('dashboard'));
         }
         return view('auth/dashboard_instructor', [
             'name' => session()->get('name'),
