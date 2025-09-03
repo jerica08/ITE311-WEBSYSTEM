@@ -28,7 +28,7 @@
                         <ul class="nav d-flex align-items-center gap-3">
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register')?>"><button class="button"> Sign Up</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login')?>"><button class="button"> Log-In</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('login')?>"><button class="button"> Log-In</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>
@@ -51,11 +51,10 @@
                             </div>
                         <?php endif; ?>
 
-                        <?php $errors = session('errors'); ?>
-                        <?php if (!empty($errors)): ?>
+                        <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger" role="alert">
                                 <ul class="mb-0">
-                                    <?php foreach ($errors as $msg): ?>
+                                    <?php foreach (session()->getFlashdata('errors') as $field => $msg): ?>
                                         <li><?= esc($msg) ?></li>
                                     <?php endforeach; ?>
                                 </ul>

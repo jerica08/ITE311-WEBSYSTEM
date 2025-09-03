@@ -14,7 +14,7 @@ class Auth extends BaseController
         if ($this->request->getMethod() === 'post') {
             $rules = [
                 'name' => 'required|min_length[3]|max_length[255]',
-                'email' => 'required|valid_email|max_length[255]|is_unique[users.email]',
+                'email' => 'required|valid_email|max_length[255]',
                 'password' => 'required|min_length[6]|max_length[255]',
                 'password_confirm' => 'required|matches[password]',
                 'role' => 'required|in_list[student,instructor,admin]'
@@ -22,10 +22,17 @@ class Auth extends BaseController
 
             if ($this->validate($rules)) {
                 $userModel = new UserModel();
+                $email = $this->request->getPost('email');
+                
+                // Check if email already exists
+                $existingUser = $userModel->where('email', $email)->first();
+                if ($existingUser) {
+                    return redirect()->back()->withInput()->with('errors', ['email' => 'Email already exists.']);
+                }
 
                 $userData = [
                     'name' => $this->request->getPost('name'),
-                    'email' => $this->request->getPost('email'),
+                    'email' => $email,
                     'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
                     'role' => $this->request->getPost('role')
                 ];
