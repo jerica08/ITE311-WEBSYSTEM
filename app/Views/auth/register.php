@@ -51,18 +51,17 @@
                             </div>
                         <?php endif; ?>
 
-                        <?php $errors = session('errors'); ?>
-                        <?php if (!empty($errors)): ?>
+                        <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger" role="alert">
                                 <ul class="mb-0">
-                                    <?php foreach ($errors as $msg): ?>
+                                    <?php foreach (session()->getFlashdata('errors') as $field => $msg): ?>
                                         <li><?= esc($msg) ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
                         <?php endif; ?>
 
-                        <form method="post" action="<?= site_url('register') ?>">
+                        <form method="post" action="<?= site_url('auth/register') ?>">
                             <?= csrf_field() ?>
 
                             <div class="mb-3 text-start">

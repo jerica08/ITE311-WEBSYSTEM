@@ -51,11 +51,10 @@
                             </div>
                         <?php endif; ?>
 
-                        <?php $errors = session('errors'); ?>
-                        <?php if (!empty($errors)): ?>
+                        <?php if (session()->getFlashdata('errors')): ?>
                             <div class="alert alert-danger" role="alert">
                                 <ul class="mb-0">
-                                    <?php foreach ($errors as $msg): ?>
+                                    <?php foreach (session()->getFlashdata('errors') as $field => $msg): ?>
                                         <li><?= esc($msg) ?></li>
                                     <?php endforeach; ?>
                                 </ul>
