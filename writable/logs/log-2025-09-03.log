@@ -403,6 +403,7 @@ in SYSTEMPATH\Cache\Handlers\FileHandler.php on line 66.
 22 SYSTEMPATH\Boot.php(349): service('codeigniter')
 23 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
 24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+<<<<<<< HEAD
 CRITICAL - 2025-09-03 07:01:47 --> CodeIgniter\Cache\Exceptions\CacheException: Cache unable to write to "C:\xampp\htdocs\ITE311-MARQUEZ\writable\cache/".
 [Method: GET, Route: /]
 in SYSTEMPATH\Cache\Handlers\FileHandler.php on line 66.
@@ -835,3 +836,5 @@ in SYSTEMPATH\Cache\Handlers\FileHandler.php on line 66.
 22 SYSTEMPATH\Boot.php(349): service('codeigniter')
 23 SYSTEMPATH\Boot.php(130): CodeIgniter\Boot::initializeCodeIgniter()
 24 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+=======
+>>>>>>> dc9685b0020adade10805d372f821930f14e749e
