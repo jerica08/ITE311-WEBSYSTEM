@@ -22,12 +22,6 @@ $routes->get('auth/login', 'Auth::login');
 $routes->post('auth/login', 'Auth::login');
 $routes->get('/logout', 'Auth::logout');
 
-//Dashboard Routes
-$routes->get('/dashboard', 'Auth::dashboard');
-$routes->get('/dashboard/student', 'Auth::dashboardStudent');
-$routes->get('/dashboard/instructor', 'Auth::dashboardInstructor');
-$routes->get('/dashboard/admin', 'Auth::dashboardAdmin');
-$routes->setAutoRoute(true);
 
 
 
