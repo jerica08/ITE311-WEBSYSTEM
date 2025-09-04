@@ -643,8 +643,7 @@ class Connection extends BaseConnection
 
         return false;
     }
-
-    /**
+    /**s
      * Rollback Transaction
      */
     protected function _transRollback(): bool
