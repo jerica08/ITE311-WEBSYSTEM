@@ -17,6 +17,14 @@
             cursor: pointer;
             transition: background 0.3s;
         }  
+        .button-active {
+            background-color: #B8860B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
         .button:hover{
             background-color: #D2B55B;
         }

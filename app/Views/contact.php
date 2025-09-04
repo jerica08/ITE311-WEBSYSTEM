@@ -16,6 +16,14 @@
             cursor: pointer;
             transition: background 0.3s;
         }
+        .button-active {
+            background-color: #B8860B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
         .button:hover{
             background-color: #0057b3a0;
         }
@@ -35,7 +43,7 @@
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login') ?>"><button class="button"> Log-In</button></a></li> 
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button-active"> Contact Us</button></a></li>
 
                     </ul>
                 </div>            

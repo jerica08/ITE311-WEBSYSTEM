@@ -28,6 +28,14 @@
             transition: background 0.3s;
             border-radius: 5px;
         }
+        .button-active {
+            background-color: #B8860B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
         .button:hover {
             background-color: #D2B55B;
 
@@ -115,7 +123,7 @@
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
                         
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/dashboard') ?>"><button class="button"> Dashboard</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/dashboard') ?>"><button class="button-active"> Dashboard</button></a></li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= site_url('auth/logout') ?>">
                                 <button class="btn-logout">
