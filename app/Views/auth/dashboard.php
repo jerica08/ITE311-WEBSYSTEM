@@ -54,6 +54,7 @@
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 30px;
+            border-top: none;
         }
         .stats-card {
             background: white;
@@ -112,10 +113,8 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                        
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/dashboard') ?>"><button class="button"> Dashboard</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= site_url('auth/logout') ?>">
                                 <button class="btn-logout">
@@ -156,155 +155,6 @@
                     <div class="col-md-2 text-center">
                         <div class="user-avatar">
                             <?= strtoupper(substr($user['name'], 0, 2)) ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <h4>0</h4>
-                        <p class="text-muted">Enrolled Courses</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <h4>0</h4>
-                        <p class="text-muted">Assignments</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-quiz"></i>
-                        </div>
-                        <h4>0</h4>
-                        <p class="text-muted">Quizzes</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stats-card">
-                        <div class="stats-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h4>0%</h4>
-                        <p class="text-muted">Progress</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Main Content Cards -->
-            <div class="row">
-                <div class="col-md-8">
-                    <!-- Recent Activity -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-clock me-2"></i>
-                                Recent Activity
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-center py-4">
-                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">No recent activity to display.</p>
-                                <small class="text-muted">Your course activities will appear here once you enroll in courses.</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Upcoming Assignments -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-calendar-alt me-2"></i>
-                                Upcoming Assignments
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-center py-4">
-                                <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">No upcoming assignments.</p>
-                                <small class="text-muted">Assignment deadlines will be shown here.</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <!-- User Profile -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-user me-2"></i>
-                                Profile Information
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="text-center mb-3">
-                                <div class="user-avatar mx-auto mb-3">
-                                    <?= strtoupper(substr($user['name'], 0, 2)) ?>
-                                </div>
-                                <h6><?= esc($user['name']) ?></h6>
-                                <small class="text-muted"><?= ucfirst(esc($user['role'])) ?></small>
-                            </div>
-                            <hr>
-                            <div class="mb-2">
-                                <strong>Email:</strong><br>
-                                <small><?= esc($user['email']) ?></small>
-                            </div>
-                            <div class="mb-2">
-                                <strong>Student ID:</strong><br>
-                                <small>KNHS-<?= str_pad($user['id'], 4, '0', STR_PAD_LEFT) ?></small>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Role:</strong><br>
-                                <span class="badge bg-secondary"><?= ucfirst(esc($user['role'])) ?></span>
-                            </div>
-                            <div class="d-grid">
-                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-edit me-1"></i>
-                                    Edit Profile
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-bolt me-2"></i>
-                                Quick Actions
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-search me-1"></i>
-                                    Browse Courses
-                                </a>
-                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-book-open me-1"></i>
-                                    View Grades
-                                </a>
-                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-calendar me-1"></i>
-                                    View Schedule
-                                </a>
-                                <a href="#" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-comments me-1"></i>
-                                    Messages
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
