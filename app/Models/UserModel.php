@@ -11,7 +11,7 @@ class UserModel extends Model
 	protected $allowedFields = ['username', 'email', 'password', 'first_name', 'last_name', 'role'];
 	protected $useTimestamps = true;
 	
-	// Validation rules
+	// Validation rules - simplified for testing
 	protected $validationRules = [
 		'username' => 'required|min_length[3]|max_length[100]',
 		'email' => 'required|valid_email',

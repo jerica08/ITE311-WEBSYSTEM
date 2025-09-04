@@ -29,5 +29,10 @@ $routes->get('/dashboard/instructor', 'Auth::dashboardInstructor');
 $routes->get('/dashboard/admin', 'Auth::dashboardAdmin');
 $routes->setAutoRoute(true);
 
+// Simple test route
+$routes->get('/test-simple', function() {
+    return view('test_simple');
+});
+
 
 
