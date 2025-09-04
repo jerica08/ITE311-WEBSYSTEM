@@ -47,6 +47,7 @@
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/auth/login')?>"><button class="button"> Log-In</button></a></li>                
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('demo') ?>"><button class="button"> Demo</button></a></li>
                         </ul>
                     </div>
                 </nav>
