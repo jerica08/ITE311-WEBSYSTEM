@@ -54,7 +54,6 @@
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 30px;
-            border-top: none;
         }
         .stats-card {
             background: white;
