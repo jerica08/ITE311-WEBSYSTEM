@@ -9,36 +9,7 @@ class UserSeeder extends Seeder
     public function run()
     {
          $users = [
-            [
-                'username' => 'admin',
-                'email' => 'admin@kawas.edu',
-                'password' => password_hash('admin123', PASSWORD_DEFAULT),
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-                'role' => 'admin',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'username' => 'instructor',
-                'email' => 'instructor@kawas.edu',
-                'password' => password_hash('instructor123', PASSWORD_DEFAULT),
-                'first_name' => 'Jane',
-                'last_name' => 'Instructor',
-                'role' => 'instructor',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'username' => 'student',
-                'email' => 'student@kawas.edu',
-                'password' => password_hash('student123', PASSWORD_DEFAULT),
-                'first_name' => 'John',
-                'last_name' => 'Student',
-                'role' => 'student',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
+           
             [
                 'username' => 'jason',
                 'email' => 'jason@lms.com',
