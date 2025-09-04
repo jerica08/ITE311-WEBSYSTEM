@@ -70,7 +70,7 @@
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login') ?>"><button class="button"> Log-In</button></a></li>                           
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button-active"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>
                     </div>       
@@ -78,7 +78,7 @@
            </nav>
            <nav class="blog-box">
                 <nav class="blog" style="font-family: 'Times New Roman', serif;">
-                    <h1 class="blog-title" style="font-weight: 900;justify-content:left;font-family: 'Times New Roman', serif;">ABOUT US</h1>
+                    <h1 class="blog-title" style="font-weight: 900;justify-content:left;font-family: 'Times New Roman', serif;margin:50px;">ABOUT US</h1>
                      <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
                      <img src="<?= base_url('img/kawas.jpg') ?>" alt="Kawas National High School" style="max-width: 500px; height: auto; justify-content:center;margin-left:50px;filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));">
                     <div class="vision">

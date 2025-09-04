@@ -24,7 +24,7 @@
             background-color: #D2B55B;
         }
         .main-content {
-            margin-top: 140px;
+            margin-top: 50px;
             padding: 20px;
         }
         .card {

@@ -30,9 +30,10 @@
         }
         .button:hover {
             background-color: #D2B55B;
+
         }
         .main-content {
-            margin-top: 140px;
+            margin-top: 50px;
             padding: 20px;
         }
         .card {
@@ -52,8 +53,9 @@
             background: linear-gradient(135deg, #DAA520 0%, #D2B55B 100%);
             color: black;
             border-radius: 15px;
-            padding: 2rem;
+            padding: 20px;
             margin-bottom: 30px;
+            
         }
         .stats-card {
             background: white;
