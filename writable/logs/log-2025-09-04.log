@@ -271,3 +271,25 @@ Stack trace:
 #11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
 #12 C:\xampp\htdocs\ITE311-MARQUEZ\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
 #13 {main}
+INFO - 2025-09-04 07:00:49 --> Register method called. Method: GET
+DEBUG - 2025-09-04 07:00:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-04 07:00:50 --> Register method called. Method: GET
+DEBUG - 2025-09-04 07:00:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-04 07:00:52 --> Login method called. Method: GET
+DEBUG - 2025-09-04 07:00:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-04 07:03:21 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "demo_credentials.php"
+[Method: GET, Route: demo]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('demo_credentials.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('demo_credentials', [], true)
+ 3 APPPATH\Controllers\home.php(22): view('demo_credentials')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->demo()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+INFO - 2025-09-04 07:03:38 --> Register method called. Method: GET
+DEBUG - 2025-09-04 07:03:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-04 07:03:44 --> Register method called. Method: GET
+DEBUG - 2025-09-04 07:03:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

@@ -65,18 +65,8 @@
                             <?= csrf_field() ?>
 
                             <div class="mb-3 text-start">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" value="<?= old('username') ?>" required>
-                            </div>
-
-                            <div class="mb-3 text-start">
-                                <label for="first_name" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" value="<?= old('first_name') ?>" required>
-                            </div>
-
-                            <div class="mb-3 text-start">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" value="<?= old('last_name') ?>" required>
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?= old('name') ?>" required>
                             </div>
 
                             <div class="mb-3 text-start">

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use Exception;
 
 class Auth extends BaseController
 {
@@ -17,12 +18,10 @@ class Auth extends BaseController
             $userModel = new UserModel();
             
             $data = [
-                'username' => $this->request->getPost('username'),
+                'name' => $this->request->getPost('name'),
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
                 'password_confirm' => $this->request->getPost('password_confirm'),
-                'first_name' => $this->request->getPost('first_name'),
-                'last_name' => $this->request->getPost('last_name'),
                 'role' => $this->request->getPost('role')
             ];
             
@@ -101,8 +100,7 @@ class Auth extends BaseController
                         'user_id' => $user['id'],
                         'email' => $user['email'],
                         'role' => $user['role'],
-                        'name' => $user['first_name'] . ' ' . $user['last_name'],
-                        'username' => $user['username']
+                        'name' => $user['name']
                     ]);
                     
                     // Redirect to main dashboard (which will redirect to role-specific dashboard)
