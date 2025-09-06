@@ -17,10 +17,6 @@ class Home extends BaseController
     public function contact(){
         return view('contact');
     }
-
-    public function demo(){
-        return view('demo_credentials');
-    }
 }
 
 
