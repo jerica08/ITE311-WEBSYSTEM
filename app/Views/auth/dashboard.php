@@ -123,7 +123,7 @@
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
                         
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/dashboard') ?>"><button class="button-active"> Dashboard</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('dashboard') ?>"><button class="button-active"> Dashboard</button></a></li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= site_url('auth/logout') ?>">
                                 <button class="btn-logout">

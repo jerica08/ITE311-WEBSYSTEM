@@ -39,7 +39,7 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('index') ?>"><button class="button"> Home</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login') ?>"><button class="button"> Log-In</button></a></li> 
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
