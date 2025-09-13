@@ -125,7 +125,7 @@
                         
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('dashboard') ?>"><button class="button-active"> Dashboard</button></a></li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="<?= site_url('auth/logout') ?>">
+                            <a class="nav-link text-white" href="<?= site_url('logout') ?>">
                                 <button class="btn-logout">
                                     <i class="fas fa-sign-out-alt me-1"></i> Logout
                                 </button>
