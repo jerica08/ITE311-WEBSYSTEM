@@ -27,6 +27,8 @@ $routes->group('auth', function($routes) {
     $routes->post('login', 'Auth::login');
     $routes->get('logout', 'Auth::logout');
     $routes->get('dashboard', 'Auth::dashboard');
+    $routes->get('admin_dashboard', 'Auth::admin_dashboard');
+    $routes->get('user_dashboard', 'Auth::user_dashboard');
 });
 
 

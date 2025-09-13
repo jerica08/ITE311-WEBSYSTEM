@@ -35,7 +35,8 @@ class Auth extends Controller
                 'name' => 'required|min_length[3]|max_length[100]',
                 'email' => 'required|valid_email|is_unique[users.email]',
                 'password' => 'required|min_length[6]',
-                'confirm_password' => 'required|matches[password]'
+                'confirm_password' => 'required|matches[password]',
+                'role' => 'required|in_list[user,admin]'
             ];
 
             if ($this->validate($rules)) {
@@ -44,7 +45,7 @@ class Auth extends Controller
                     'name' => $this->request->getPost('name'),
                     'email' => $this->request->getPost('email'),
                     'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                    'role' => 'user',
+                    'role' => $this->request->getPost('role'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ];
@@ -102,7 +103,13 @@ class Auth extends Controller
                     $this->session->set($sessionData);
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
-                    return redirect()->to('/auth/dashboard');
+                    
+                    // Redirect based on user role
+                    if ($user['role'] === 'admin') {
+                        return redirect()->to('/auth/admin_dashboard');
+                    } else {
+                        return redirect()->to('/auth/user_dashboard');
+                    }
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
@@ -127,9 +134,65 @@ class Auth extends Controller
     }
 
     /**
-     * Protected dashboard page for logged-in users only
+     * Protected dashboard page for logged-in users only (legacy - redirects to appropriate dashboard)
      */
     public function dashboard()
+    {
+        // Check if user is logged in
+        if (!$this->session->get('logged_in')) {
+            $this->session->setFlashdata('error', 'Please login to access the dashboard.');
+            return redirect()->to('/auth/login');
+        }
+
+        // Redirect to appropriate dashboard based on role
+        $userRole = $this->session->get('user_role');
+        if ($userRole === 'admin') {
+            return redirect()->to('/auth/admin_dashboard');
+        } else {
+            return redirect()->to('/auth/user_dashboard');
+        }
+    }
+
+    /**
+     * Admin dashboard for administrators
+     */
+    public function admin_dashboard()
+    {
+        // Check if user is logged in
+        if (!$this->session->get('logged_in')) {
+            $this->session->setFlashdata('error', 'Please login to access the dashboard.');
+            return redirect()->to('/auth/login');
+        }
+
+        // Check if user has admin role
+        if ($this->session->get('user_role') !== 'admin') {
+            $this->session->setFlashdata('error', 'Access denied. Admin privileges required.');
+            return redirect()->to('/auth/user_dashboard');
+        }
+
+        $data = [
+            'user' => [
+                'id' => $this->session->get('user_id'),
+                'name' => $this->session->get('user_name'),
+                'email' => $this->session->get('user_email'),
+                'role' => $this->session->get('user_role')
+            ]
+        ];
+
+        // Get some admin statistics
+        $data['stats'] = [
+            'total_users' => $this->userModel->countAll(),
+            'total_admins' => $this->userModel->where('role', 'admin')->countAllResults(false),
+            'total_students' => $this->userModel->where('role', 'user')->countAllResults(false)
+        ];
+
+        return view('auth/admin_dashboard', $data);
+    }
+
+    /**
+     * User dashboard for regular users/students
+     */
+    public function user_dashboard()
     {
         // Check if user is logged in
         if (!$this->session->get('logged_in')) {
@@ -146,7 +209,7 @@ class Auth extends Controller
             ]
         ];
 
-        return view('auth/dashboard', $data);
+        return view('auth/user_dashboard', $data);
     }
 
     /**

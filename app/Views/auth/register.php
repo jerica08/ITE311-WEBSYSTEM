@@ -82,7 +82,7 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/') ?>"><button class="button"> Home</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('index') ?>"><button class="button"> Home</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('register') ?>"><button class="button-active"> Sign Up</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('login') ?>"><button class="button"> Log-In</button></a></li>                
                         <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('about') ?>"><button class="button"> About Us</button></a></li>
@@ -165,7 +165,7 @@
                                     <?php endif; ?>
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="confirm_password" class="form-label">Confirm Password</label>
                                     <input type="password" 
                                            class="form-control <?= isset($validation) && $validation->hasError('confirm_password') ? 'is-invalid' : '' ?>" 
@@ -176,6 +176,23 @@
                                     <?php if (isset($validation) && $validation->hasError('confirm_password')): ?>
                                         <div class="text-danger small mt-1">
                                             <?= $validation->getError('confirm_password') ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="role" class="form-label">Select Role</label>
+                                    <select class="form-control <?= isset($validation) && $validation->hasError('role') ? 'is-invalid' : '' ?>" 
+                                            id="role" 
+                                            name="role" 
+                                            required>
+                                        <option value="">Choose your role...</option>
+                                        <option value="user" <?= old('role') == 'user' ? 'selected' : '' ?>>Student/User</option>
+                                        <option value="admin" <?= old('role') == 'admin' ? 'selected' : '' ?>>Administrator</option>
+                                    </select>
+                                    <?php if (isset($validation) && $validation->hasError('role')): ?>
+                                        <div class="text-danger small mt-1">
+                                            <?= $validation->getError('role') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
