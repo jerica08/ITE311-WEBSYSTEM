@@ -50,7 +50,7 @@
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul class="nav d-flex align-items-center gap-3">
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('') ?>"><button class="button-active"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/') ?>"><button class="button-active"> Home</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('register')?>"><button class="button"> Sign Up</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('login')?>"><button class="button"> Log-In</button></a></li>                
                             <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('about') ?>"><button class="button"> About Us</button></a></li>
@@ -65,7 +65,7 @@
             <div class="container" style="text-align:center; margin-top: 50px;">
               <h1 style="font-weight:1000; font-family: 'Times New Roman', serif;">WELCOME!</h1><br><br>
                <h2 style="font-weight:1000; font-family: 'Times New Roman', serif;">Kawas National High School</h2>
-              <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; margin-top: 20px;">
+              <img src="<?= base_url('public/img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; margin-top: 20px;">
             </div>
         </main>
     </body>

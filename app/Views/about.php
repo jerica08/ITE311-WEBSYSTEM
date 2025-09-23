@@ -71,11 +71,11 @@
                     <div class="container-fluid d-flex justify-content-between align-items-center">
                         <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                         <ul class="nav d-flex align-items-center gap-3" style="">
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('index') ?>"><button class="button"> Home</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('register') ?>"><button class="button"> Sign Up</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('login') ?>"><button class="button"> Log-In</button></a></li>                           
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('about') ?>"><button class="button-active"> About Us</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/public') ?>"><button class="button"> Home</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/register') ?>"><button class="button"> Sign Up</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/login') ?>"><button class="button"> Log-In</button></a></li>                           
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/about') ?>"><button class="button-active"> About Us</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>
                     </div>       
                </nav>

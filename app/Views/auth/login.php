@@ -82,11 +82,11 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/') ?>"><button class="button"> Home</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('register') ?>"><button class="button"> Sign Up</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('login') ?>"><button class="button-active"> Log-In</button></a></li>                
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('about') ?>"><button class="button"> About Us</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/public') ?>"><button class="button"> Home</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/register') ?>"><button class="button"> Sign Up</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/login') ?>"><button class="button-active"> Log-In</button></a></li>                
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/about') ?>"><button class="button"> About Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/contact') ?>"><button class="button"> Contact Us</button></a></li>
                     </ul>
                 </div>
             </nav>
@@ -121,8 +121,8 @@
                                 </div>
                             <?php endif; ?>
 
-                            <?= form_open('auth/login') ?>
-                                <?= csrf_field() ?>
+                            <form action="<?= base_url('/login') ?>" method="post">
+                                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                                 
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email Address</label>
@@ -158,11 +158,11 @@
                                 <div class="d-grid mb-3">
                                     <button type="submit" class="btn btn-primary">Sign In</button>
                                 </div>
-                            <?= form_close() ?>
+                            </form>
 
                             <div class="text-center">
                                 <p class="mb-0">Don't have an account?</p>
-                                <a href="<?= base_url('auth/register') ?>" class="text-decoration-none" style="color: #DAA520;">
+                                <a href="<?= base_url('/register') ?>" class="text-decoration-none" style="color: #DAA520;">
                                     Create Account Here
                                 </a>
                             </div>

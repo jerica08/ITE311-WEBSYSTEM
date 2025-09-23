@@ -2,23 +2,21 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
 use CodeIgniter\Controller;
 
 class Auth extends Controller
 {
-    protected $userModel;
+    protected $db;
     protected $session;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
-        helper(['form', 'url']);
     }
 
-    /**
-     * Display registration form and process form submission
+   
+     /* Display registration form and process form submission
      */
     public function register()
     {
@@ -35,23 +33,28 @@ class Auth extends Controller
                 'name' => 'required|min_length[3]|max_length[100]',
                 'email' => 'required|valid_email|is_unique[users.email]',
                 'password' => 'required|min_length[6]',
-                'confirm_password' => 'required|matches[password]',
-                'role' => 'required|in_list[user,admin]'
+                'confirm_password' => 'required|matches[password]'
             ];
 
             if ($this->validate($rules)) {
+                // Determine role: accept only admin, teacher, student; default to student
+                $allowedRoles = ['admin', 'teacher', 'student'];
+                $requestedRole = $this->request->getPost('role');
+                $role = in_array($requestedRole, $allowedRoles, true) ? $requestedRole : 'student';
+
                 // Prepare user data
                 $userData = [
                     'name' => $this->request->getPost('name'),
                     'email' => $this->request->getPost('email'),
                     'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                    'role' => $this->request->getPost('role'),
+                    'role' => $role,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ];
 
-                // Save user to database
-                if ($this->userModel->save($userData)) {
+                // Save user to database using direct query
+                $builder = $this->db->table('users');
+                if ($builder->insert($userData)) {
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
                     return redirect()->to('/login');
                 } else {
@@ -65,9 +68,9 @@ class Auth extends Controller
         return view('auth/register', $data);
     }
 
-    /**
-     * Display login form and process form submission
-     */
+    
+     /* Display login form and process form submission*/
+
     public function login()
     {
         // If user is already logged in, redirect to dashboard
@@ -88,8 +91,9 @@ class Auth extends Controller
                 $email = $this->request->getPost('email');
                 $password = $this->request->getPost('password');
 
-                // Find user by email
-                $user = $this->userModel->where('email', $email)->first();
+                // Find user by email using direct query
+                $builder = $this->db->table('users');
+                $user = $builder->where('email', $email)->get()->getRowArray();
 
                 if ($user && password_verify($password, $user['password'])) {
                     // Set session data
@@ -102,13 +106,16 @@ class Auth extends Controller
                     ];
                     $this->session->set($sessionData);
 
-                    $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                 
                     
-                    // Redirect based on user role
-                    if ($user['role'] === 'admin') {
-                        return redirect()->to('/admin_dashboard');
+                    // Redirect based on role
+                    $role = $user['role'] ?? 'student';
+                    if ($role === 'admin') {
+                        return redirect()->to('/admin/dashboard');
+                    } elseif ($role === 'teacher') {
+                        return redirect()->to('/teacher/dashboard');
                     } else {
-                        return redirect()->to('/user_dashboard');
+                        return redirect()->to('/student/dashboard');
                     }
                 } else {
                     $data['error'] = 'Invalid email or password.';
@@ -134,7 +141,7 @@ class Auth extends Controller
     }
 
     /**
-     * Protected dashboard page for logged-in users only (legacy - redirects to appropriate dashboard)
+     * Dashboard page for all logged-in users
      */
     public function dashboard()
     {
@@ -144,32 +151,6 @@ class Auth extends Controller
             return redirect()->to('/login');
         }
 
-        // Redirect to appropriate dashboard based on role
-        $userRole = $this->session->get('user_role');
-        if ($userRole === 'admin') {
-            return redirect()->to('/admin_dashboard');
-        } else {
-            return redirect()->to('/user_dashboard');
-        }
-    }
-
-    /**
-     * Admin dashboard for administrators
-     */
-    public function admin_dashboard()
-    {
-        // Check if user is logged in
-        if (!$this->session->get('logged_in')) {
-            $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/login');
-        }
-
-        // Check if user has admin role
-        if ($this->session->get('user_role') !== 'admin') {
-            $this->session->setFlashdata('error', 'Access denied. Admin privileges required.');
-            return redirect()->to('/user_dashboard');
-        }
-
         $data = [
             'user' => [
                 'id' => $this->session->get('user_id'),
@@ -179,52 +160,18 @@ class Auth extends Controller
             ]
         ];
 
-        // Get some admin statistics
-        $data['stats'] = [
-            'total_users' => $this->userModel->countAll(),
-            'total_admins' => $this->userModel->where('role', 'admin')->countAllResults(false),
-            'total_students' => $this->userModel->where('role', 'user')->countAllResults(false)
-        ];
-
-        return view('auth/admin_dashboard', $data);
-    }
-
-    /**
-     * User dashboard for regular users/students
-     */
-    public function user_dashboard()
-    {
-        // Check if user is logged in
-        if (!$this->session->get('logged_in')) {
-            $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/login');
+        // Add admin statistics if user is admin
+        if ($this->session->get('user_role') === 'admin') {
+            // Use fresh builders for each count to avoid condition carry-over
+            $data['stats'] = [
+                'total_users' => $this->db->table('users')->countAll(),
+                'total_admins' => $this->db->table('users')->where('role', 'admin')->countAllResults(),
+                'total_teachers' => $this->db->table('users')->where('role', 'teacher')->countAllResults(),
+                'total_students' => $this->db->table('users')->where('role', 'student')->countAllResults(),
+            ];
         }
 
-        $data = [
-            'user' => [
-                'id' => $this->session->get('user_id'),
-                'name' => $this->session->get('user_name'),
-                'email' => $this->session->get('user_email'),
-                'role' => $this->session->get('user_role')
-            ]
-        ];
-
-        return view('auth/user_dashboard', $data);
+        return view('dashboard', $data);
     }
 
-    /**
-     * Check if user is authenticated (helper method)
-     */
-    private function isAuthenticated()
-    {
-        return $this->session->get('logged_in') === true;
-    }
-
-    /**
-     * Check if user has specific role (helper method)
-     */
-    private function hasRole($role)
-    {
-        return $this->session->get('user_role') === $role;
-    }
 }

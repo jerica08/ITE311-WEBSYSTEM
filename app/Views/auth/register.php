@@ -82,11 +82,11 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
                     <ul class="nav d-flex align-items-center gap-3">
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('index') ?>"><button class="button"> Home</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('register') ?>"><button class="button-active"> Sign Up</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('login') ?>"><button class="button"> Log-In</button></a></li>                
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('about') ?>"><button class="button"> About Us</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/public') ?>"><button class="button"> Home</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/register') ?>"><button class="button-active"> Sign Up</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/login') ?>"><button class="button"> Log-In</button></a></li>                
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/about') ?>"><button class="button"> About Us</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/contact') ?>"><button class="button"> Contact Us</button></a></li>
                     </ul>
                 </div>
             </nav>
@@ -115,8 +115,8 @@
                                 </div>
                             <?php endif; ?>
 
-                            <?= form_open('register') ?>
-                                <?= csrf_field() ?>
+                            <form action="<?= base_url('/register') ?>" method="post">
+                                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                                 
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Full Name</label>
@@ -151,6 +151,15 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select id="role" name="role" class="form-control">
+                                        <option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
+                                        <option value="teacher" <?= old('role') === 'teacher' ? 'selected' : '' ?>>Teacher</option>
+                                        <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" 
                                            class="form-control <?= isset($validation) && $validation->hasError('password') ? 'is-invalid' : '' ?>" 
@@ -180,31 +189,15 @@
                                     <?php endif; ?>
                                 </div>
 
-                                <div class="mb-4">
-                                    <label for="role" class="form-label">Select Role</label>
-                                    <select class="form-control <?= isset($validation) && $validation->hasError('role') ? 'is-invalid' : '' ?>" 
-                                            id="role" 
-                                            name="role" 
-                                            required>
-                                        <option value="">Choose your role...</option>
-                                        <option value="user" <?= old('role') == 'user' ? 'selected' : '' ?>>Student/User</option>
-                                        <option value="admin" <?= old('role') == 'admin' ? 'selected' : '' ?>>Administrator</option>
-                                    </select>
-                                    <?php if (isset($validation) && $validation->hasError('role')): ?>
-                                        <div class="text-danger small mt-1">
-                                            <?= $validation->getError('role') ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
 
                                 <div class="d-grid mb-3">
                                     <button type="submit" class="btn btn-primary">Create Account</button>
                                 </div>
-                            <?= form_close() ?>
+                            </form>
 
                             <div class="text-center">
                                 <p class="mb-0">Already have an account?</p>
-                                <a href="<?= base_url('login') ?>" class="text-decoration-none" style="color: #DAA520;">
+                                <a href="<?= base_url('/login') ?>" class="text-decoration-none" style="color: #DAA520;">
                                     Sign In Here
                                 </a>
                             </div>
