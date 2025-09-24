@@ -34,7 +34,7 @@ class TeacherController extends BaseController
             'courses' => $courses,
         ];
 
-        // Reuse existing dashboard view
-        return view('dashboard', $data);
+        // Render teacher-specific dashboard view
+        return view('teacher/dashboard', $data);
     }
 }
