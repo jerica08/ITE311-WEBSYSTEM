@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Kawas National High School LMS</title>
+    <title>Admin Dashboard - Kawas National High School LMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -131,29 +131,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navigationbar">
-            <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                <p><h1 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h1></p>
-            </nav>  
-            <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
-                <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand text-white" href="#"><h4>Learning Management System</h4></a>
-                    <ul class="nav d-flex align-items-center gap-3">
-                        
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= base_url('/dashboard') ?>"><button class="button-active"> Dashboard</button></a></li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="<?= base_url('/logout') ?>">
-                                <button class="btn-logout">
-                                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                                </button>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </nav>
-    </header>
+    <?= view('templates/header') ?>
 
     <main class="main-content">
         <div class="container">
@@ -197,34 +175,6 @@
                         <h2 class="fw-bold mb-0">
                             
                         </h2>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Management Links -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <div class="link-card d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-user-cog fa-2x me-3" style="color:#DAA520"></i>
-                            <div>
-                                <h5 class="mb-1">Manage Users</h5>
-                                <small class="text-muted">Add, edit, or deactivate users</small>
-                            </div>
-                        </div>
-                        <a href="" class="btn">Open</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="link-card d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-chalkboard-teacher fa-2x me-3" style="color:#DAA520"></i>
-                            <div>
-                                <h5 class="mb-1">Manage Courses</h5>
-                                <small class="text-muted">Create and organize course content</small>
-                            </div>
-                        </div>
-                        <a href="" class="btn">Open</a>
                     </div>
                 </div>
             </div>
