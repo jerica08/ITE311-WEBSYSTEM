@@ -11,7 +11,7 @@ class StudentController extends BaseController
         // Authorization: must be logged in and student
         if (!session()->get('logged_in') || session()->get('user_role') !== 'student') {
             return redirect()->to('/login');
-        }
+        }   
 
         $db = \Config\Database::connect();
         $studentId = (int) session()->get('user_id');

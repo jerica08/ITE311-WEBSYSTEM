@@ -146,7 +146,7 @@
                         <h2 class="mb-2">
                             Welcome to your Dashboard, <?= esc($user['name']) ?>!
                         </h2>
-                        <p class="mb-0 fs-5">Kawas National High School Learning Management System</p>
+                        <p class="mb-0 fs-5">Kawas National University Learning Management System</p>
                         <small class="opacity-75">Role: <?= ucfirst(esc($user['role'])) ?> | Email: <?= esc($user['email']) ?></small>
                     </div>
                     <div class="col-md-2 text-center">

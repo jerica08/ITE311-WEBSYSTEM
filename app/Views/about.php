@@ -33,39 +33,23 @@
             align-items:center;
         }
        
-        .vision{
+        .about{
             margin-top: 100px;
             margin-left:100px;
         }
-        .vision-title{
+        .vision-content{
             font-size:50px;
-        }
-        .mission-content{
-            padding:20px;
-        }
-        .mission{
-            margin-top: 100px;
-            margin-left:100px;
-        }
+        }   
         h1{
             text-align:center;
         }
-        .coreValues-title{
-            font-size:50px;
-        }
-        .coreValues{
-            margin-top: 100px;
-            margin-left:100px;
-        }
-        h1{
-            text-align:center;
-        }    
+         
     </style>
     <body>
         
         <nav class="navigationbar">
             <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
+                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National National University</h4></p>
             </nav>       
                 <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -83,36 +67,11 @@
            <nav class="blog-box">
                 <nav class="blog" style="font-family: 'Times New Roman', serif;">
                     <h1 class="blog-title" style="font-weight: 900;justify-content:left;font-family: 'Times New Roman', serif;margin:50px;">ABOUT US</h1>
-                     <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
-                     <img src="<?= base_url('img/kawas.jpg') ?>" alt="Kawas National High School" style="max-width: 500px; height: auto; justify-content:center;margin-left:50px;filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));">
-                    <div class="vision">
-                        <h2>DepEd VISION</h2>   
-                        <div class="vision-content">
-                            <h5>We dream of Filipinos who passionately love their country and whose values and competencies enable them to realize their full potential and contribute meaningfully to building the nation.</h5><br>
-                            <h5>As a learner-centered public institution, the Department of Education continuously improves itself to better serve its stakeholders.</h5>
-                        </div>
+                     <img src="<?= base_url('img/KNU_logo.jpg') ?>" alt="Kawas National University" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
+                    <div class="about">
+                        <div class="about-content">
+                            <h5>Welcome to the Kawas National University Learning Management System, an innovative platform designed to transform the way our students and faculty connect, learn, and grow.</h5><br>
                     </div>
-                      <div class="mission">
-                        <h2>DepEd MISSION</h2>
-                        <div class="mission-content">
-                            <h5>To protect and promote the right of every Filipino to quality, equitable, culture-based, and complete basic education where:</h5><br>
-                            <h5>Students learn in a child-friendly, gender-sensitive, safe, and motivating environment.</h5>
-                            <h5>Teachers facilitate learning and constantly nurture every learner.</h5>
-                            <h5>Administrators and staff, as stewards of the institution, ensure an enabling and supportive environment for effective learning to happen.</h5>
-                            <h5>Family, community, and other stakeholders are actively engaged and share responsibility for developing life-long learners.</h5><br>
-                            <h5>As a learner-centered public institution, the Department of Education continuously improves itself to better serve its stakeholders.</h5>
-                        </div>
-                    </div>
-                     <div class="coreValues">
-                        <h2>CORE VALUES</h2>   
-                        <div class="coreValues-content">
-                            <h5>Maka-Diyos</h5>
-                            <h5>Maka-Tao</h5>
-                            <h5>Makakalikasan</h5>
-                            <h5>Makabansa</h5>
-                        </div>
-                    </div>
-  
                 </nav>
            </nav>
     

@@ -7,7 +7,7 @@ $name = session('user_name') ?? session('name');
 <header>
     <nav class="navigationbar">
         <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-            <h1 style="color: white;margin-bottom:0;font-family: 'Times New Roman', serif;">Kawas National High School</h1>
+            <h1 style="color: white;margin-bottom:0;font-family: 'Times New Roman', serif;">Kawas National University</h1>
         </nav>
         <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
             <div class="container-fluid d-flex justify-content-between align-items-center">
