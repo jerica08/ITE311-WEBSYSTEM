@@ -49,7 +49,7 @@
         
         <nav class="navigationbar">
             <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National National University</h4></p>
+                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National University</h4></p>
             </nav>       
                 <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                     <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -67,7 +67,7 @@
            <nav class="blog-box">
                 <nav class="blog" style="font-family: 'Times New Roman', serif;">
                     <h1 class="blog-title" style="font-weight: 900;justify-content:left;font-family: 'Times New Roman', serif;margin:50px;">ABOUT US</h1>
-                     <img src="<?= base_url('img/KNU_logo.jpg') ?>" alt="Kawas National University" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
+                     <img src="<?= base_url('./img/KNU_logo.png') ?>" alt="Kawas National University" style="max-width: 200px; height: auto; justify-content:center;margin-left:50px;">
                     <div class="about">
                         <div class="about-content">
                             <h5>Welcome to the Kawas National University Learning Management System, an innovative platform designed to transform the way our students and faculty connect, learn, and grow.</h5><br>

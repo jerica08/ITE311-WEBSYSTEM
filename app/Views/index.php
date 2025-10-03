@@ -17,6 +17,7 @@
             .main-content {
                 margin-top: 20px;
                 padding: 20px;
+                display: center;;
             }
             .button {
                 background-color: #DAA520;
@@ -33,7 +34,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             transition: background 0.3s;
-        }
+            }
             .button:hover {
                 background-color: #D2B55B;
             }
@@ -59,8 +60,7 @@
                     </div>
                 </nav>
             </nav>
-        </header>
-        
+        </header>     
         <main class="main-content">
             <div class="container" style="text-align:center; margin-top: 50px;">
               <h1 style="font-weight:1000; font-family: 'Times New Roman', serif;">WELCOME!</h1><br><br>
