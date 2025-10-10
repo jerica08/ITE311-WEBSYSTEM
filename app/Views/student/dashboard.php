@@ -117,25 +117,60 @@
             <table class="table table-sm align-middle mb-0">
                 <thead>
                     <tr>
-                        <th style="width:120px;">Term</th>
                         <th>Course</th>
                         <th style="width:160px;">Subject Code</th>
                         <th style="width:100px;">Unit</th>
+                        <th style="width:180px;">Enrolled On</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($enrollments ?? [])): ?>
-                        <?php foreach ($enrollments as $e): ?>
+                    <?php if (!empty($enrolledCourses ?? [])): ?>
+                        <?php foreach ($enrolledCourses as $c): ?>
                             <tr>
-                                <td><?= esc($e['term'] ?? '-') ?></td>
-                                <td><?= esc($e['course'] ?? '-') ?></td>
-                                <td><?= esc($e['code'] ?? '-') ?></td>
-                                <td><?= esc($e['unit'] ?? '-') ?></td>
+                                <td><?= esc($c['title'] ?? '-') ?></td>
+                                <td><?= esc($c['code'] ?? '-') ?></td>
+                                <td><?= esc($c['unit'] ?? '-') ?></td>
+                                <td><?= esc($c['enrollment_date'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td colspan="4" class="text-muted">No enrolled courses.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Available Courses -->
+        <div class="mb-2 section-title"><i class="bi bi-journal-bookmark-fill me-2"></i>Available Courses</div>
+        <div class="table-wrap mb-4">
+            <table class="table table-sm align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th style="width:160px;">Subject Code</th>
+                        <th style="width:100px;">Unit</th>
+                        <th style="width:140px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($availableCourses ?? [])): ?>
+                        <?php foreach ($availableCourses as $ac): ?>
+                            <tr>
+                                <td><?= esc($ac['title'] ?? '-') ?></td>
+                                <td><?= esc($ac['code'] ?? '-') ?></td>
+                                <td><?= esc($ac['unit'] ?? '-') ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" onclick="enroll(<?= (int)($ac['id'] ?? 0) ?>, this)">
+                                        Enroll
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="4" class="text-muted">No available courses to enroll.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -206,5 +241,40 @@
             </table>
         </div>
     </div>
+
+    <script>
+        async function enroll(courseId, btnEl) {
+            if (!courseId) return;
+
+            const tokenName = '<?= csrf_token() ?>';
+            const tokenHash = '<?= csrf_hash() ?>';
+            const formData = new FormData();
+            formData.append('course_id', courseId);
+            formData.append(tokenName, tokenHash);
+
+            btnEl && (btnEl.disabled = true, btnEl.textContent = 'Enrolling...');
+            try {
+                const res = await fetch('<?= site_url('course/enroll') ?>', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await res.json();
+                if (res.status === 201) {
+                    // Refresh to reflect new enrollment
+                    location.reload();
+                } else if (res.status === 409) {
+                    alert('You are already enrolled in this course.');
+                } else if (res.status === 401) {
+                    location.href = '<?= site_url('auth/login') ?>';
+                } else {
+                    alert(data.message || 'Failed to enroll.');
+                }
+            } catch (e) {
+                alert('Network error while enrolling.');
+            } finally {
+                btnEl && (btnEl.disabled = false, btnEl.textContent = 'Enroll');
+            }
+        }
+    </script>
 </body>
 </html>
