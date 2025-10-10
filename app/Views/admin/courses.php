@@ -36,6 +36,45 @@
     </div>
 
     <div class="container my-4">
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?= session()->getFlashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <div class="mb-2 section-title"><i class="bi bi-plus-square me-2"></i>Add Course</div>
+        <div class="table-wrap p-3 mb-4">
+            <form method="post" action="<?= site_url('admin/courses/create') ?>" class="row g-3">
+                <?= csrf_field() ?>
+                <div class="col-md-4">
+                    <label class="form-label">Title<span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Code</label>
+                    <input type="text" name="code" class="form-control" placeholder="e.g., MATH101">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Unit</label>
+                    <input type="number" name="unit" class="form-control" min="0" max="10">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Instructor ID</label>
+                    <input type="number" name="instructor_id" class="form-control" min="0" placeholder="User ID of instructor">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" style="background-color:#DAA520;border:none;color:#000">Create Course</button>
+                </div>
+            </form>
+        </div>
+
         <div class="mb-2 section-title"><i class="bi bi-journal-bookmark-fill me-2"></i>Courses</div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">

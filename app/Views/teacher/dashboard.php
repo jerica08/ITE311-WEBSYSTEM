@@ -90,6 +90,18 @@
     <?= view('templates/header', ['title' => 'Teacher Dashboard']) ?>
 
     <div class="container my-4">
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?= session()->getFlashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
         <!-- Welcome Card -->
         <div class="card welcome-card mb-4 px-3 py-3">
             <div class="row align-items-center g-3">
@@ -116,8 +128,33 @@
 
         <!-- Action Buttons -->
         <div class="d-flex gap-3 mb-3">
-            <a href="#" class="btn btn-dark-gold w-50"><i class="bi bi-plus-square me-2"></i>Create New Course</a>
+            <button class="btn btn-dark-gold w-50" type="button" data-bs-toggle="collapse" data-bs-target="#createCourseForm" aria-expanded="false" aria-controls="createCourseForm">
+                <i class="bi bi-plus-square me-2"></i>Create New Course
+            </button>
             <a href="#" class="btn btn-dark-gold w-50">Create New Lesson</a>
+        </div>
+
+        <div class="collapse mb-4" id="createCourseForm">
+            <div class="card card-body">
+                <form method="post" action="<?= site_url('teacher/courses/create') ?>" class="row g-3">
+                    <?= csrf_field() ?>
+                    <div class="col-md-6">
+                        <label class="form-label">Title<span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Code</label>
+                        <input type="text" name="code" class="form-control" placeholder="e.g., SCI101">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Unit</label>
+                        <input type="number" name="unit" class="form-control" min="0" max="10">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" style="background-color:#DAA520;border:none;color:#000">Create Course</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Courses You Teach -->

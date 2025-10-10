@@ -36,5 +36,14 @@ $routes->get('admin/courses', 'AdminController::courses');
 $routes->get('teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('student/dashboard', 'StudentController::dashboard');
 
+// Course actions
+$routes->post('course/enroll', 'Course::enroll');
+
+// Admin course management
+$routes->post('admin/courses/create', 'AdminController::createCourse');
+
+// Teacher course management
+$routes->post('teacher/courses/create', 'TeacherController::createCourse');
+
 
 

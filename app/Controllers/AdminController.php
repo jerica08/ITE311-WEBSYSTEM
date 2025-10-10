@@ -110,4 +110,41 @@ class AdminController extends BaseController
             'courses' => $courses,
         ]);
     }
+
+    public function createCourse()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/courses');
+        }
+
+        $title = trim((string) $this->request->getPost('title'));
+        $code  = trim((string) ($this->request->getPost('code') ?? ''));
+        $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $instructorId = (int) ($this->request->getPost('instructor_id') ?? 0);
+
+        if ($title === '') {
+            return redirect()->to('/admin/courses')->with('error', 'Course title is required.');
+        }
+
+        $db = Database::connect();
+        try {
+            $data = [
+                'title' => $title,
+                'code'  => $code !== '' ? $code : null,
+                'unit'  => $unit > 0 ? $unit : null,
+                'instructor_id' => $instructorId > 0 ? $instructorId : null,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            $db->table('courses')->insert($data);
+            return redirect()->to('/admin/courses')->with('success', 'Course created successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/courses')->with('error', 'Failed to create course.');
+        }
+    }
 }
