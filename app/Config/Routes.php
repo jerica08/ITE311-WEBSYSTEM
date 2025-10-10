@@ -29,10 +29,10 @@ $routes->group('auth', function($routes) {
     $routes->get('dashboard', 'Auth::dashboard');
 });
 
-// Role-based dashboards
-$routes->get('admin/dashboard', 'Dashboard::admin');
-$routes->get('teacher/dashboard', 'Dashboard::instructor');
-$routes->get('student/dashboard', 'Dashboard::student');
+// Role-based dashboards (new controllers)
+$routes->get('admin/dashboard', 'AdminController::dashboard');
+$routes->get('teacher/dashboard', 'TeacherController::dashboard');
+$routes->get('student/dashboard', 'StudentController::dashboard');
 
 
 
