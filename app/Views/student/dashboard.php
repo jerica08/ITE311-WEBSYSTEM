@@ -123,7 +123,7 @@
                         <th style="width:180px;">Enrolled On</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="enrolled-tbody">
                     <?php if (!empty($enrolledCourses ?? [])): ?>
                         <?php foreach ($enrolledCourses as $c): ?>
                             <tr>
@@ -157,12 +157,12 @@
                 <tbody>
                     <?php if (!empty($availableCourses ?? [])): ?>
                         <?php foreach ($availableCourses as $ac): ?>
-                            <tr>
+                            <tr id="course-row-<?= (int)($ac['id'] ?? 0) ?>">
                                 <td><?= esc($ac['title'] ?? '-') ?></td>
                                 <td><?= esc($ac['code'] ?? '-') ?></td>
                                 <td><?= esc($ac['unit'] ?? '-') ?></td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" onclick="enroll(<?= (int)($ac['id'] ?? 0) ?>, this)">
+                                    <button class="btn btn-sm btn-primary btn-enroll" style="background-color:#DAA520;border:none;color:#000" data-course-id="<?= (int)($ac['id'] ?? 0) ?>">
                                         Enroll
                                     </button>
                                 </td>
@@ -242,39 +242,74 @@
         </div>
     </div>
 
+    <!-- jQuery for AJAX enrollment -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
-        async function enroll(courseId, btnEl) {
-            if (!courseId) return;
+        $(function() {
+            $(document).on('click', '.btn-enroll', function(e) {
+                e.preventDefault();
+                const $btn = $(this);
+                const courseId = parseInt($btn.data('course-id')) || 0;
+                if (!courseId) return;
 
-            const tokenName = '<?= csrf_token() ?>';
-            const tokenHash = '<?= csrf_hash() ?>';
-            const formData = new FormData();
-            formData.append('course_id', courseId);
-            formData.append(tokenName, tokenHash);
+                const tokenName = '<?= csrf_token() ?>';
+                const tokenHash = '<?= csrf_hash() ?>';
+                $btn.prop('disabled', true).text('Enrolling...');
 
-            btnEl && (btnEl.disabled = true, btnEl.textContent = 'Enrolling...');
-            try {
-                const res = await fetch('<?= site_url('course/enroll') ?>', {
-                    method: 'POST',
-                    body: formData,
+                $.post('<?= site_url('course/enroll') ?>', {
+                    course_id: courseId,
+                    [tokenName]: tokenHash,
+                }).done(function(data, textStatus, jqXHR) {
+                    // On success: add to enrolled list and disable button
+                    if (jqXHR.status === 201 && data && data.status === 'success') {
+                        const $row = $btn.closest('tr');
+                        const title = $row.find('td').eq(0).text();
+                        const code  = $row.find('td').eq(1).text();
+                        const unit  = $row.find('td').eq(2).text();
+
+                        // Append new enrolled row
+                        const now = new Date();
+                        const stamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+                        $('#enrolled-tbody').append(
+                            `<tr><td>${$('<div>').text(title).html()}</td><td>${$('<div>').text(code).html()}</td><td>${$('<div>').text(unit).html()}</td><td>${stamp}</td></tr>`
+                        );
+
+                        // Remove available row
+                        $('#course-row-' + courseId).remove();
+
+                        // Show alert
+                        $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                          'Enrolled in ' + $('<div>').text(title).html() + ' successfully.' +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                          '</div>').insertBefore($('.section-title').first());
+                    } else if (jqXHR.status === 409) {
+                        $('<div class="alert alert-warning alert-dismissible fade show" role="alert">' +
+                          'You are already enrolled in this course.' +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                          '</div>').insertBefore($('.section-title').first());
+                        $btn.prop('disabled', true).text('Enrolled');
+                    } else if (jqXHR.status === 401) {
+                        window.location.href = '<?= site_url('auth/login') ?>';
+                    } else {
+                        $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                          (data && data.message ? data.message : 'Failed to enroll.') +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                          '</div>').insertBefore($('.section-title').first());
+                        $btn.prop('disabled', false).text('Enroll');
+                    }
+                }).fail(function(jqXHR) {
+                    if (jqXHR.status === 401) {
+                        window.location.href = '<?= site_url('auth/login') ?>';
+                        return;
+                    }
+                    $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                      'Network error while enrolling.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                      '</div>').insertBefore($('.section-title').first());
+                    $btn.prop('disabled', false).text('Enroll');
                 });
-                const data = await res.json();
-                if (res.status === 201) {
-                    // Refresh to reflect new enrollment
-                    location.reload();
-                } else if (res.status === 409) {
-                    alert('You are already enrolled in this course.');
-                } else if (res.status === 401) {
-                    location.href = '<?= site_url('auth/login') ?>';
-                } else {
-                    alert(data.message || 'Failed to enroll.');
-                }
-            } catch (e) {
-                alert('Network error while enrolling.');
-            } finally {
-                btnEl && (btnEl.disabled = false, btnEl.textContent = 'Enroll');
-            }
-        }
+            });
+        });
     </script>
 </body>
 </html>

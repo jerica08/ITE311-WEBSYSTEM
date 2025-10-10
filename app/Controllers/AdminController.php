@@ -130,6 +130,9 @@ class AdminController extends BaseController
         if ($title === '') {
             return redirect()->to('/admin/courses')->with('error', 'Course title is required.');
         }
+        if ($instructorId <= 0) {
+            return redirect()->to('/admin/courses')->with('error', 'Instructor ID is required and must be a valid user ID.');
+        }
 
         $db = Database::connect();
         try {
@@ -137,7 +140,7 @@ class AdminController extends BaseController
                 'title' => $title,
                 'code'  => $code !== '' ? $code : null,
                 'unit'  => $unit > 0 ? $unit : null,
-                'instructor_id' => $instructorId > 0 ? $instructorId : null,
+                'instructor_id' => $instructorId,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
