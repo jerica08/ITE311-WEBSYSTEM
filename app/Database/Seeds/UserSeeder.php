@@ -8,38 +8,31 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-         $users = [
-           
+        $users = [
             [
-                'username' => 'jason',
-                'email' => 'jason@lms.com',
-                'password' => password_hash('jason123', PASSWORD_DEFAULT),
-                'first_name' => 'Jason',
-                'last_name' => 'Admin',
-                'role' => 'admin',
+                'name'       => 'Jason Admin',
+                'email'      => 'jason@lms.com',
+                'password'   => password_hash('jason123', PASSWORD_DEFAULT),
+                'role'       => 'admin',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
-                'username' => 'karl',
-                'email' => 'karl@lms.com',
-                'password' => password_hash('karl123', PASSWORD_DEFAULT),
-                'first_name' => 'Karl',
-                'last_name' => 'Instructor',
-                'role' => 'instructor',
+                'name'       => 'Karl Instructor',
+                'email'      => 'karl@lms.com',
+                'password'   => password_hash('karl123', PASSWORD_DEFAULT),
+                'role'       => 'user',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
-                'username' => 'kendra',
-                'email' => 'kendra@lms.com',
-                'password' => password_hash('kendra123', PASSWORD_DEFAULT),
-                'first_name' => 'Kendra',
-                'last_name' => 'Student',
-                'role' => 'student',
+                'name'       => 'Kendra Student',
+                'email'      => 'kendra@lms.com',
+                'password'   => password_hash('kendra123', PASSWORD_DEFAULT),
+                'role'       => 'user',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-            ]
+            ],
         ];
 
         $this->db->table('users')->insertBatch($users);

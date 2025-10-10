@@ -29,5 +29,10 @@ $routes->group('auth', function($routes) {
     $routes->get('dashboard', 'Auth::dashboard');
 });
 
+// Role-based dashboards
+$routes->get('admin/dashboard', 'Dashboard::admin');
+$routes->get('teacher/dashboard', 'Dashboard::instructor');
+$routes->get('student/dashboard', 'Dashboard::student');
+
 
 
