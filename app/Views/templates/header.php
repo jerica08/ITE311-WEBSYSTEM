@@ -15,7 +15,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
 
 <div class="topbar">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <div class="fw-bold">Kawas National High School</div>
+        <div class="fw-bold">Kawas National University</div>
         <?php if ($isLogged && $name): ?>
             <div class="small">Signed in as <strong><?= esc($name) ?></strong> (<?= esc(ucfirst($role)) ?>)</div>
         <?php endif; ?>

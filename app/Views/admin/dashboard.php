@@ -98,13 +98,10 @@
         <!-- Welcome Card -->
         <div class="card welcome-card mb-4 px-3 py-3">
             <div class="row align-items-center g-3">
-                <div class="col-auto">
-                    <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Logo" class="avatar">
-                </div>
                 <div class="col">
                     <h5 class="mb-1">Welcome to your Dashboard, <?= esc($user['name'] ?? '') ?>!</h5>
                     <div class="small">
-                        Kawas National High School Learning Management System<br>
+                        Kawas National University Learning Management System<br>
                         Role: <?= esc(ucfirst((string)($user['role'] ?? ''))) ?> · Email: <?= esc($user['email'] ?? '') ?>
                     </div>
                 </div>

@@ -104,11 +104,11 @@
     <header>
         <nav class="navigationbar">
             <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
+                <p><h2 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National University</h2></p>
             </nav>  
             <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
+                    <a class="navbar-brand text-white" href="#"><h4>Learning Management System</h4></a>
                     <ul class="nav d-flex align-items-center gap-3">
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
@@ -128,7 +128,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center justify-content-center">
-                                <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas Logo" class="school-logo">
+                              
                                 <div>
                                     <h3 class="mb-0">
                                         <i class="fas fa-sign-in-alt me-2"></i>
@@ -167,67 +167,44 @@
                                 <?= csrf_field() ?>
                                 
                                 <div class="mb-3">
-                                    <label for="email" class="form-label fw-bold">
-                                        <i class="fas fa-envelope me-1"></i>Email Address
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <i class="fas fa-envelope text-muted"></i>
-                                        </span>
-                                        <input type="email" 
-                                               class="form-control <?= isset($validation) && $validation->hasError('email') ? 'is-invalid' : '' ?>" 
-                                               id="email" 
-                                               name="email" 
-                                               value="<?= old('email') ?>" 
-                                               placeholder="Enter your email address"
-                                               required>
-                                    </div>
+                                    <label for="email" class="form-label fw-bold">Email Address</label>
+                                    <input type="email" 
+                                           class="form-control <?= isset($validation) && $validation->hasError('email') ? 'is-invalid' : '' ?>" 
+                                           id="email" 
+                                           name="email" 
+                                           value="<?= old('email') ?>" 
+                                           placeholder="Enter your email address"
+                                           required>
                                     <?php if (isset($validation) && $validation->hasError('email')): ?>
                                         <div class="invalid-feedback d-block">
-                                            <i class="fas fa-exclamation-circle me-1"></i>
                                             <?= $validation->getError('email') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="password" class="form-label fw-bold">
-                                        <i class="fas fa-lock me-1"></i>Password
-                                    </label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <i class="fas fa-lock text-muted"></i>
-                                        </span>
-                                        <input type="password" 
-                                               class="form-control <?= isset($validation) && $validation->hasError('password') ? 'is-invalid' : '' ?>" 
-                                               id="password" 
-                                               name="password" 
-                                               placeholder="Enter your password"
-                                               required>
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                            <i class="fas fa-eye" id="toggleIcon"></i>
-                                        </button>
-                                    </div>
+                                    <label for="password" class="form-label fw-bold">Password</label>
+                                    <input type="password" 
+                                           class="form-control <?= isset($validation) && $validation->hasError('password') ? 'is-invalid' : '' ?>" 
+                                           id="password" 
+                                           name="password" 
+                                           placeholder="Enter your password"
+                                           required>
                                     <?php if (isset($validation) && $validation->hasError('password')): ?>
                                         <div class="invalid-feedback d-block">
-                                            <i class="fas fa-exclamation-circle me-1"></i>
                                             <?= $validation->getError('password') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="d-grid mb-3">
-                                    <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="fas fa-sign-in-alt me-2"></i>
-                                        Sign In
-                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
                                 </div>
                             <?= form_close() ?>
 
                             <div class="text-center">
                                 <p class="mb-0" style="font-family: 'Times New Roman', serif;">Don't have an account?</p>
                                 <a href="<?= base_url('auth/register') ?>" class="text-decoration-none fw-bold" style="color: #DAA520; font-family: 'Times New Roman', serif;">
-                                    <i class="fas fa-user-plus me-1"></i>
                                     Create Account Here
                                 </a>
                             </div>

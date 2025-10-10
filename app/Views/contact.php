@@ -25,11 +25,11 @@
         <header>
             <nav class="navigationbar">
                 <nav class="text d-flex align-items-center" style="background-color:#000000;padding: 10px;">
-                    <p><h4 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National High School</h4></p>
+                    <p><h2 style="color: white;text-align:left;margin-bottom:none;font-family: 'Times New Roman', serif;">Kawas National University</h2></p>
                 </nav>    
                 <nav class="btm-navbar" style="background-color:#DAA520;font-family: 'Times New Roman', serif;">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand text-white" href="#"><h2>Learning Management System</h2></a>
+                    <a class="navbar-brand text-white" href="#"><h4>Learning Management System</h4></a>
                     <ul class="nav d-flex align-items-center gap-3">
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('') ?>"><button class="button"> Sign Up</button></a></li>
