@@ -3,199 +3,165 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use Exception;
+use CodeIgniter\Controller;
 
-class Auth extends BaseController
+class Auth extends Controller
 {
+    protected $userModel;
+    protected $session;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+        $this->session = \Config\Services::session();
+        helper(['form', 'url']);
+    }
+
+    /**
+     * Display registration form and process form submission
+     */
     public function register()
     {
-        // Debug: Log the request method
-        log_message('info', 'Register method called. Method: ' . $this->request->getMethod());
-        echo "<!-- DEBUG: Register method called. Method: " . $this->request->getMethod() . " -->";
-        
-        // If it's a POST request, handle the registration
-        if ($this->request->getMethod() === 'post') {
-            $userModel = new UserModel();
-            
-            $data = [
-                'name' => $this->request->getPost('name'),
-                'email' => $this->request->getPost('email'),
-                'password' => $this->request->getPost('password'),
-                'password_confirm' => $this->request->getPost('password_confirm'),
-                'role' => $this->request->getPost('role')
+        // If user is already logged in, redirect to dashboard
+        if ($this->session->get('user_id')) {
+            return redirect()->to('/auth/dashboard');
+        }
+
+        $data = [];
+
+        if ($this->request->getMethod() === 'POST') {
+            // Validation rules
+            $rules = [
+                'name' => 'required|min_length[3]|max_length[100]',
+                'email' => 'required|valid_email|is_unique[users.email]',
+                'password' => 'required|min_length[6]',
+                'confirm_password' => 'required|matches[password]'
             ];
-            
-            // Debug: Log the received data
-            log_message('info', 'Registration data received: ' . print_r($data, true));
-            echo "<!-- DEBUG: Registration data received: " . print_r($data, true) . " -->";
-            
-            // Validate password confirmation
-            if ($data['password'] !== $data['password_confirm']) {
-                log_message('error', 'Password confirmation mismatch');
-                session()->setFlashdata('errors', ['password_confirm' => 'Password confirmation does not match']);
-                return redirect()->back()->withInput();
-            }
-            
-            // Remove password_confirm from data array
-            unset($data['password_confirm']);
-            
-            // Try to insert the user
-            try {
-                // Temporarily disable validation to test
-                $userModel->setValidationRules([]);
-                if ($userModel->insert($data)) {
-                    log_message('info', 'Registration successful for: ' . $data['email']);
-                    session()->setFlashdata('success', 'Registration successful! Please log in.');
-                    return redirect()->to('/login');
+
+            if ($this->validate($rules)) {
+                // Prepare user data
+                $userData = [
+                    'name' => $this->request->getPost('name'),
+                    'email' => $this->request->getPost('email'),
+                    'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                    'role' => 'user',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                // Save user to database
+                if ($this->userModel->save($userData)) {
+                    $this->session->setFlashdata('success', 'Registration successful! Please login.');
+                    return redirect()->to('/auth/login');
                 } else {
-                    $errors = $userModel->errors();
-                    log_message('error', 'Registration failed for: ' . $data['email'] . ' - Errors: ' . print_r($errors, true));
-                    session()->setFlashdata('errors', $errors);
-                    return redirect()->back()->withInput();
+                    $data['error'] = 'Registration failed. Please try again.';
                 }
-            } catch (Exception $e) {
-                log_message('error', 'Registration exception: ' . $e->getMessage());
-                session()->setFlashdata('errors', ['general' => 'Registration failed: ' . $e->getMessage()]);
-                return redirect()->back()->withInput();
+            } else {
+                $data['validation'] = $this->validator;
             }
         }
-        
-        // If it's a GET request, show the registration form
-        return view('auth/register');
+
+        return view('auth/register', $data);
     }
 
+    /**
+     * Display login form and process form submission
+     */
     public function login()
     {
-        // Debug: Log the request method
-        log_message('info', 'Login method called. Method: ' . $this->request->getMethod());
-        echo "<!-- DEBUG: Login method called. Method: " . $this->request->getMethod() . " -->";
-        
-        // If it's a POST request, handle the login
-        if ($this->request->getMethod() === 'post') {
-            $email = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
-            
-            // Debug: Log the login attempt
-            log_message('info', 'Login attempt for email: ' . $email);
-            echo "<!-- DEBUG: Login attempt for email: " . $email . " -->";
-            
-            // Simple validation
-            if (empty($email) || empty($password)) {
-                log_message('error', 'Login failed: Empty email or password');
-                session()->setFlashdata('errors', ['general' => 'Please fill in all fields']);
-                return redirect()->back();
-            }
-            
-            $userModel = new UserModel();
-            
-            try {
-                $user = $userModel->authenticate($email, $password);
-                
-                if ($user) {
-                    log_message('info', 'Login successful for: ' . $email);
-                    
+        // If user is already logged in, redirect to dashboard
+        if ($this->session->get('user_id')) {
+            return redirect()->to('/auth/dashboard');
+        }
+
+        $data = [];
+
+        if ($this->request->getMethod() === 'POST') {
+            // Validation rules
+            $rules = [
+                'email' => 'required|valid_email',
+                'password' => 'required'
+            ];
+
+            if ($this->validate($rules)) {
+                $email = $this->request->getPost('email');
+                $password = $this->request->getPost('password');
+
+                // Find user by email
+                $user = $this->userModel->where('email', $email)->first();
+
+                if ($user && password_verify($password, $user['password'])) {
                     // Set session data
-                    session()->set([
-                        'isLoggedIn' => true,
+                    $sessionData = [
                         'user_id' => $user['id'],
-                        'email' => $user['email'],
-                        'role' => $user['role'],
-                        'name' => $user['name']
-                    ]);
-                    
-                    // Redirect to main dashboard (which will redirect to role-specific dashboard)
-                    return redirect()->to('/dashboard');
+                        'user_name' => $user['name'],
+                        'user_email' => $user['email'],
+                        'user_role' => $user['role'],
+                        'logged_in' => true
+                    ];
+                    $this->session->set($sessionData);
+
+                    $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
+                    return redirect()->to('/auth/dashboard');
                 } else {
-                    log_message('error', 'Login failed: Invalid credentials for ' . $email);
-                    session()->setFlashdata('errors', ['general' => 'Invalid email or password']);
-                    return redirect()->back();
+                    $data['error'] = 'Invalid email or password.';
                 }
-            } catch (Exception $e) {
-                log_message('error', 'Login exception: ' . $e->getMessage());
-                session()->setFlashdata('errors', ['general' => 'Login failed: ' . $e->getMessage()]);
-                return redirect()->back();
+            } else {
+                $data['validation'] = $this->validator;
             }
         }
-        
-        // If it's a GET request, show the login form
-        return view('auth/login');
+
+        return view('auth/login', $data);
     }
 
+    /**
+     * Destroy user session and redirect
+     */
     public function logout()
     {
-        // Clear all session data
-        session()->destroy();
+        // Destroy session
+        $this->session->destroy();
         
-        // Redirect to home page
-        return redirect()->to('/');
+        $this->session->setFlashdata('success', 'You have been logged out successfully.');
+        return redirect()->to('/auth/login');
     }
 
+    /**
+     * Protected dashboard page for logged-in users only
+     */
     public function dashboard()
     {
         // Check if user is logged in
-        if (!session()->get('isLoggedIn')) {
-            return redirect()->to('/login');
+        if (!$this->session->get('logged_in')) {
+            $this->session->setFlashdata('error', 'Please login to access the dashboard.');
+            return redirect()->to('/auth/login');
         }
-        
-        // Redirect to role-specific dashboard
-        $role = session()->get('role');
-        switch ($role) {
-            case 'student':
-                return redirect()->to('/dashboard/student');
-            case 'instructor':
-                return redirect()->to('/dashboard/instructor');
-            case 'admin':
-                return redirect()->to('/dashboard/admin');
-            default:
-                return redirect()->to('/');
-        }
+
+        $data = [
+            'user' => [
+                'id' => $this->session->get('user_id'),
+                'name' => $this->session->get('user_name'),
+                'email' => $this->session->get('user_email'),
+                'role' => $this->session->get('user_role')
+            ]
+        ];
+
+        return view('auth/dashboard', $data);
     }
 
-    public function dashboardStudent()
+    /**
+     * Check if user is authenticated (helper method)
+     */
+    private function isAuthenticated()
     {
-        // Check if user is logged in and has student role
-        if (!session()->get('isLoggedIn') || session()->get('role') !== 'student') {
-            return redirect()->to('/login');
-        }
-        
-        $data['user'] = [
-            'name' => session()->get('name'),
-            'email' => session()->get('email'),
-            'role' => session()->get('role')
-        ];
-        
-        return view('dashboard/student', $data);
+        return $this->session->get('logged_in') === true;
     }
 
-    public function dashboardInstructor()
+    /**
+     * Check if user has specific role (helper method)
+     */
+    private function hasRole($role)
     {
-        // Check if user is logged in and has instructor role
-        if (!session()->get('isLoggedIn') || session()->get('role') !== 'instructor') {
-            return redirect()->to('/login');
-        }
-        
-        $data['user'] = [
-            'name' => session()->get('name'),
-            'email' => session()->get('email'),
-            'role' => session()->get('role')
-        ];
-        
-        return view('dashboard/instructor', $data);
-    }
-
-    public function dashboardAdmin()
-    {
-        // Check if user is logged in and has admin role
-        if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
-            return redirect()->to('/login');
-        }
-        
-        $data['user'] = [
-            'name' => session()->get('name'),
-            'email' => session()->get('email'),
-            'role' => session()->get('role')
-        ];
-        
-        return view('dashboard/admin', $data);
+        return $this->session->get('user_role') === $role;
     }
 }
