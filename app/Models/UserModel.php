@@ -10,13 +10,12 @@ class UserModel extends Model
 	protected $primaryKey = 'id';
 	protected $allowedFields = ['name', 'email', 'password', 'role'];
 	protected $useTimestamps = true;
-	
 	// Validation rules - simplified for testing
 	protected $validationRules = [
 		'name' => 'required|min_length[2]|max_length[100]',
 		'email' => 'required|valid_email|is_unique[users.email]',
 		'password' => 'required|min_length[6]',
-		'role' => 'required|in_list[admin,user]'
+		'role' => 'required|in_list[admin,teacher,student]'
 	];
 	
 	protected $validationMessages = [

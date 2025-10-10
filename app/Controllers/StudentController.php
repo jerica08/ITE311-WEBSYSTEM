@@ -16,16 +16,23 @@ class StudentController extends BaseController
         }
 
         $userModel = new UserModel();
+
+        // Placeholder datasets; wire up to real models later
+        $enrollments = [];
+        $deadlines   = [];
+        $grades      = [];
+
         $data = [
             'user' => [
                 'name'  => $session->get('name'),
                 'email' => $session->get('email'),
                 'role'  => $session->get('role'),
             ],
-            // Example: data a student might see
-            'teachers' => $userModel->whereIn('role', ['teacher', 'instructor'])->findAll(),
+            'enrollments' => $enrollments,
+            'deadlines'   => $deadlines,
+            'grades'      => $grades,
         ];
 
-        return view('dashboard/student', $data);
+        return view('student/dashboard', $data);
     }
 }

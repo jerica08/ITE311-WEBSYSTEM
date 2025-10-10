@@ -31,6 +31,8 @@ $routes->group('auth', function($routes) {
 
 // Role-based dashboards (new controllers)
 $routes->get('admin/dashboard', 'AdminController::dashboard');
+$routes->get('admin/users', 'AdminController::users');
+$routes->get('admin/courses', 'AdminController::courses');
 $routes->get('teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('student/dashboard', 'StudentController::dashboard');
 
