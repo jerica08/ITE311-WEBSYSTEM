@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\EnrollmentModel;
+use Config\Database;
 
 class Course extends BaseController
 {
@@ -36,6 +37,18 @@ class Course extends BaseController
         if ($courseId <= 0) {
             return $this->response->setStatusCode(400)
                 ->setJSON(['status' => 'error', 'message' => 'Invalid course_id']);
+        }
+
+        // Ensure course exists
+        $db = Database::connect();
+        try {
+            $courseExists = $db->table('courses')->where('id', $courseId)->countAllResults() > 0;
+        } catch (\Throwable $e) {
+            $courseExists = false;
+        }
+        if (!$courseExists) {
+            return $this->response->setStatusCode(404)
+                ->setJSON(['status' => 'error', 'message' => 'Course not found']);
         }
 
         $enrollmentModel = new EnrollmentModel();

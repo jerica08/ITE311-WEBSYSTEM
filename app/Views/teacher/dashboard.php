@@ -112,17 +112,6 @@
                         Role: <?= esc(ucfirst((string)($user['role'] ?? ''))) ?> · Email: <?= esc($user['email'] ?? '') ?>
                     </div>
                 </div>
-                <div class="col-auto">
-                    <div class="initials">
-                        <?php 
-                        $nm = (string)($user['name'] ?? '');
-                        $parts = preg_split('/\s+/', trim($nm));
-                        $fi = strtoupper(substr($parts[0] ?? '', 0, 1));
-                        $li = strtoupper(substr($parts[count($parts)-1] ?? '', 0, 1));
-                        echo esc($fi . $li);
-                        ?>
-                    </div>
-                </div>
             </div>
         </div>
 

@@ -105,9 +105,6 @@
                         Role: <?= esc(ucfirst((string)($user['role'] ?? ''))) ?> · Email: <?= esc($user['email'] ?? '') ?>
                     </div>
                 </div>
-                <div class="col-auto">
-                    <div class="initials"><?= esc($userInitials ?? '') ?></div>
-                </div>
             </div>
         </div>
 
