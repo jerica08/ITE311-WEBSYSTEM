@@ -112,10 +112,10 @@ class Auth extends Controller
                     $role = strtolower((string) $user['role']);
                     switch ($role) {
                         case 'admin':
-                            return redirect()->to('/admin/dashboard');
+                            return redirect()->to('/admin/dashboard-simple');
                         case 'instructor':
                         case 'teacher':
-                            return redirect()->to('/teacher/dashboard');
+                            return redirect()->to('/teacher/dashboard-simple');
                         case 'student':
                             return redirect()->to('/announcements');
                         default:

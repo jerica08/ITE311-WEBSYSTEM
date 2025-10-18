@@ -47,3 +47,7 @@ $routes->post('teacher/courses/create', 'TeacherController::createCourse');
 
 // Announcements
 $routes->get('announcements', 'Announcement::index');
+
+// Simple dashboards (new, keep old existing ones too)
+$routes->get('admin/dashboard-simple', 'Admin::dashboard');
+$routes->get('teacher/dashboard-simple', 'Teacher::dashboard');

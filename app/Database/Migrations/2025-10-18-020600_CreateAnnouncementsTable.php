@@ -8,7 +8,7 @@ class CreateAnnouncementsTable extends Migration
 {
     public function up()
     {
-        // Create announcements table
+       
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
