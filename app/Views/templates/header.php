@@ -42,6 +42,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                     <a href="#">Assignments</a>
                 <?php elseif ($role === 'student'): ?>
                     <a href="<?= site_url('student/dashboard') ?>">Dashboard</a>
+                    <a href="<?= site_url('announcements') ?>" class="<?= (uri_string() === 'announcements' ? 'active' : '') ?>">Announcements</a>
                     <a href="#">My Classes</a>
                     <a href="#">Grades</a>
                 <?php else: ?>
@@ -51,6 +52,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
             <?php endif; ?>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 
 <div class="container my-3">
