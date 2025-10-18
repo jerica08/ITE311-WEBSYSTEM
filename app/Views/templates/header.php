@@ -33,11 +33,11 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                 <a href="<?= site_url('register') ?>">Sign Up</a>
             <?php else: ?>
                 <?php if ($role === 'admin'): ?>
-                    <a href="<?= site_url('admin/dashboard') ?>">Dashboard</a>
+                    <a href="<?= site_url('admin/dashboard-simple') ?>">Dashboard</a>
                     <a href="<?= site_url('admin/users') ?>">User Management</a>
                     <a href="<?= site_url('admin/courses') ?>">Course Management</a>
                 <?php elseif ($role === 'teacher' || $role === 'instructor'): ?>
-                    <a href="<?= site_url('teacher/dashboard') ?>">Dashboard</a>
+                    <a href="<?= site_url('teacher/dashboard-simple') ?>">Dashboard</a>
                     <a href="#">My Courses</a>
                     <a href="#">Assignments</a>
                 <?php elseif ($role === 'student'): ?>
