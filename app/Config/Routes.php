@@ -45,5 +45,3 @@ $routes->post('admin/courses/create', 'AdminController::createCourse');
 // Teacher course management
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
 
-// Announcements
-$routes->get('announcements', 'Announcement::index');

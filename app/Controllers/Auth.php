@@ -117,10 +117,10 @@ class Auth extends Controller
                         case 'teacher':
                             return redirect()->to('/teacher/dashboard');
                         case 'student':
-                            return redirect()->to('/announcements');
+                            return redirect()->to('/student/dashboard');
                         default:
-                            // Fallback: send to announcements page
-                            return redirect()->to('/announcements');
+                            // Fallback: send to home page
+                            return redirect()->to('/');
                     }
                 } else {
                     $data['error'] = 'Invalid email or password.';
