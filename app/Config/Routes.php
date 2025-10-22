@@ -45,3 +45,9 @@ $routes->post('admin/courses/create', 'AdminController::createCourse');
 // Teacher course management
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
 
+
+// Materials management
+$routes->get('materials/upload/(:num)', 'Materials::upload/$1');
+$routes->post('materials/upload/(:num)', 'Materials::upload/$1');
+$routes->post('materials/delete/(:num)', 'Materials::delete/$1');
+$routes->get('materials/download/(:num)', 'Materials::download/$1');
