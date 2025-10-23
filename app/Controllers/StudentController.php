@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\EnrollmentModel;
+use App\Models\MaterialModel;
 use Config\Database;
 
 class StudentController extends BaseController
@@ -48,6 +49,27 @@ class StudentController extends BaseController
             $availableCourses = [];
         }
 
+        // Materials for enrolled courses
+        $materialsByCourse = [];
+        try {
+            $courseIds = array_column($enrolledCourses, 'id');
+            if (!empty($courseIds)) {
+                $materialModel = new MaterialModel();
+                $materials = $materialModel->whereIn('course_id', $courseIds)
+                    ->orderBy('id', 'DESC')
+                    ->findAll();
+                foreach ($materials as $m) {
+                    $cid = (int) ($m['course_id'] ?? 0);
+                    if (!isset($materialsByCourse[$cid])) {
+                        $materialsByCourse[$cid] = [];
+                    }
+                    $materialsByCourse[$cid][] = $m;
+                }
+            }
+        } catch (\Throwable $e) {
+            $materialsByCourse = [];
+        }
+
         // Placeholder datasets for other sections
         $deadlines   = [];
         $grades      = [];
@@ -60,6 +82,7 @@ class StudentController extends BaseController
             ],
             'enrolledCourses' => $enrolledCourses,
             'availableCourses' => $availableCourses,
+            'materialsByCourse' => $materialsByCourse,
             'deadlines'   => $deadlines,
             'grades'      => $grades,
         ];

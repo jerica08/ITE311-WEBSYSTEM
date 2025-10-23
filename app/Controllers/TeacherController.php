@@ -31,10 +31,11 @@ class TeacherController extends BaseController
                 $coursesRows = $builder->orderBy('id', 'DESC')->get()->getResultArray();
                 foreach ($coursesRows as $r) {
                     $courses[] = [
-                        'term' => $r['term'] ?? '-',
+                        'id'    => $r['id'] ?? null,
+                        'term'  => $r['term'] ?? '-',
                         'title' => $r['title'] ?? '-',
-                        'code' => $r['code'] ?? '-',
-                        'unit' => $r['unit'] ?? '-',
+                        'code'  => $r['code'] ?? '-',
+                        'unit'  => $r['unit'] ?? '-',
                     ];
                 }
             }

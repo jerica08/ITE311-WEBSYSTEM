@@ -24,40 +24,54 @@ class Materials extends Controller
      */
     public function upload(int $course_id)
     {
-        if (!$this->session->get('isLoggedIn')) {
+        $isLogged = (bool) ($this->session->get('isLoggedIn') ?? $this->session->get('logged_in') ?? false);
+        if (!$isLogged) {
+            log_message('warning', 'Materials::upload auth redirect (not logged in) uri={uri}', ['uri' => (string) $this->request->getUri()]);
             return redirect()->to('/auth/login');
         }
 
-        $role = strtolower((string) $this->session->get('role'));
+        $role = strtolower((string) ($this->session->get('role') ?? $this->session->get('user_role') ?? ''));
+        log_message('info', 'Materials::upload entry course_id={cid} role={role} method={method} uri={uri}', [
+            'cid' => $course_id,
+            'role' => $role,
+            'method' => $this->request->getMethod(),
+            'uri' => (string) $this->request->getUri(),
+        ]);
         if (!in_array($role, ['admin', 'teacher', 'instructor'], true)) {
+            log_message('warning', 'Materials::upload forbidden for role={role}', ['role' => $role]);
             return $this->response->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
                 ->setBody('Forbidden');
         }
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getMethod(true) === 'POST') {
+            log_message('info', 'Materials::upload handling POST for course_id={cid}', ['cid' => $course_id]);
             $file = $this->request->getFile('material');
             if (!$file || !$file->isValid()) {
-                return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                    ->setBody('Invalid file upload.');
+                $this->session->setFlashdata('error', 'Invalid file upload.');
+                log_message('error', 'Materials::upload invalid file: {error}', ['error' => $file ? $file->getErrorString() : 'no file']);
+                return redirect()->back();
             }
 
             // You can adjust allowed mime types/extensions as needed
             $allowedExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'png', 'jpg', 'jpeg', 'mp4'];
             $ext = strtolower($file->getExtension());
             if (!in_array($ext, $allowedExtensions, true)) {
-                return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                    ->setBody('File type not allowed.');
+                $this->session->setFlashdata('error', 'File type not allowed.');
+                log_message('error', 'Materials::upload disallowed extension: {ext}', ['ext' => $ext]);
+                return redirect()->back();
             }
 
             $uploadDir = WRITEPATH . 'uploads/materials';
             if (!is_dir($uploadDir)) {
                 @mkdir($uploadDir, 0775, true);
+                log_message('info', 'Materials::upload created upload dir {dir}', ['dir' => $uploadDir]);
             }
 
             $newName = $file->getRandomName();
             if (!$file->move($uploadDir, $newName)) {
-                return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                    ->setBody('Failed to move uploaded file.');
+                $this->session->setFlashdata('error', 'Failed to move uploaded file.');
+                log_message('error', 'Materials::upload failed to move file to {dir}', ['dir' => $uploadDir]);
+                return redirect()->back();
             }
 
             $model = new MaterialModel();
@@ -70,41 +84,25 @@ class Materials extends Controller
             if ($insertId === false) {
                 // rollback file
                 @unlink($uploadDir . DIRECTORY_SEPARATOR . $newName);
-                return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                    ->setBody('Failed to save material record.');
+                $err = method_exists($model, 'errors') ? json_encode($model->errors()) : 'unknown';
+                log_message('error', 'Materials::upload DB insert failed. errors={err}', ['err' => $err]);
+                $this->session->setFlashdata('error', 'Failed to save material record.');
+                return redirect()->back();
             }
 
+            log_message('info', 'Materials::upload success course_id={cid} insert_id={id} stored={path}', [
+                'cid' => $course_id,
+                'id' => $insertId,
+                'path' => 'uploads/materials/' . $newName,
+            ]);
             $this->session->setFlashdata('success', 'Material uploaded successfully.');
             return redirect()->back();
         }
 
-        // Simple minimal form (no separate view to avoid clutter)
-        $csrf = csrf_field();
-        $html = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload Material</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="p-4">
-    <div class="container">
-        <h1 class="mb-3">Upload Material (Course ID: {$course_id})</h1>
-        {$this->renderFlashMessages()}
-        <form method="post" enctype="multipart/form-data" class="card p-3" action="">
-            {$csrf}
-            <div class="mb-3">
-                <label class="form-label">Choose file</label>
-                <input type="file" name="material" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
-    </div>
-</body>
-</html>
-HTML;
-        return $this->response->setBody($html);
+        // Render themed view
+        return view('materials/upload', [
+            'course_id' => $course_id,
+        ]);
     }
 
     /**

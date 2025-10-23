@@ -156,6 +156,7 @@
                         <th>Course</th>
                         <th style="width:160px;">Subject Code</th>
                         <th style="width:100px;">Unit</th>
+                        <th style="width:160px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,6 +167,16 @@
                                 <td><?= esc($c['title'] ?? '-') ?></td>
                                 <td><?= esc($c['code'] ?? '-') ?></td>
                                 <td><?= esc($c['unit'] ?? '-') ?></td>
+                                <td>
+                                    <?php $cid = (int)($c['id'] ?? 0); ?>
+                                    <?php if ($cid > 0): ?>
+                                        <a class="btn btn-sm btn-outline-primary" href="<?= site_url('materials/upload/' . $cid) ?>">
+                                            <i class="bi bi-upload me-1"></i>Upload Material
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="text-muted">No course ID</span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
