@@ -11,6 +11,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     .menu a { color:#fff; text-decoration:none; padding:.4rem .8rem; border-radius:.3rem; }
     .menu a.active, .menu a:hover { background: rgba(0,0,0,.15); }
     .logout-btn { background:#E74C3C; color:#fff; border:none; padding:.35rem .7rem; border-radius:.3rem; }
+    .notif-badge { background:#DC3545; color:#fff; border-radius:999px; padding:0 .45rem; font-size:.75rem; margin-left:.25rem; }
 </style>
 
 <div class="topbar">
@@ -47,6 +48,8 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                 <?php else: ?>
                     <a href="<?= site_url('/') ?>">Home</a>
                 <?php endif; ?>
+                <?php $cnt = (int)($notificationUnreadCount ?? 0); ?>
+                <a href="<?= site_url('notifications') ?>">Notifications<?= ($cnt > 0 ? '<span class="notif-badge">' . $cnt . '</span>' : '') ?></a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn ms-2">Logout</a>
             <?php endif; ?>
         </div>
