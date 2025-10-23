@@ -84,6 +84,7 @@
                         <th>Title</th>
                         <th style="width:160px;">Instructor ID</th>
                         <th style="width:180px;">Created</th>
+                        <th style="width:200px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,11 +95,16 @@
                                 <td><?= esc($c['title']) ?></td>
                                 <td><?= esc($c['instructor_id']) ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" href="<?= site_url('admin/course/' . (int)($c['id'] ?? 0) . '/upload') ?>">
+                                        <i class="bi bi-upload me-1"></i>Upload Material
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-muted">No courses found.</td>
+                            <td colspan="5" class="text-muted">No courses found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
