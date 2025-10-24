@@ -77,8 +77,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
 
 <script>
 (function(){
-  var $ = window.jQuery;
-  if(!$) return;
+  // Wait for jQuery to be available before initializing
 
   function updateBadge(count){
     var $badge = $('#notifBadge');
@@ -129,10 +128,27 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     });
   }
 
-  $(function(){
-    fetchNotifications();
-    $('#notifDropdown').on('show.bs.dropdown', fetchNotifications);
-    setInterval(fetchNotifications, 60000);
-  });
+  function initNotif(){
+    var $ = window.jQuery;
+    if(!$) return false;
+    $(function(){
+      fetchNotifications();
+      $('#notifDropdown').on('show.bs.dropdown', fetchNotifications);
+      setInterval(fetchNotifications, 60000);
+    });
+    return true;
+  }
+
+  if(!initNotif()){
+    var __notifTries = 0;
+    var __notifTimer = setInterval(function(){
+      __notifTries++;
+      if(initNotif()){
+        clearInterval(__notifTimer);
+      } else if(__notifTries > 60){ // ~30s max
+        clearInterval(__notifTimer);
+      }
+    }, 500);
+  }
 })();
 </script>

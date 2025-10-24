@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\EnrollmentModel;
+use App\Models\NotificationModel;
 use Config\Database;
 
 class Course extends BaseController
@@ -68,6 +69,22 @@ class Course extends BaseController
         if ($insertId === false) {
             return $this->response->setStatusCode(500)
                 ->setJSON(['status' => 'error', 'message' => 'Failed to enroll user']);
+        }
+
+        // Create a notification for the student about the new enrollment (temporary for testing)
+        try {
+            $courseRow = $db->table('courses')->select('title')->where('id', $courseId)->get()->getRowArray();
+            $courseTitle = $courseRow['title'] ?? ('Course #' . $courseId);
+            $notificationModel = new NotificationModel();
+            $notificationModel->insert([
+                'user_id'    => $userId,
+                'message'    => 'You enrolled in ' . $courseTitle,
+                'is_read'    => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+        } catch (\Throwable $e) {
+            // Temporary: log any notification insertion errors for debugging
+            log_message('error', 'Notification insert failed after enrollment: ' . $e->getMessage());
         }
 
         return $this->response->setStatusCode(201)
