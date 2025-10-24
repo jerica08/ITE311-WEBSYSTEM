@@ -129,12 +129,10 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  $(function(){
     fetchNotifications();
-    var dropdown = document.getElementById('notifDropdown');
-    if(dropdown){
-      dropdown.addEventListener('show.bs.dropdown', fetchNotifications);
-    }
+    $('#notifDropdown').on('show.bs.dropdown', fetchNotifications);
+    setInterval(fetchNotifications, 60000);
   });
 })();
 </script>
