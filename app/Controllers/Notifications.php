@@ -30,14 +30,19 @@ class Notifications extends Controller
             'success' => true,
             'unread_count' => $unreadCount,
             'notifications' => $notifications,
+            'csrf_token' => csrf_token(),
+            'csrf_hash' => csrf_hash(),
         ]);
     }
 
     public function mark_as_read($id)
     {
-        if ($this->request->getMethod() !== 'post') {
+        // Accept POST; also allow AJAX requests to prevent false 405 due to method detection quirks
+        $method = strtolower($this->request->getMethod());
+        if ($method !== 'post' && !$this->request->isAJAX()) {
             return $this->response->setStatusCode(405)->setJSON(['success' => false, 'message' => 'Method Not Allowed']);
         }
+        log_message('debug', 'Notifications::mark_as_read method=' . $method);
 
         $userId = (int) $this->session->get('user_id');
         if (!$userId) {
@@ -61,6 +66,8 @@ class Notifications extends Controller
 
         return $this->response->setJSON([
             'success' => (bool) $updated,
+            'csrf_token' => csrf_token(),
+            'csrf_hash' => csrf_hash(),
         ]);
     }
 }

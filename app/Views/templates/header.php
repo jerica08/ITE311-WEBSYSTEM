@@ -79,6 +79,9 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
 (function(){
   // Wait for jQuery to be available before initializing
 
+  var __csrfName = '<?= csrf_token() ?>';
+  var __csrfHash = '<?= csrf_hash() ?>';
+
   function updateBadge(count){
     var $badge = $('#notifBadge');
     count = parseInt(count || 0, 10);
@@ -102,17 +105,20 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
       var $text = $('<div class="me-2"></div>').text(n.message);
       var $btn = $('<button type="button" class="btn btn-sm btn-outline-secondary">Mark as Read</button>');
       $btn.on('click', function(){
-        $.post('<?= site_url('notifications/mark_read') ?>' + '/' + n.id, function(r){
+        var data = {}; data[__csrfName] = __csrfHash;
+        $.post('<?= site_url('notifications/mark_read') ?>' + '/' + n.id, data, function(r){
           if(r && r.success){
+            // Optimistic UI update
             $item.remove();
             var current = parseInt($('#notifBadge').text() || '0', 10) || 0;
-            var next = Math.max(0, current - 1);
-            updateBadge(next);
-            if($('#notifMenu').children().length === 0){
-              $('#notifMenu').append('<div class="dropdown-item text-muted">No notifications</div>');
+            updateBadge(Math.max(0, current - 1));
+            // Refresh from server to ensure perfect sync (handles any duplicates or server-side filters)
+            fetchNotifications();
+            if(r.csrf_token && r.csrf_hash){
+              __csrfName = r.csrf_token; __csrfHash = r.csrf_hash;
             }
           }
-        });
+        }).fail(function(){ /* optionally show error */ });
       });
       $alert.append($text).append($btn);
       $item.append($alert);
@@ -125,6 +131,9 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
       if(!res || res.success !== true) return;
       updateBadge(res.unread_count || 0);
       renderList(res.notifications || []);
+      if(res.csrf_token && res.csrf_hash){
+        __csrfName = res.csrf_token; __csrfHash = res.csrf_hash;
+      }
     });
   }
 
