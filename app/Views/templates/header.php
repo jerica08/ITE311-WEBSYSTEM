@@ -48,8 +48,12 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                 <?php else: ?>
                     <a href="<?= site_url('/') ?>">Home</a>
                 <?php endif; ?>
-                <?php $cnt = (int)($notificationUnreadCount ?? 0); ?>
-                <a href="<?= site_url('notifications') ?>">Notifications<?= ($cnt > 0 ? '<span class="notif-badge">' . $cnt . '</span>' : '') ?></a>
+                <div class="dropdown">
+                    <a href="#" id="notifDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Notifications <span id="notifBadge" class="badge bg-danger d-none">0</span>
+                    </a>
+                    <div id="notifMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width:320px; max-height:360px; overflow:auto;"></div>
+                </div>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn ms-2">Logout</a>
             <?php endif; ?>
         </div>
@@ -70,3 +74,67 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+(function(){
+  var $ = window.jQuery;
+  if(!$) return;
+
+  function updateBadge(count){
+    var $badge = $('#notifBadge');
+    count = parseInt(count || 0, 10);
+    if(count > 0){
+      $badge.text(count).removeClass('d-none');
+    } else {
+      $badge.text('0').addClass('d-none');
+    }
+  }
+
+  function renderList(items){
+    var $menu = $('#notifMenu');
+    $menu.empty();
+    if(!items || !items.length){
+      $menu.append('<div class="dropdown-item text-muted">No notifications</div>');
+      return;
+    }
+    items.forEach(function(n){
+      var $item = $('<div class="dropdown-item p-0"></div>');
+      var $alert = $('<div class="alert alert-info m-2 mb-0 d-flex justify-content-between align-items-start"></div>');
+      var $text = $('<div class="me-2"></div>').text(n.message);
+      var $btn = $('<button type="button" class="btn btn-sm btn-outline-secondary">Mark as Read</button>');
+      $btn.on('click', function(){
+        $.post('<?= site_url('notifications/mark_read') ?>' + '/' + n.id, function(r){
+          if(r && r.success){
+            $item.remove();
+            var current = parseInt($('#notifBadge').text() || '0', 10) || 0;
+            var next = Math.max(0, current - 1);
+            updateBadge(next);
+            if($('#notifMenu').children().length === 0){
+              $('#notifMenu').append('<div class="dropdown-item text-muted">No notifications</div>');
+            }
+          }
+        });
+      });
+      $alert.append($text).append($btn);
+      $item.append($alert);
+      $menu.append($item);
+    });
+  }
+
+  function fetchNotifications(){
+    $.get('<?= site_url('notifications') ?>', function(res){
+      if(!res || res.success !== true) return;
+      updateBadge(res.unread_count || 0);
+      renderList(res.notifications || []);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    fetchNotifications();
+    var dropdown = document.getElementById('notifDropdown');
+    if(dropdown){
+      dropdown.addEventListener('show.bs.dropdown', fetchNotifications);
+    }
+  });
+})();
+</script>
