@@ -24,7 +24,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/auth/dashboard');
         }
 
         $data = [];
@@ -44,7 +44,7 @@ class Auth extends Controller
                     'name' => $this->request->getPost('name'),
                     'email' => $this->request->getPost('email'),
                     'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-                    'role' => 'user',
+                    'role' => 'student',
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ];
@@ -52,7 +52,7 @@ class Auth extends Controller
                 // Save user to database
                 if ($this->userModel->save($userData)) {
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
-                    return redirect()->to('/login');
+                    return redirect()->to('/auth/login');
                 } else {
                     $data['error'] = 'Registration failed. Please try again.';
                 }
@@ -71,7 +71,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to('/auth/dashboard');
         }
 
         $data = [];
@@ -91,18 +91,37 @@ class Auth extends Controller
                 $user = $this->userModel->where('email', $email)->first();
 
                 if ($user && password_verify($password, $user['password'])) {
-                    // Set session data
+                    // Set session data (provide both legacy and unified keys)
                     $sessionData = [
-                        'user_id' => $user['id'],
-                        'user_name' => $user['name'],
+                        'user_id'    => $user['id'],
+                        'user_name'  => $user['name'],
                         'user_email' => $user['email'],
-                        'user_role' => $user['role'],
-                        'logged_in' => true
+                        'user_role'  => $user['role'],
+                        'logged_in'  => true,          // existing usage in Auth
+                        // Keys expected by Dashboard controller
+                        'isLoggedIn' => true,
+                        'name'       => $user['name'],
+                        'email'      => $user['email'],
+                        'role'       => $user['role'],
                     ];
                     $this->session->set($sessionData);
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
-                    return redirect()->to('/dashboard');
+
+                    // Role-based redirection
+                    $role = strtolower((string) $user['role']);
+                    switch ($role) {
+                        case 'admin':
+                            return redirect()->to('/admin/dashboard');
+                        case 'instructor':
+                        case 'teacher':
+                            return redirect()->to('/teacher/dashboard');
+                        case 'student':
+                            return redirect()->to('/student/dashboard');
+                        default:
+                            // default regular users go to student dashboard
+                            return redirect()->to('/student/dashboard');
+                    }
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
@@ -123,7 +142,7 @@ class Auth extends Controller
         $this->session->destroy();
         
         $this->session->setFlashdata('success', 'You have been logged out successfully.');
-        return redirect()->to('/login');
+        return redirect()->to('/auth/login');
     }
 
     /**
@@ -134,7 +153,7 @@ class Auth extends Controller
         // Check if user is logged in
         if (!$this->session->get('logged_in')) {
             $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/login');
+            return redirect()->to('/auth/login');
         }
 
         $data = [
