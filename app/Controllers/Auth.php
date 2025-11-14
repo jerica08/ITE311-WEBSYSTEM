@@ -24,7 +24,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -52,7 +52,7 @@ class Auth extends Controller
                 // Save user to database
                 if ($this->userModel->save($userData)) {
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
-                    return redirect()->to('/auth/login');
+                    return redirect()->to('/login');
                 } else {
                     $data['error'] = 'Registration failed. Please try again.';
                 }
@@ -71,7 +71,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -102,7 +102,7 @@ class Auth extends Controller
                     $this->session->set($sessionData);
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
-                    return redirect()->to('/auth/dashboard');
+                    return redirect()->to('/dashboard');
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
@@ -123,7 +123,7 @@ class Auth extends Controller
         $this->session->destroy();
         
         $this->session->setFlashdata('success', 'You have been logged out successfully.');
-        return redirect()->to('/auth/login');
+        return redirect()->to('/login');
     }
 
     /**
@@ -134,7 +134,7 @@ class Auth extends Controller
         // Check if user is logged in
         if (!$this->session->get('logged_in')) {
             $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $data = [
