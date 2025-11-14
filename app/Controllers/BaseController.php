@@ -59,8 +59,13 @@ abstract class BaseController extends Controller
         $userId = (int) ($session->get('user_id') ?? $session->get('id') ?? 0);
         $unread = 0;
         if ($userId > 0) {
-            $notifModel = new NotificationModel();
-            $unread = $notifModel->getUnreadCount($userId);
+            try {
+                $notifModel = new NotificationModel();
+                $unread = $notifModel->getUnreadCount($userId);
+            } catch (\Exception $e) {
+                // Table doesn't exist or other database error, set unread to 0
+                $unread = 0;
+            }
         }
         service('renderer')->setData(['notificationUnreadCount' => $unread]);
     }

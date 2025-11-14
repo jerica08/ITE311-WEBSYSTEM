@@ -38,7 +38,7 @@ class StudentController extends BaseController
         try {
             $db = Database::connect();
             if ($db->tableExists('courses')) {
-                $builder = $db->table('courses')->select('id, title, code, unit');
+                $builder = $db->table('courses')->select('id, title, description');
                 $enrolledIds = array_column($enrolledCourses, 'id');
                 if (!empty($enrolledIds)) {
                     $builder->whereNotIn('id', $enrolledIds);

@@ -1,0 +1,633 @@
+INFO - 2025-11-14 01:28:08 --> Register method called. Method: GET
+CRITICAL - 2025-11-14 01:28:08 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/register.php"
+[Method: GET, Route: register]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/register.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/register', [], true)
+ 3 APPPATH\Controllers\Auth.php(64): view('auth/register')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->register()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+INFO - 2025-11-14 01:28:12 --> Login method called. Method: GET
+CRITICAL - 2025-11-14 01:28:12 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/login.php"
+[Method: GET, Route: login]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/login.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/login', [], true)
+ 3 APPPATH\Controllers\Auth.php(121): view('auth/login')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-14 01:28:23 --> mysqli_sql_exception: Duplicate column name 'name' in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('ALTER TABLE `us...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('ALTER TABLE `us...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('ALTER TABLE `us...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\Forge.php(772): CodeIgniter\Database\BaseConnection->query('ALTER TABLE `us...')
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\app\Database\Migrations\2025-09-04-060913_AlterUsersTableStructure.php(12): CodeIgniter\Database\Forge->addColumn('users', Array)
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MigrationRunner.php(876): App\Database\Migrations\AlterUsersTableStructure->up()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+ERROR - 2025-11-14 01:31:17 --> mysqli_sql_exception: Table 'users' already exists in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('CREATE TABLE `u...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `u...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `u...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `u...')
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\app\Database\Migrations\2025-08-20-000001_CreateUsersTable.php(46): CodeIgniter\Database\Forge->createTable('users')
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MigrationRunner.php(876): App\Database\Migrations\CreateUsersTable->up()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:31:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:31:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:32:13 --> CSRF token verified.
+DEBUG - 2025-11-14 01:32:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:32:39 --> CSRF token verified.
+DEBUG - 2025-11-14 01:32:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:32:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:32:54 --> CSRF token verified.
+DEBUG - 2025-11-14 01:32:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:32:55 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:32:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:33:00 --> mysqli_sql_exception: Unknown column 'code' in 'field list' in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `t...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `t...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `t...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `t...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\StudentController.php(45): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\StudentController->dashboard()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\StudentController))
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+ERROR - 2025-11-14 01:33:11 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:33:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:33:13 --> mysqli_sql_exception: Unknown column 'code' in 'field list' in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `t...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `t...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `t...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `t...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\StudentController.php(45): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\StudentController->dashboard()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\StudentController))
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+DEBUG - 2025-11-14 01:33:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:33:36 --> CSRF token verified.
+DEBUG - 2025-11-14 01:33:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:33:45 --> CSRF token verified.
+DEBUG - 2025-11-14 01:33:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:33:45 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:33:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:33:47 --> mysqli_sql_exception: Unknown column 'code' in 'field list' in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `id`, `t...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `id`, `t...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `id`, `t...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `id`, `t...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\StudentController.php(45): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\StudentController->dashboard()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\StudentController))
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+DEBUG - 2025-11-14 01:33:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:33:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:34:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:34:26 --> CSRF token verified.
+DEBUG - 2025-11-14 01:34:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:34:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:34:37 --> CSRF token verified.
+DEBUG - 2025-11-14 01:34:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:34:37 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:34:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:34:47 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:34:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:34:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:34:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:37:19 --> CSRF token verified.
+DEBUG - 2025-11-14 01:37:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:37:19 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:37:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:37:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:37:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:37:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:38:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:38:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-14 01:38:28 --> CSRF token verified.
+DEBUG - 2025-11-14 01:38:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:38:28 --> mysqli_sql_exception: Table 'lms_marquez.announcements' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\Announcement.php(15): CodeIgniter\BaseModel->findAll()
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(933): App\Controllers\Announcement->index()
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Announcement))
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+DEBUG - 2025-11-14 01:38:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:40:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:40:02 --> mysqli_sql_exception: Table 'lms_marquez.notifications' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\app\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+CRITICAL - 2025-11-14 01:40:02 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'lms_marquez.notifications' doesn't exist
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 3 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 4 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 5 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 6 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-14 01:40:02 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'lms_marquez.notifications' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 5 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 6 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 7 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 8 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-14 01:40:02 --> [Caused by] mysqli_sql_exception: Table 'lms_marquez.notifications' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 6 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 7 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 8 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 9 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:40:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-11-14 01:40:08 --> mysqli_sql_exception: Table 'lms_marquez.notifications' doesn't exist in C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\ITE311-MARQUEZ\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\xampp\htdocs\ITE311-MARQUEZ\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+#5 C:\xampp\htdocs\ITE311-MARQUEZ\app\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+#6 C:\xampp\htdocs\ITE311-MARQUEZ\app\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+#7 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#8 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#9 C:\xampp\htdocs\ITE311-MARQUEZ\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\ITE311-MARQUEZ\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\ITE311-MARQUEZ\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+CRITICAL - 2025-11-14 01:40:08 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'lms_marquez.notifications' doesn't exist
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 3 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 4 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 5 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 6 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-14 01:40:08 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'lms_marquez.notifications' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 5 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 6 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 7 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 8 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-14 01:40:08 --> [Caused by] mysqli_sql_exception: Table 'lms_marquez.notifications' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = 5
+AND `is_read` = 0')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `notifications`
+WHERE `user_id` = :user_id:
+AND `is_read` = :is_read:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 6 APPPATH\Models\NotificationModel.php(18): CodeIgniter\Model->countAllResults()
+ 7 APPPATH\Controllers\BaseController.php(63): App\Models\NotificationModel->getUnreadCount(5)
+ 8 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 9 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:42:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:42:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:42:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:42:38 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:42:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:42:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:42:43 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:42:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:42:49 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:42:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:42:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:42:56 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:43:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:43:23 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:43:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:43:30 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:43:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:43:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:43:35 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:44:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:44:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:44:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:44:02 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:44:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:44:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:44:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:44:44 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:46:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:46:03 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:46:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:46:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:46:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:46:23 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:46:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:46:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:46:23 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:49:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:49:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:49:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:49:52 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-14 01:51:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:51:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-14 01:51:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-11-14 01:51:25 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/dashboard.php"
+[Method: GET, Route: auth/dashboard]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/dashboard.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/dashboard', [], true)
+ 3 APPPATH\Controllers\Auth.php(168): view('auth/dashboard', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->dashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
