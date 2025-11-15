@@ -17,9 +17,7 @@ class Auth extends Controller
         helper(['form', 'url']);
     }
 
-    /**
-     * Display registration form and process form submission
-     */
+    
     public function register()
     {
         // If user is already logged in, redirect to dashboard
@@ -64,9 +62,7 @@ class Auth extends Controller
         return view('auth/register', $data);
     }
 
-    /**
-     * Display login form and process form submission
-     */
+   
     public function login()
     {
         // If user is already logged in, redirect to dashboard
@@ -114,9 +110,7 @@ class Auth extends Controller
         return view('auth/login', $data);
     }
 
-    /**
-     * Destroy user session and redirect
-     */
+    
     public function logout()
     {
         // Destroy session
@@ -126,9 +120,7 @@ class Auth extends Controller
         return redirect()->to('/login');
     }
 
-    /**
-     * Protected dashboard page for logged-in users only
-     */
+   
     public function dashboard()
     {
         // Check if user is logged in
@@ -149,17 +141,13 @@ class Auth extends Controller
         return view('auth/dashboard', $data);
     }
 
-    /**
-     * Check if user is authenticated (helper method)
-     */
+    
     private function isAuthenticated()
     {
         return $this->session->get('logged_in') === true;
     }
 
-    /**
-     * Check if user has specific role (helper method)
-     */
+    
     private function hasRole($role)
     {
         return $this->session->get('user_role') === $role;
