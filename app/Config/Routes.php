@@ -58,3 +58,7 @@ $routes->post('admin/course/(:num)/upload', 'Materials::upload/$1');
 
 // Optional GET route for delete (use cautiously; POST is preferred)
 $routes->get('materials/delete/(:num)', 'Materials::delete/$1');
+
+// Notifications API
+$routes->get('/notifications', 'Notifications::get');
+$routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
