@@ -73,7 +73,13 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             // 'honeypot',
-            'csrf',
+            // Enable CSRF globally but exempt upload endpoints that receive large multipart/form-data
+            'csrf' => [
+                'except' => [
+                    'materials/upload/*',
+                    'admin/course/*/upload',
+                ],
+            ],
             // 'invalidchars',
         ],
         'after' => [

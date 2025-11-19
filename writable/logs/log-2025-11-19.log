@@ -155,3 +155,27 @@ DEBUG - 2025-11-19 01:35:47 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2025-11-19 01:35:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-11-19 01:35:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-11-19 01:35:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:36:40 --> CSRF token verified.
+DEBUG - 2025-11-19 01:36:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:36:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:36:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:41:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:41:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:41:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:41:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:41:49 --> CSRF token verified.
+DEBUG - 2025-11-19 01:41:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:41:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:41:53 --> Materials::upload entry course_id=1 role=teacher method=GET uri=http://localhost/ITE311-MARQUEZ/materials/upload/1
+DEBUG - 2025-11-19 01:42:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:42:48 --> Materials::upload entry course_id=1 role=teacher method=POST uri=http://localhost/ITE311-MARQUEZ/materials/upload/1
+INFO - 2025-11-19 01:42:48 --> Materials::upload handling POST for course_id=1
+INFO - 2025-11-19 01:42:48 --> Materials::upload success course_id=1 insert_id=1 stored=uploads/materials/1763516568_66dcde3ab672512c36b1.docx
+DEBUG - 2025-11-19 01:42:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:42:48 --> Materials::upload entry course_id=1 role=teacher method=GET uri=http://localhost/ITE311-MARQUEZ/materials/upload/1
+DEBUG - 2025-11-19 01:42:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:43:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:43:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-11-19 01:43:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-11-19 01:43:12 --> CSRF token verified.
+DEBUG - 2025-11-19 01:43:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

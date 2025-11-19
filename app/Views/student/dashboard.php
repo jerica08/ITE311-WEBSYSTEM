@@ -123,12 +123,41 @@
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr id="no-enroll-row">
+                        <tr>
                             <td colspan="4" class="text-muted">No enrolled courses.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Course Materials -->
+        <div class="mb-2 section-title"><i class="bi bi-folder-symlink-fill me-2"></i>Course Materials</div>
+        <div class="table-wrap mb-4 p-3">
+            <?php if (!empty($enrolledCourses ?? [])): ?>
+                <?php foreach ($enrolledCourses as $course): ?>
+                    <?php $cid = (int)($course['id'] ?? 0); $materials = $materialsByCourse[$cid] ?? []; ?>
+                    <div class="mb-3">
+                        <div class="fw-semibold mb-2"><?= esc($course['title'] ?? 'Course') ?> <span class="text-muted">(<?= esc($course['code'] ?? '') ?>)</span></div>
+                        <?php if (!empty($materials)): ?>
+                            <ul class="list-group list-group-flush">
+                                <?php foreach ($materials as $m): ?>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="bi bi-file-earmark-text me-2"></i><?= esc($m['file_name'] ?? 'File') ?></span>
+                                        <a class="btn btn-sm btn-outline-primary" href="<?= site_url('materials/download/' . (int)($m['id'] ?? 0)) ?>">
+                                            <i class="bi bi-download me-1"></i>Download
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <div class="text-muted small">No materials available for this course.</div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-muted">No enrolled courses to show materials.</div>
+            <?php endif; ?>
         </div>
 
         <!-- Available Courses -->
@@ -256,8 +285,7 @@
                         const code  = $row.find('td').eq(1).text();
                         const unit  = $row.find('td').eq(2).text();
 
-                        // Remove placeholder row if it exists, then append new enrolled row
-                        $('#no-enroll-row').remove();
+                        // Append new enrolled row
                         const now = new Date();
                         const stamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
                         $('#enrolled-tbody').append(
