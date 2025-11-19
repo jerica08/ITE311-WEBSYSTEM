@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\EnrollmentModel;
+use Config\Database;
 
 class StudentController extends BaseController
 {
@@ -17,8 +19,36 @@ class StudentController extends BaseController
 
         $userModel = new UserModel();
 
-        // Placeholder datasets; wire up to real models later
-        $enrollments = [];
+        $userId = (int) ($session->get('user_id') ?? 0);
+
+        // Enrolled courses via EnrollmentModel join
+        $enrolledCourses = [];
+        try {
+            $enrollmentModel = new EnrollmentModel();
+            if ($userId > 0) {
+                $enrolledCourses = $enrollmentModel->getUserEnrollments($userId);
+            }
+        } catch (\Throwable $e) {
+            $enrolledCourses = [];
+        }
+
+        // Available courses = courses not yet enrolled by user
+        $availableCourses = [];
+        try {
+            $db = Database::connect();
+            if ($db->tableExists('courses')) {
+                $builder = $db->table('courses')->select('id, title, code, unit');
+                $enrolledIds = array_column($enrolledCourses, 'id');
+                if (!empty($enrolledIds)) {
+                    $builder->whereNotIn('id', $enrolledIds);
+                }
+                $availableCourses = $builder->orderBy('id', 'DESC')->get()->getResultArray();
+            }
+        } catch (\Throwable $e) {
+            $availableCourses = [];
+        }
+
+        // Placeholder datasets for other sections
         $deadlines   = [];
         $grades      = [];
 
@@ -28,7 +58,8 @@ class StudentController extends BaseController
                 'email' => $session->get('email'),
                 'role'  => $session->get('role'),
             ],
-            'enrollments' => $enrollments,
+            'enrolledCourses' => $enrolledCourses,
+            'availableCourses' => $availableCourses,
             'deadlines'   => $deadlines,
             'grades'      => $grades,
         ];

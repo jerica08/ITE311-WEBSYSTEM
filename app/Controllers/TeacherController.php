@@ -78,4 +78,42 @@ class TeacherController extends BaseController
 
         return view('teacher/dashboard', $data);
     }
+
+    public function createCourse()
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/teacher/dashboard');
+        }
+
+        $title = trim((string) $this->request->getPost('title'));
+        $code  = trim((string) ($this->request->getPost('code') ?? ''));
+        $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $instructorId = (int) ($session->get('user_id') ?? 0);
+
+        if ($title === '') {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Course title is required.');
+        }
+
+        $db = Database::connect();
+        try {
+            $data = [
+                'title' => $title,
+                'code'  => $code !== '' ? $code : null,
+                'unit'  => $unit > 0 ? $unit : null,
+                'instructor_id' => $instructorId > 0 ? $instructorId : null,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            $db->table('courses')->insert($data);
+            return redirect()->to('/teacher/dashboard')->with('success', 'Course created successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Failed to create course.');
+        }
+    }
 }

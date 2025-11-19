@@ -55,7 +55,8 @@
         
         <main class="main-content">
             <div class="container" style="text-align:center; margin-top: 50px;">
-              <h1 style="font-weight:1000; font-family: 'Times New Roman', serif;">Kawas National Univerity</h1>
+              <h1 style="font-weight:1000; font-family: 'Times New Roman', serif;">Kawas National High School</h1>
+              <img src="<?= base_url('img/kawas_logo.jpg') ?>" alt="Kawas National High School Logo" style="max-width: 200px; height: auto; margin-top: 20px;">
             </div>
         </main>
     </body>

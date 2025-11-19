@@ -111,8 +111,8 @@
                     <a class="navbar-brand text-white" href="#"><h4>Learning Management System</h4></a>
                     <ul class="nav d-flex align-items-center gap-3">
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('register') ?>"><button class="button"> Sign Up</button></a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('login') ?>"><button class="button"> Log-In</button></a></li>                
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login') ?>"><button class="button"> Log-In</button></a></li>                
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                     </ul>
@@ -163,7 +163,7 @@
                                 </div>
                             <?php endif; ?>
 
-                            <?= form_open('login', ['class' => 'needs-validation', 'novalidate' => true]) ?>
+                            <?= form_open('auth/login', ['class' => 'needs-validation', 'novalidate' => true]) ?>
                                 <?= csrf_field() ?>
                                 
                                 <div class="mb-3">
@@ -204,7 +204,7 @@
 
                             <div class="text-center">
                                 <p class="mb-0" style="font-family: 'Times New Roman', serif;">Don't have an account?</p>
-                                <a href="<?= base_url('register') ?>" class="text-decoration-none fw-bold" style="color: #DAA520; font-family: 'Times New Roman', serif;">
+                                <a href="<?= base_url('auth/register') ?>" class="text-decoration-none fw-bold" style="color: #DAA520; font-family: 'Times New Roman', serif;">
                                     Create Account Here
                                 </a>
                             </div>
