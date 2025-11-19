@@ -123,7 +123,7 @@
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
+                        <tr id="no-enroll-row">
                             <td colspan="4" class="text-muted">No enrolled courses.</td>
                         </tr>
                     <?php endif; ?>
@@ -256,7 +256,8 @@
                         const code  = $row.find('td').eq(1).text();
                         const unit  = $row.find('td').eq(2).text();
 
-                        // Append new enrolled row
+                        // Remove placeholder row if it exists, then append new enrolled row
+                        $('#no-enroll-row').remove();
                         const now = new Date();
                         const stamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
                         $('#enrolled-tbody').append(
