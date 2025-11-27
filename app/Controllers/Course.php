@@ -4,10 +4,17 @@ namespace App\Controllers;
 
 use App\Models\EnrollmentModel;
 use App\Models\NotificationModel;
+use App\Models\CourseModel;
 use Config\Database;
 
 class Course extends BaseController
 {
+    protected CourseModel $courseModel;
+
+    public function __construct()
+    {
+        $this->courseModel = new CourseModel();
+    }
     /**
      * Handle AJAX enrollment requests.
      * POST: course_id
@@ -95,22 +102,27 @@ class Course extends BaseController
             ]);
     }
 
-    public function search ()
+    public function search()
     {
-        $searchTerm = $this->request->getGet ('search_term');
+        $searchTerm = trim((string) ($this->request->getPost('search_term') ?? $this->request->getGet('search_term') ?? ''));
+        $courseModel = new CourseModel();
 
-        if (!empty ($searchTerm)) {
-            $this->courseModel->like('course_name', $searchTerm);
-            $this->courseModel->orLike('course_description', $searchTerm);
+        if ($searchTerm !== '') {
+            $courseModel->groupStart()
+                ->like('title', $searchTerm)
+                ->orLike('description', $searchTerm)
+                ->groupEnd();
         }
 
-        $courses = $this->courseModel->findAll();
+        $courses = $courseModel->orderBy('created_at', 'DESC')->findAll();
 
         if ($this->request->isAJAX()) {
-            return $this->response->setJSON($courses);
+            return $this->response->setJSON(['courses' => $courses, 'searchTerm' => $searchTerm]);
         }
 
-        return view ('courses/search_results', ['courses' => $courses, 'searchTerm' => $searchTerm]);
-
+        return view('courses/search_results', [
+            'courses' => $courses,
+            'searchTerm' => $searchTerm,
+        ]);
     }
 }

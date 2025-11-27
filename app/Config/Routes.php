@@ -64,5 +64,5 @@ $routes->get('/notifications', 'Notifications::get');
 $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
 
 //Search Route
-$routes->get('/courses/search', 'Course::search');
-$routes->post('/courses/search', 'Course::search');
+$routes->get('/course', 'Course::search');
+$routes->match(['get', 'post'], '/courses/search', 'Course::search');
