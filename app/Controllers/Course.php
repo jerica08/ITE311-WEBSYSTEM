@@ -94,4 +94,23 @@ class Course extends BaseController
                 'enrollment_id' => $insertId,
             ]);
     }
+
+    public function search ()
+    {
+        $searchTerm = $this->request->getGet ('search_term');
+
+        if (!empty ($searchTerm)) {
+            $this->courseModel->like('course_name', $searchTerm);
+            $this->courseModel->orLike('course_description', $searchTerm);
+        }
+
+        $courses = $this->courseModel->findAll();
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON($courses);
+        }
+
+        return view ('courses/search_results', ['courses' => $courses, 'searchTerm' => $searchTerm]);
+
+    }
 }
