@@ -104,7 +104,7 @@
     <div class="page-container">
         <div class="section-title mb-4">Results for <?= esc($searchTerm ?: 'all courses') ?></div>
         <div class="search-box mb-4">
-            <form id="searchForm" class="input-group" method="get" action="<?= site_url('course/search') ?>">
+            <form id="searchForm" class="input-group" method="get" action="<?= site_url('course') ?>">
                 <?= csrf_field() ?>
                 <input type="text" id="searchInput" name="search_term" class="form-control" placeholder="Search courses..." value="<?= esc($searchTerm) ?>">
                 <button class="btn btn-primary" type="submit">
@@ -143,49 +143,52 @@
         $(document).ready(function () {
             const $searchInput = $('#searchInput');
             const $coursesContainer = $('#coursesContainer');
+            let debounceTimer;
 
-            function filterCards(value) {
-                const term = value.toLowerCase();
-                $('.course-card').each(function () {
-                    const text = $(this).text().toLowerCase();
-                    $(this).closest('.col-md-4').toggle(text.indexOf(term) > -1);
+            function renderCourses(courses) {
+                $coursesContainer.empty();
+                if (courses.length === 0) {
+                    $coursesContainer.html('<div class="col-12"><div class="alert alert-info">No courses found matching your search.</div></div>');
+                    return;
+                }
+                $.each(courses, function (index, course) {
+                    const description = (course.description ?? '').substring(0, 160);
+                    const card = `
+                        <div class="col-md-4">
+                            <div class="card course-card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">${course.title ?? 'Untitled course'}</h5>
+                                    <p class="card-text text-muted flex-grow-1">${description}${(course.description && course.description.length > 160 ? '...' : '')}</p>
+                                    <p class="text-muted small mb-1">Instructor ID: ${course.instructor_id ?? '-'}</p>
+                                    <p class="text-muted small">Created at: ${course.created_at ?? '-'}</p>
+                                    <a class="btn btn-sm btn-primary mt-auto" href="<?= site_url('admin/course') ?>/${course.id ?? 0}/upload">View course</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    $coursesContainer.append(card);
                 });
             }
 
+            function performSearch(term) {
+                $.get('<?= site_url('course') ?>', { search_term: term }, function (data) {
+                    const courses = data.courses ?? [];
+                    renderCourses(courses);
+                }, 'json');
+            }
+
             $searchInput.on('keyup', function () {
-                filterCards($(this).val());
+                const term = $(this).val().trim();
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function () {
+                    performSearch(term);
+                }, 300);
             });
 
             $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
-                const searchTerm = $searchInput.val();
-                $.get('<?= site_url('course/search') ?>', { search_term: searchTerm }, function (data) {
-                    $coursesContainer.empty();
-
-                    const courses = data.courses ?? [];
-                    if (courses.length > 0) {
-                        $.each(courses, function (index, course) {
-                            const description = (course.description ?? '').substring(0, 160);
-                            const card = `
-                                <div class="col-md-4">
-                                    <div class="card course-card h-100">
-                                        <div class="card-body d-flex flex-column">
-                                            <h5 class="card-title">${course.title ?? 'Untitled course'}</h5>
-                                            <p class="card-text text-muted flex-grow-1">${description}${(course.description && course.description.length > 160 ? '...' : '')}</p>
-                                            <p class="text-muted small mb-1">Instructor ID: ${course.instructor_id ?? '-'}</p>
-                                            <p class="text-muted small">Created at: ${course.created_at ?? '-'}</p>
-                                            <a class="btn btn-sm btn-primary mt-auto" href="<?= site_url('admin/course') ?>/${course.id ?? 0}/upload">View course</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            $coursesContainer.append(card);
-                        });
-                    } else {
-                        $coursesContainer.html('<div class="col-12"><div class="alert alert-info">No courses found matching your search.</div></div>');
-                    }
-                    filterCards(searchTerm);
-                }, 'json');
+                clearTimeout(debounceTimer);
+                performSearch($searchInput.val().trim());
             });
         });
     </script>
