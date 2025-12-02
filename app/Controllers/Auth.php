@@ -65,13 +65,13 @@ class Auth extends Controller
     }
 
     /**
-     * Display login form and process form submission
+     * Login form and process form submission
      */
     public function login()
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -108,6 +108,7 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
+<<<<<<< HEAD
                     // Role-based redirection
                     $role = strtolower((string) $user['role']);
                     switch ($role) {
@@ -122,6 +123,9 @@ class Auth extends Controller
                             // Fallback: send to home page
                             return redirect()->to('/');
                     }
+=======
+                    return redirect()->to('/dashboard');
+>>>>>>> lab-5
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
@@ -146,7 +150,7 @@ class Auth extends Controller
     }
 
     /**
-     * Protected dashboard page for logged-in users only
+     *Dashboard page for logged-in users only
      */
     public function dashboard()
     {

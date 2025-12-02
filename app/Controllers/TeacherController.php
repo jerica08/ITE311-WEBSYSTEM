@@ -13,7 +13,7 @@ class TeacherController extends BaseController
         // Authorization: teacher/instructor only
         $role = strtolower((string) $session->get('role'));
         if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userId = (int) ($session->get('user_id') ?? 0);
@@ -77,7 +77,8 @@ class TeacherController extends BaseController
             'submissions' => $submissions,
         ];
 
-        return view('teacher/dashboard', $data);
+        // Use the existing teacher.php view
+        return view('teacher', $data);
     }
 
     public function createCourse()

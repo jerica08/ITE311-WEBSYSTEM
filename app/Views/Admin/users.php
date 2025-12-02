@@ -36,6 +36,20 @@
     </div>
 
     <div class="container my-4">
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= esc(session()->getFlashdata('success')) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?= esc(session()->getFlashdata('error')) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="mb-2 section-title"><i class="bi bi-people-fill me-2"></i>Users</div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
@@ -45,7 +59,8 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th style="width:140px;">Role</th>
-                        <th style="width:180px;">Created</th>
+                        <th style="width:160px;">Created</th>
+                        <th style="width:140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +72,14 @@
                                 <td><?= esc($u['email']) ?></td>
                                 <td><?= esc($u['role']) ?></td>
                                 <td><?= esc($u['created_at'] ?? '') ?></td>
+                                <td>
+                                    <a href="<?= site_url('admin/users/edit/' . (int) $u['id']) ?>" class="btn btn-sm btn-primary">Edit</a>
+                                    <form action="<?= site_url('admin/users/delete') ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="id" value="<?= (int) $u['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
