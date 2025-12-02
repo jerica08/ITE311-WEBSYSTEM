@@ -58,7 +58,7 @@ class AdminController extends BaseController
             'userInitials'  => $initials,
         ];
 
-        return view('admin/dashboard', $data);
+        return view('admin/admin', $data);
     }
 
     public function users()
@@ -79,6 +79,79 @@ class AdminController extends BaseController
             ],
             'users' => $users,
         ]);
+    }
+
+    public function updateUserRole()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $userId = (int) ($this->request->getPost('id') ?? 0);
+        $role   = (string) $this->request->getPost('role');
+
+        if ($userId <= 0 || !in_array($role, ['admin', 'teacher', 'student'], true)) {
+            return redirect()->to('/admin/users')->with('error', 'Invalid user or role.');
+        }
+
+        $userModel = new UserModel();
+
+        if (!$userModel->find($userId)) {
+            return redirect()->to('/admin/users')->with('error', 'User not found.');
+        }
+
+        try {
+            $userModel->update($userId, ['role' => $role]);
+            return redirect()->to('/admin/users')->with('success', 'User role updated successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/users')->with('error', 'Failed to update user role.');
+        }
+    }
+
+    public function editUser($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->find((int) $id);
+
+        if (!$user) {
+            return redirect()->to('/admin/users')->with('error', 'User not found.');
+        }
+
+        return view('admin/user_edit', [
+            'user' => $user,
+        ]);
+    }
+
+    public function deleteUser()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $userId = (int) ($this->request->getPost('id') ?? 0);
+        if ($userId <= 0) {
+            return redirect()->to('/admin/users')->with('error', 'Invalid user.');
+        }
+
+        $userModel = new UserModel();
+
+        if (!$userModel->find($userId)) {
+            return redirect()->to('/admin/users')->with('error', 'User not found.');
+        }
+
+        try {
+            $userModel->delete($userId);
+            return redirect()->to('/admin/users')->with('success', 'User deleted successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/users')->with('error', 'Failed to delete user.');
+        }
     }
 
     public function courses()

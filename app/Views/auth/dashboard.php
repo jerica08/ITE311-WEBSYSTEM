@@ -3,7 +3,7 @@ helper('url');
 
 if (isset($user['role'])) {
     if ($user['role'] === 'admin') {
-        echo view('admin', ['user' => $user]);
+        echo view('admin/admin', ['user' => $user]);
         return;
     }
 
