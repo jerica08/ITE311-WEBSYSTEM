@@ -108,20 +108,7 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-                    // Role-based redirection
-                    $role = strtolower((string) $user['role']);
-                    switch ($role) {
-                        case 'admin':
-                            return redirect()->to('/admin/dashboard');
-                        case 'instructor':
-                        case 'teacher':
-                            return redirect()->to('/teacher/dashboard');
-                        case 'student':
-                            return redirect()->to('/student/dashboard');
-                        default:
-                            // default regular users go to student dashboard
-                        return redirect()->to('/student/dashboard');
-                    }
+                    return redirect()->to('/auth/dashboard');
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
