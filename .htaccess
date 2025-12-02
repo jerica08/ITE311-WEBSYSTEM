@@ -15,6 +15,9 @@ Options -Indexes
 	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 	RewriteBase /ITE311-MARQUEZ/
 
+	# Block direct access to /public (and anything under it) and return 404
+	RewriteRule ^public($|/.*) - [R=404,L]
+
 	# Redirect Trailing Slashes...
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} (.+)/$

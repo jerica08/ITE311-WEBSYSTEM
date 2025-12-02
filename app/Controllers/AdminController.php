@@ -11,7 +11,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userModel = new UserModel();
@@ -65,7 +65,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userModel = new UserModel();
@@ -85,7 +85,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userId = (int) ($this->request->getPost('id') ?? 0);
@@ -113,7 +113,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userModel = new UserModel();
@@ -132,7 +132,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userId = (int) ($this->request->getPost('id') ?? 0);
@@ -158,7 +158,7 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $db = Database::connect();

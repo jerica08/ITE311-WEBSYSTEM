@@ -71,7 +71,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -108,7 +108,7 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-                    return redirect()->to('/auth/dashboard');
+                    return redirect()->to('/dashboard');
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }

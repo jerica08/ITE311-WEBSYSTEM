@@ -68,8 +68,8 @@
                         <a class="navbar-brand text-white" href="#"><h4>Learning Management System</h4></a>
                         <ul class="nav d-flex align-items-center gap-3" style="">
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('/') ?>"><button class="button"> Home</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/register') ?>"><button class="button"> Sign Up</button></a></li>
-                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('auth/login') ?>"><button class="button"> Log-In</button></a></li>                           
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('register') ?>"><button class="button"> Sign Up</button></a></li>
+                            <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('login') ?>"><button class="button"> Log-In</button></a></li>                           
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('about') ?>"><button class="button"> About Us</button></a></li>
                             <li class="nav-item"><a class="nav-link text-white" href="<?= site_url('contact') ?>"><button class="button"> Contact Us</button></a></li>
                         </ul>

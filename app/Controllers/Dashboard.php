@@ -8,7 +8,7 @@ class Dashboard extends BaseController
     {
         // Check if user is logged in and has student role
         if (!session()->get('isLoggedIn') || session()->get('role') !== 'student') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
         
         $data['user'] = [
@@ -24,7 +24,7 @@ class Dashboard extends BaseController
     {
         // Check if user is logged in and has instructor role
         if (!session()->get('isLoggedIn') || session()->get('role') !== 'instructor') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
         
         $data['user'] = [
@@ -40,7 +40,7 @@ class Dashboard extends BaseController
     {
         // Check if user is logged in and has admin role
         if (!session()->get('isLoggedIn') || session()->get('role') !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
         
         $data['user'] = [

@@ -12,7 +12,7 @@ class StudentController extends BaseController
         $role = strtolower((string) $session->get('role'));
         // Authorization: student or generic user
         if (!$session->get('isLoggedIn') || !in_array($role, ['student', 'user'], true)) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userModel = new UserModel();
