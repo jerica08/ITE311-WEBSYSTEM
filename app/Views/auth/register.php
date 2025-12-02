@@ -188,24 +188,6 @@
                                     </div>
                                 <?php endif; ?>
                             </div>
-                        <div class="mb-3">
-                            <label for="role" class="form-label fw-bold">Select Role</label>
-                            <select 
-                                class="form-control <?= isset($validation) && $validation->hasError('role') ? 'is-invalid' : '' ?>"
-                                id="role"
-                                name="role"
-                                required>
-                                <option value="" disabled <?= old('role') === null || old('role') === '' ? 'selected' : '' ?>>Select a role</option>
-                                <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
-                                <option value="teacher" <?= old('role') === 'teacher' ? 'selected' : '' ?>>Teacher</option>
-                                <option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
-                            </select>
-                            <?php if (isset($validation) && $validation->hasError('role')): ?>
-                                <div class="invalid-feedback d-block">
-                                    <?= $validation->getError('role') ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
 
                             <div class="mb-3">
                                 <label for="password" class="form-label fw-bold">Password</label>
@@ -248,6 +230,7 @@
                                 Sign In Here
                             </a>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

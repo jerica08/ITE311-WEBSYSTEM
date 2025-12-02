@@ -65,7 +65,7 @@ class Auth extends Controller
     }
 
     /**
-     * Display login form and process form submission
+     * Login form and process form submission
      */
     public function login()
     {
@@ -120,7 +120,7 @@ class Auth extends Controller
                             return redirect()->to('/student/dashboard');
                         default:
                             // default regular users go to student dashboard
-                            return redirect()->to('/student/dashboard');
+                        return redirect()->to('/student/dashboard');
                     }
                 } else {
                     $data['error'] = 'Invalid email or password.';
@@ -146,7 +146,7 @@ class Auth extends Controller
     }
 
     /**
-     * Protected dashboard page for logged-in users only
+     *Dashboard page for logged-in users only
      */
     public function dashboard()
     {
