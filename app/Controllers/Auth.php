@@ -69,8 +69,17 @@ class Auth extends Controller
      */
     public function login()
     {
-        // If user is already logged in, redirect to dashboard
+        // If user is already logged in, redirect to role-based dashboard
         if ($this->session->get('user_id')) {
+            $role = (string) $this->session->get('role');
+            if ($role === 'admin') {
+                return redirect()->to('/admin/dashboard');
+            } elseif (in_array($role, ['teacher', 'instructor'], true)) {
+                return redirect()->to('/teacher/dashboard');
+            } elseif ($role === 'student') {
+                return redirect()->to('/student/dashboard');
+            }
+
             return redirect()->to('/dashboard');
         }
 
@@ -108,24 +117,17 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-<<<<<<< HEAD
-                    // Role-based redirection
-                    $role = strtolower((string) $user['role']);
-                    switch ($role) {
-                        case 'admin':
-                            return redirect()->to('/admin/dashboard');
-                        case 'instructor':
-                        case 'teacher':
-                            return redirect()->to('/teacher/dashboard');
-                        case 'student':
-                            return redirect()->to('/student/dashboard');
-                        default:
-                            // Fallback: send to home page
-                            return redirect()->to('/');
+                    // Redirect based on role
+                    $role = (string) $user['role'];
+                    if ($role === 'admin') {
+                        return redirect()->to('/admin/dashboard');
+                    } elseif (in_array($role, ['teacher', 'instructor'], true)) {
+                        return redirect()->to('/teacher/dashboard');
+                    } elseif ($role === 'student') {
+                        return redirect()->to('/student/dashboard');
                     }
-=======
+
                     return redirect()->to('/dashboard');
->>>>>>> lab-5
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }

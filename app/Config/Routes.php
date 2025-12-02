@@ -25,6 +25,12 @@ $routes->group('auth', function($routes) {
     $routes->get('dashboard', 'Auth::dashboard');
 });
 
+// Support /auth/register and /auth/login URLs
+$routes->get('auth/register', 'Auth::register');
+$routes->post('auth/register', 'Auth::register');
+$routes->get('auth/login', 'Auth::login');
+$routes->post('auth/login', 'Auth::login');
+
 // Role-based dashboards (new controllers)
 $routes->get('admin/dashboard', 'AdminController::dashboard');
 $routes->get('admin/users', 'AdminController::users');
