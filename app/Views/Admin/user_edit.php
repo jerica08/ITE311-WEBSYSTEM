@@ -16,9 +16,9 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="fw-bold">Learning Management System</div>
             <div class="menu d-flex align-items-center gap-2">
-                <a href="<?= site_url('admin/dashboard') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;">Dashboard</a>
-                <a href="<?= site_url('admin/users') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;background: rgba(0,0,0,.15);">User Management</a>
-                <a href="<?= site_url('admin/courses') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;">Course Management</a>
+                <a href="<?= site_url('dashboard') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;">Dashboard</a>
+                <a href="<?= site_url('users') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;background: rgba(0,0,0,.15);">User Management</a>
+                <a href="<?= site_url('courses') ?>" style="color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:.3rem;">Course Management</a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm" style="background:#E74C3C;color:#fff;border:none;padding:.4rem .8rem;border-radius:.3rem;">Logout</a>
             </div>
         </div>
@@ -28,7 +28,7 @@
         <div class="card">
             <div class="card-header" style="background:#D1A11F;color:#000;font-weight:600;">Edit User Role</div>
             <div class="card-body">
-                <form action="<?= site_url('admin/users/update-role') ?>" method="post" class="row g-3">
+                <form action="<?= site_url('users/update-role') ?>" method="post" class="row g-3">
                     <?= csrf_field() ?>
                     <input type="hidden" name="id" value="<?= (int) $user['id'] ?>">
 
@@ -53,7 +53,7 @@
 
                     <div class="col-12 d-flex gap-2 mt-3">
                         <button type="submit" class="btn btn-primary">Save Changes</button>
-                        <a href="<?= site_url('admin/users') ?>" class="btn btn-secondary">Cancel</a>
+                        <a href="<?= site_url('users') ?>" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

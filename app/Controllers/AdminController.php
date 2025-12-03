@@ -188,11 +188,11 @@ class AdminController extends BaseController
     {
         $session = session();
         if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         if (!$this->request->is('post')) {
-            return redirect()->to('/admin/courses');
+            return redirect()->to('/courses');
         }
 
         $title = trim((string) $this->request->getPost('title'));
@@ -201,10 +201,10 @@ class AdminController extends BaseController
         $instructorId = (int) ($this->request->getPost('instructor_id') ?? 0);
 
         if ($title === '') {
-            return redirect()->to('/admin/courses')->with('error', 'Course title is required.');
+            return redirect()->to('/courses')->with('error', 'Course title is required.');
         }
         if ($instructorId <= 0) {
-            return redirect()->to('/admin/courses')->with('error', 'Instructor ID is required and must be a valid user ID.');
+            return redirect()->to('/courses')->with('error', 'Instructor ID is required and must be a valid user ID.');
         }
 
         $db = Database::connect();
@@ -218,9 +218,9 @@ class AdminController extends BaseController
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $db->table('courses')->insert($data);
-            return redirect()->to('/admin/courses')->with('success', 'Course created successfully.');
+            return redirect()->to('/courses')->with('success', 'Course created successfully.');
         } catch (\Throwable $e) {
-            return redirect()->to('/admin/courses')->with('error', 'Failed to create course.');
+            return redirect()->to('/courses')->with('error', 'Failed to create course.');
         }
     }
 

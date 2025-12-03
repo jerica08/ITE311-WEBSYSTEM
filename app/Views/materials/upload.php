@@ -22,7 +22,7 @@
     <div class="container my-4">
         <div class="d-flex align-items-center justify-content-between mb-2">
             <div class="section-title flex-grow-1 me-3"><i class="bi bi-upload me-2"></i>Upload Material<?= isset($course_id) ? ' (Course ID: '.esc($course_id).')' : '' ?></div>
-            <a href="<?= site_url((session('role') === 'teacher' || session('role') === 'instructor') ? 'teacher/dashboard' : ((session('role') === 'admin') ? 'admin/dashboard' : 'student/dashboard')) ?>" class="btn btn-outline-secondary">
+            <a href="<?= site_url((session('role') === 'teacher' || session('role') === 'instructor') ? 't-dashboard' : ((session('role') === 'admin') ? 'dashboard' : 's-dashboard')) ?>" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
             </a>
         </div>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-12 d-flex gap-2">
                             <button type="submit" class="btn btn-gold"><i class="bi bi-cloud-arrow-up me-1"></i>Upload</button>
-                            <a href="<?= site_url((session('role') === 'teacher' || session('role') === 'instructor') ? 'teacher/dashboard' : 'admin/dashboard') ?>" class="btn btn-outline-secondary">Cancel</a>
+                            <a href="<?= site_url((session('role') === 'teacher' || session('role') === 'instructor') ? 't-dashboard' : 'dashboard') ?>" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

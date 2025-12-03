@@ -22,9 +22,9 @@ class Auth extends Controller
      */
     public function register()
     {
-        // If user is already logged in, redirect to dashboard
+        // If user is already logged in, redirect to unified dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -52,7 +52,7 @@ class Auth extends Controller
                 // Save user to database
                 if ($this->userModel->save($userData)) {
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
-                    return redirect()->to('/auth/login');
+                    return redirect()->to('/login');
                 } else {
                     $data['error'] = 'Registration failed. Please try again.';
                 }
@@ -69,17 +69,8 @@ class Auth extends Controller
      */
     public function login()
     {
-        // If user is already logged in, redirect to role-based dashboard
+        // If user is already logged in, always go to unified dashboard
         if ($this->session->get('user_id')) {
-            $role = (string) $this->session->get('role');
-            if ($role === 'admin') {
-                return redirect()->to('/admin/dashboard');
-            } elseif (in_array($role, ['teacher', 'instructor'], true)) {
-                return redirect()->to('/teacher/dashboard');
-            } elseif ($role === 'student') {
-                return redirect()->to('/student/dashboard');
-            }
-
             return redirect()->to('/dashboard');
         }
 
@@ -117,16 +108,7 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-                    // Redirect based on role
-                    $role = (string) $user['role'];
-                    if ($role === 'admin') {
-                        return redirect()->to('/admin/dashboard');
-                    } elseif (in_array($role, ['teacher', 'instructor'], true)) {
-                        return redirect()->to('/teacher/dashboard');
-                    } elseif ($role === 'student') {
-                        return redirect()->to('/student/dashboard');
-                    }
-
+                    // After successful login, go to unified dashboard view
                     return redirect()->to('/dashboard');
                 } else {
                     $data['error'] = 'Invalid email or password.';
@@ -146,9 +128,9 @@ class Auth extends Controller
     {
         // Destroy session
         $this->session->destroy();
-        
+
         $this->session->setFlashdata('success', 'You have been logged out successfully.');
-        return redirect()->to('/auth/login');
+        return redirect()->to('/login');
     }
 
     /**
@@ -159,7 +141,7 @@ class Auth extends Controller
         // Check if user is logged in
         if (!$this->session->get('logged_in')) {
             $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $data = [

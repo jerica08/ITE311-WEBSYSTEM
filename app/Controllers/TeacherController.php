@@ -20,19 +20,19 @@ class TeacherController extends BaseController
 
         $db = Database::connect();
 
-        // Courses taught by this teacher
+        // Courses in the system (shown on teacher dashboard)
         $courses = [];
         try {
             if ($db->tableExists('courses')) {
-                $builder = $db->table('courses')->select('id, title, instructor_id');
-                if ($userId > 0) {
-                    $builder->where('instructor_id', $userId);
-                }
-                $coursesRows = $builder->orderBy('id', 'DESC')->get()->getResultArray();
+                $coursesRows = $db->table('courses')
+                    ->select('id, title, code, unit, instructor_id')
+                    ->orderBy('id', 'DESC')
+                    ->get()->getResultArray();
+
                 foreach ($coursesRows as $r) {
                     $courses[] = [
                         'id'    => $r['id'] ?? null,
-                        'term'  => $r['term'] ?? '-',
+                        'term'  => '-',
                         'title' => $r['title'] ?? '-',
                         'code'  => $r['code'] ?? '-',
                         'unit'  => $r['unit'] ?? '-',
@@ -86,11 +86,11 @@ class TeacherController extends BaseController
         $session = session();
         $role = strtolower((string) $session->get('role'));
         if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         if (!$this->request->is('post')) {
-            return redirect()->to('/teacher/dashboard');
+            return redirect()->to('/t-dashboard');
         }
 
         $title = trim((string) $this->request->getPost('title'));
@@ -99,7 +99,7 @@ class TeacherController extends BaseController
         $instructorId = (int) ($session->get('user_id') ?? 0);
 
         if ($title === '') {
-            return redirect()->to('/teacher/dashboard')->with('error', 'Course title is required.');
+            return redirect()->to('/t-dashboard')->with('error', 'Course title is required.');
         }
 
         $db = Database::connect();
@@ -113,9 +113,9 @@ class TeacherController extends BaseController
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $db->table('courses')->insert($data);
-            return redirect()->to('/teacher/dashboard')->with('success', 'Course created successfully.');
+            return redirect()->to('/t-dashboard')->with('success', 'Course created successfully.');
         } catch (\Throwable $e) {
-            return redirect()->to('/teacher/dashboard')->with('error', 'Failed to create course.');
+            return redirect()->to('/t-dashboard')->with('error', 'Failed to create course.');
         }
     }
 }

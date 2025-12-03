@@ -27,9 +27,9 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="fw-bold">Learning Management System</div>
             <div class="menu d-flex align-items-center gap-2">
-                <a href="<?= site_url('admin/dashboard') ?>">Dashboard</a>
-                <a href="<?= site_url('admin/users') ?>" class="active">User Management</a>
-                <a href="<?= site_url('admin/courses') ?>">Course Management</a>
+                <a href="<?= site_url('dashboard') ?>">Dashboard</a>
+                <a href="<?= site_url('users') ?>" class="active">User Management</a>
+                <a href="<?= site_url('courses') ?>">Course Management</a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn">Logout</a>
             </div>
         </div>
@@ -52,7 +52,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="section-title mb-0"><i class="bi bi-people-fill me-2"></i>Users</div>
-            <a href="<?= site_url('admin/users/create') ?>" class="btn btn-sm btn-success">Add User</a>
+            <a href="<?= site_url('users/create') ?>" class="btn btn-sm btn-success">Add User</a>
         </div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
@@ -76,8 +76,8 @@
                                 <td><?= esc($u['role']) ?></td>
                                 <td><?= esc($u['created_at'] ?? '') ?></td>
                                 <td>
-                                    <a href="<?= site_url('admin/users/edit/' . (int) $u['id']) ?>" class="btn btn-sm btn-primary">Edit</a>
-                                    <form action="<?= site_url('admin/users/delete') ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <a href="<?= site_url('users/edit/' . (int) $u['id']) ?>" class="btn btn-sm btn-primary">Edit</a>
+                                    <form action="<?= site_url('users/delete') ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="id" value="<?= (int) $u['id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>

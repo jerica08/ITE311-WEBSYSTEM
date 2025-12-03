@@ -27,9 +27,9 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="fw-bold">Learning Management System</div>
             <div class="menu d-flex align-items-center gap-2">
-                <a href="<?= site_url('admin/dashboard') ?>">Dashboard</a>
-                <a href="<?= site_url('admin/users') ?>">User Management</a>
-                <a href="<?= site_url('admin/courses') ?>" class="active">Course Management</a>
+                <a href="<?= site_url('dashboard') ?>">Dashboard</a>
+                <a href="<?= site_url('users') ?>">User Management</a>
+                <a href="<?= site_url('courses') ?>" class="active">Course Management</a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn">Logout</a>
             </div>
         </div>
@@ -51,7 +51,7 @@
 
         <div class="mb-2 section-title"><i class="bi bi-plus-square me-2"></i>Add Course</div>
         <div class="table-wrap p-3 mb-4">
-            <form method="post" action="<?= site_url('admin/courses/create') ?>" class="row g-3">
+            <form method="post" action="<?= site_url('courses/create') ?>" class="row g-3">
                 <?= csrf_field() ?>
                 <div class="col-md-4">
                     <label class="form-label">Title<span class="text-danger">*</span></label>
@@ -96,7 +96,7 @@
                                 <td><?= esc($c['instructor_id']) ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" href="<?= site_url('admin/course/' . (int)($c['id'] ?? 0) . '/upload') ?>">
+                                    <a class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" href="<?= site_url('course/' . (int)($c['id'] ?? 0) . '/upload') ?>">
                                         <i class="bi bi-upload me-1"></i>Upload Material
                                     </a>
                                 </td>

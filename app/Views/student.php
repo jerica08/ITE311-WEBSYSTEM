@@ -307,7 +307,7 @@
                           '</div>').insertBefore($('.section-title').first());
                         $btn.prop('disabled', true).text('Enrolled');
                     } else if (jqXHR.status === 401) {
-                        window.location.href = '<?= site_url('auth/login') ?>';
+                        window.location.href = '<?= site_url('login') ?>';
                     } else {
                         $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
                           (data && data.message ? data.message : 'Failed to enroll.') +
@@ -317,7 +317,7 @@
                     }
                 }).fail(function(jqXHR) {
                     if (jqXHR.status === 401) {
-                        window.location.href = '<?= site_url('auth/login') ?>';
+                        window.location.href = '<?= site_url('login') ?>';
                         return;
                     }
                     $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +

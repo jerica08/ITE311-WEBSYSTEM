@@ -87,6 +87,6 @@ class StudentController extends BaseController
             'grades'      => $grades,
         ];
 
-        return view('student/dashboard', $data);
+        return view('student', $data);
     }
 }

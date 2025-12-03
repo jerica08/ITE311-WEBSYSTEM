@@ -25,9 +25,9 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="fw-bold">Learning Management System</div>
             <div class="menu d-flex align-items-center gap-2">
-                <a href="<?= site_url('admin/dashboard') ?>">Dashboard</a>
-                <a href="<?= site_url('admin/users') ?>" class="active">User Management</a>
-                <a href="<?= site_url('admin/courses') ?>">Course Management</a>
+                <a href="<?= site_url('dashboard') ?>">Dashboard</a>
+                <a href="<?= site_url('users') ?>" class="active">User Management</a>
+                <a href="<?= site_url('courses') ?>">Course Management</a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn">Logout</a>
             </div>
         </div>

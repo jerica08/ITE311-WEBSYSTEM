@@ -19,35 +19,23 @@ $routes->post('/login', 'Auth::login');
 $routes->get('/logout', 'Auth::logout');
 $routes->get('/dashboard', 'Auth::dashboard');
 
-// Auth group routes (alternative approach)
-$routes->group('auth', function($routes) {
-    $routes->get('logout', 'Auth::logout');
-    $routes->get('dashboard', 'Auth::dashboard');
-});
-
-// Support /auth/register and /auth/login URLs
-$routes->get('auth/register', 'Auth::register');
-$routes->post('auth/register', 'Auth::register');
-$routes->get('auth/login', 'Auth::login');
-$routes->post('auth/login', 'Auth::login');
-
 // Role-based dashboards (new controllers)
-$routes->get('admin/dashboard', 'AdminController::dashboard');
-$routes->get('admin/users', 'AdminController::users');
-$routes->post('admin/users/update-role', 'AdminController::updateUserRole');
-$routes->get('admin/users/edit/(:num)', 'AdminController::editUser/$1');
-$routes->post('admin/users/delete', 'AdminController::deleteUser');
-$routes->get('admin/users/create', 'AdminController::createUser');
-$routes->post('admin/users/store', 'AdminController::storeUser');
-$routes->get('admin/courses', 'AdminController::courses');
-$routes->get('teacher/dashboard', 'TeacherController::dashboard');
-$routes->get('student/dashboard', 'StudentController::dashboard');
+$routes->get('dashboard', 'AdminController::dashboard');
+$routes->get('users', 'AdminController::users');
+$routes->post('users/update-role', 'AdminController::updateUserRole');
+$routes->get('users/edit/(:num)', 'AdminController::editUser/$1');
+$routes->post('users/delete', 'AdminController::deleteUser');
+$routes->get('users/create', 'AdminController::createUser');
+$routes->post('users/store', 'AdminController::storeUser');
+$routes->get('courses', 'AdminController::courses');
+$routes->get('t-dashboard', 'TeacherController::dashboard');
+$routes->get('s-dashboard', 'StudentController::dashboard');
 
 // Course actions
 $routes->post('course/enroll', 'Course::enroll');
 
 // Admin course management
-$routes->post('admin/courses/create', 'AdminController::createCourse');
+$routes->post('courses/create', 'AdminController::createCourse');
 
 // Teacher course management
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
@@ -60,8 +48,8 @@ $routes->post('materials/delete/(:num)', 'Materials::delete/$1');
 $routes->get('materials/download/(:num)', 'Materials::download/$1');
 
 // Admin routes for material uploads
-$routes->get('admin/course/(:num)/upload', 'Materials::upload/$1');
-$routes->post('admin/course/(:num)/upload', 'Materials::upload/$1');
+$routes->get('course/(:num)/upload', 'Materials::upload/$1');
+$routes->post('course/(:num)/upload', 'Materials::upload/$1');
 
 // Optional GET route for delete (use cautiously; POST is preferred)
 $routes->get('materials/delete/(:num)', 'Materials::delete/$1');
