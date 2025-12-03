@@ -37,6 +37,8 @@ $routes->get('admin/users', 'AdminController::users');
 $routes->post('admin/users/update-role', 'AdminController::updateUserRole');
 $routes->get('admin/users/edit/(:num)', 'AdminController::editUser/$1');
 $routes->post('admin/users/delete', 'AdminController::deleteUser');
+$routes->get('admin/users/create', 'AdminController::createUser');
+$routes->post('admin/users/store', 'AdminController::storeUser');
 $routes->get('admin/courses', 'AdminController::courses');
 $routes->get('teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('student/dashboard', 'StudentController::dashboard');

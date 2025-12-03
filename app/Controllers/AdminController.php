@@ -223,4 +223,45 @@ class AdminController extends BaseController
             return redirect()->to('/admin/courses')->with('error', 'Failed to create course.');
         }
     }
+
+    public function createUser()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        $data = [
+            'validation' => null,
+        ];
+
+        return view('admin/user_create', $data);
+    }
+
+    public function storeUser()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/users');
+        }
+
+        $userModel = new UserModel();
+
+        $data = [
+            'name'     => (string) $this->request->getPost('name'),
+            'email'    => (string) $this->request->getPost('email'),
+            'password' => (string) $this->request->getPost('password'),
+            'role'     => (string) $this->request->getPost('role'),
+        ];
+
+        if (!$userModel->insert($data)) {
+            return redirect()->back()->withInput()->with('errors', $userModel->errors());
+        }
+
+        return redirect()->to('/admin/users')->with('success', 'User created successfully.');
+    }
 }

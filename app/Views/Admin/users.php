@@ -50,7 +50,10 @@
             </div>
         <?php endif; ?>
 
-        <div class="mb-2 section-title"><i class="bi bi-people-fill me-2"></i>Users</div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="section-title mb-0"><i class="bi bi-people-fill me-2"></i>Users</div>
+            <a href="<?= site_url('admin/users/create') ?>" class="btn btn-sm btn-success">Add User</a>
+        </div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
                 <thead>
