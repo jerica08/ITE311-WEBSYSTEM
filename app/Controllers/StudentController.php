@@ -33,17 +33,15 @@ class StudentController extends BaseController
             $enrolledCourses = [];
         }
 
-        // Available courses = courses not yet enrolled by user
+        // Available courses: all courses in the system (student can choose which to enroll)
         $availableCourses = [];
         try {
             $db = Database::connect();
             if ($db->tableExists('courses')) {
-                $builder = $db->table('courses')->select('id, title, code, unit');
-                $enrolledIds = array_column($enrolledCourses, 'id');
-                if (!empty($enrolledIds)) {
-                    $builder->whereNotIn('id', $enrolledIds);
-                }
-                $availableCourses = $builder->orderBy('id', 'DESC')->get()->getResultArray();
+                $availableCourses = $db->table('courses')
+                    ->select('id, title, code, unit')
+                    ->orderBy('id', 'DESC')
+                    ->get()->getResultArray();
             }
         } catch (\Throwable $e) {
             $availableCourses = [];
