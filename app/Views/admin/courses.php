@@ -66,9 +66,32 @@
                     <input type="number" name="unit" class="form-control" min="0" max="10">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Instructor ID</label>
-                    <input type="number" name="instructor_id" class="form-control" min="0" placeholder="User ID of instructor">
+                    <label class="form-label">Instructor</label>
+                    <select name="instructor_id" class="form-select" required>
+                        <option value="">Select instructor</option>
+                        <?php if (!empty($teachers ?? [])): ?>
+                            <?php foreach ($teachers as $t): ?>
+                                <option value="<?= (int)($t['id'] ?? 0) ?>">
+                                    <?= esc($t['name'] ?? '') ?> (<?= esc($t['email'] ?? '') ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
                 </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Academic Year</label>
+                    <input type="text" name="academic_year" class="form-control" placeholder="e.g., 2024-2025">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="start_date" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="end_date" class="form-control">
+                </div>
+
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary" style="background-color:#DAA520;border:none;color:#000">Create Course</button>
                 </div>
@@ -82,23 +105,27 @@
                     <tr>
                         <th style="width:60px;">#</th>
                         <th>Title</th>
-                        <th style="width:160px;">Instructor ID</th>
+                        <th style="width:140px;">Instructor ID</th>
                         <th style="width:180px;">Created</th>
-                        <th style="width:200px;">Actions</th>
+                        <th style="width:240px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($courses ?? [])): ?>
                         <?php foreach ($courses as $i => $c): ?>
+                            <?php $cid = (int)($c['id'] ?? 0); ?>
                             <tr>
                                 <td><?= $i+1 ?></td>
-                                <td><?= esc($c['title']) ?></td>
-                                <td><?= esc($c['instructor_id']) ?></td>
+                                <td><?= esc($c['title'] ?? '') ?></td>
+                                <td><?= esc($c['instructor_id'] ?? '') ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
-                                <td>
-                                    <a class="btn btn-sm btn-primary" style="background-color:#DAA520;border:none;color:#000" href="<?= site_url('admin/course/' . (int)($c['id'] ?? 0) . '/upload') ?>">
-                                        <i class="bi bi-upload me-1"></i>Upload Material
-                                    </a>
+                                <td class="d-flex gap-1">
+                                    <a class="btn btn-sm btn-outline-secondary" href="<?= site_url('admin/courses/' . $cid) ?>">View</a>
+                                    <a class="btn btn-sm btn-outline-primary" href="<?= site_url('admin/courses/' . $cid . '/edit') ?>">Edit</a>
+                                    <form method="post" action="<?= site_url('admin/courses/' . $cid . '/delete') ?>" onsubmit="return confirm('Delete this course?');">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

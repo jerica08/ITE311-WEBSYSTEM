@@ -15,7 +15,7 @@ class StudentController extends BaseController
         $role = strtolower((string) $session->get('role'));
         // Authorization: student or generic user
         if (!$session->get('isLoggedIn') || !in_array($role, ['student', 'user'], true)) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userModel = new UserModel();
@@ -38,12 +38,16 @@ class StudentController extends BaseController
         try {
             $db = Database::connect();
             if ($db->tableExists('courses')) {
-                $builder = $db->table('courses')->select('id, title, code, unit');
+                $builder = $db->table('courses c')
+                    ->select('c.id, c.title, c.code, c.unit, c.academic_year, u.name AS instructor_name')
+                    ->join('users u', 'u.id = c.instructor_id', 'left');
+
                 $enrolledIds = array_column($enrolledCourses, 'id');
                 if (!empty($enrolledIds)) {
-                    $builder->whereNotIn('id', $enrolledIds);
+                    $builder->whereNotIn('c.id', $enrolledIds);
                 }
-                $availableCourses = $builder->orderBy('id', 'DESC')->get()->getResultArray();
+
+                $availableCourses = $builder->orderBy('c.id', 'DESC')->get()->getResultArray();
             }
         } catch (\Throwable $e) {
             $availableCourses = [];
@@ -87,6 +91,6 @@ class StudentController extends BaseController
             'grades'      => $grades,
         ];
 
-        return view('student/dashboard', $data);
+        return view('student', $data);
     }
 }

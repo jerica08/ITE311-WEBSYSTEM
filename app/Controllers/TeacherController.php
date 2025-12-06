@@ -13,7 +13,7 @@ class TeacherController extends BaseController
         // Authorization: teacher/instructor only
         $role = strtolower((string) $session->get('role'));
         if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $userId = (int) ($session->get('user_id') ?? 0);
@@ -77,7 +77,7 @@ class TeacherController extends BaseController
             'submissions' => $submissions,
         ];
 
-        return view('teacher/dashboard', $data);
+        return view('teacher', $data);
     }
 
     public function createCourse()
@@ -95,6 +95,9 @@ class TeacherController extends BaseController
         $title = trim((string) $this->request->getPost('title'));
         $code  = trim((string) ($this->request->getPost('code') ?? ''));
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
+        $startDate = (string) ($this->request->getPost('start_date') ?? '');
+        $endDate = (string) ($this->request->getPost('end_date') ?? '');
         $instructorId = (int) ($session->get('user_id') ?? 0);
 
         if ($title === '') {
@@ -107,6 +110,9 @@ class TeacherController extends BaseController
                 'title' => $title,
                 'code'  => $code !== '' ? $code : null,
                 'unit'  => $unit > 0 ? $unit : null,
+                'academic_year' => $academicYear !== '' ? $academicYear : null,
+                'start_date' => $startDate !== '' ? $startDate : null,
+                'end_date' => $endDate !== '' ? $endDate : null,
                 'instructor_id' => $instructorId > 0 ? $instructorId : null,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),

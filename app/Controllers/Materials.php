@@ -27,7 +27,7 @@ class Materials extends Controller
         $isLogged = (bool) ($this->session->get('isLoggedIn') ?? $this->session->get('logged_in') ?? false);
         if (!$isLogged) {
             log_message('warning', 'Materials::upload auth redirect (not logged in) uri={uri}', ['uri' => (string) $this->request->getUri()]);
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $role = strtolower((string) ($this->session->get('role') ?? $this->session->get('user_role') ?? ''));
@@ -111,7 +111,7 @@ class Materials extends Controller
     public function delete(int $material_id)
     {
         if (!$this->session->get('isLoggedIn')) {
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
         $role = strtolower((string) $this->session->get('role'));

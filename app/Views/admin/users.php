@@ -36,7 +36,12 @@
     </div>
 
     <div class="container my-4">
-        <div class="mb-2 section-title"><i class="bi bi-people-fill me-2"></i>Users</div>
+        <div class="mb-2 section-title d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-people-fill me-2"></i>Users</span>
+            <a href="<?= site_url('admin/users/create') ?>" class="btn btn-sm btn-success">
+                <i class="bi bi-person-plus-fill"></i> Add User
+            </a>
+        </div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
                 <thead>
@@ -46,6 +51,7 @@
                         <th>Email</th>
                         <th style="width:140px;">Role</th>
                         <th style="width:180px;">Created</th>
+                        <th style="width:160px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +63,17 @@
                                 <td><?= esc($u['email']) ?></td>
                                 <td><?= esc($u['role']) ?></td>
                                 <td><?= esc($u['created_at'] ?? '') ?></td>
+                                <td>
+                                    <a href="<?= site_url('admin/users/edit/' . $u['id']) ?>" class="btn btn-sm btn-primary me-1">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <form action="<?= site_url('admin/users/delete/' . $u['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

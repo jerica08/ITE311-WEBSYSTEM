@@ -11,7 +11,7 @@ $routes->get('/', 'Home::index');
 $routes->get('/about', 'Home::about');
 $routes->get('/contact', 'Home::contact');
 
-// Authentication Routes
+// Authentication Routes (primary URLs WITHOUT /auth prefix)
 $routes->get('/register', 'Auth::register');
 $routes->post('/register', 'Auth::register');
 $routes->get('/login', 'Auth::login');
@@ -19,32 +19,35 @@ $routes->post('/login', 'Auth::login');
 $routes->get('/logout', 'Auth::logout');
 $routes->get('/dashboard', 'Auth::dashboard');
 
-// Auth group routes (alternative approach)
-$routes->group('auth', function($routes) {
-    $routes->get('register', 'Auth::register');
-    $routes->post('register', 'Auth::register');
-    $routes->get('login', 'Auth::login');
-    $routes->post('login', 'Auth::login');
-    $routes->get('logout', 'Auth::logout');
-    $routes->get('dashboard', 'Auth::dashboard');
-});
-
-// Role-based dashboards (new controllers)
-$routes->get('admin/dashboard', 'AdminController::dashboard');
-$routes->get('admin/users', 'AdminController::users');
-$routes->get('admin/courses', 'AdminController::courses');
-$routes->get('teacher/dashboard', 'TeacherController::dashboard');
-$routes->get('student/dashboard', 'StudentController::dashboard');
+// (No /auth/... routes; primary URLs are non-prefixed)
 
 // Course actions
 $routes->post('course/enroll', 'Course::enroll');
 
-// Admin course management
+// Admin dashboard & management
+$routes->get('admin', 'AdminController::dashboard');
+$routes->get('admin/dashboard', 'AdminController::dashboard');
+$routes->get('admin/users', 'AdminController::users');
+$routes->get('admin/courses', 'AdminController::courses');
 $routes->post('admin/courses/create', 'AdminController::createCourse');
+
+// Admin course CRUD
+$routes->get('admin/courses/(:num)', 'AdminController::showCourse/$1');
+$routes->get('admin/courses/(:num)/edit', 'AdminController::editCourse/$1');
+$routes->post('admin/courses/(:num)/update', 'AdminController::updateCourse/$1');
+$routes->post('admin/courses/(:num)/delete', 'AdminController::deleteCourse/$1');
+
+// Admin user management actions
+$routes->get('admin/users/edit/(:num)', 'AdminController::editUser/$1');
+$routes->post('admin/users/update/(:num)', 'AdminController::updateUser/$1');
+$routes->post('admin/users/delete/(:num)', 'AdminController::deleteUser/$1');
+
+// Admin create user
+$routes->get('admin/users/create', 'AdminController::createUserForm');
+$routes->post('admin/users/store', 'AdminController::storeUser');
 
 // Teacher course management
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
-
 
 // Materials management
 $routes->get('materials/upload/(:num)', 'Materials::upload/$1');

@@ -24,7 +24,7 @@ class Auth extends Controller
     {
         // If user is already logged in, redirect to dashboard
         if ($this->session->get('user_id')) {
-            return redirect()->to('/auth/dashboard');
+            return redirect()->to('/dashboard');
         }
 
         $data = [];
@@ -52,7 +52,7 @@ class Auth extends Controller
                 // Save user to database
                 if ($this->userModel->save($userData)) {
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
-                    return redirect()->to('/auth/login');
+                    return redirect()->to('/login');
                 } else {
                     $data['error'] = 'Registration failed. Please try again.';
                 }
@@ -108,20 +108,8 @@ class Auth extends Controller
 
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
-                    // Role-based redirection
-                    $role = strtolower((string) $user['role']);
-                    switch ($role) {
-                        case 'admin':
-                            return redirect()->to('/admin/dashboard');
-                        case 'instructor':
-                        case 'teacher':
-                            return redirect()->to('/teacher/dashboard');
-                        case 'student':
-                            return redirect()->to('/student/dashboard');
-                        default:
-                            // Fallback: send to home page
-                            return redirect()->to('/');
-                    }
+                    // Go through the generic dashboard route
+                    return redirect()->to('/dashboard');
                 } else {
                     $data['error'] = 'Invalid email or password.';
                 }
@@ -142,7 +130,7 @@ class Auth extends Controller
         $this->session->destroy();
         
         $this->session->setFlashdata('success', 'You have been logged out successfully.');
-        return redirect()->to('/auth/login');
+        return redirect()->to('/login');
     }
 
     /**
@@ -153,19 +141,38 @@ class Auth extends Controller
         // Check if user is logged in
         if (!$this->session->get('logged_in')) {
             $this->session->setFlashdata('error', 'Please login to access the dashboard.');
-            return redirect()->to('/auth/login');
+            return redirect()->to('/login');
         }
 
-        $data = [
-            'user' => [
-                'id' => $this->session->get('user_id'),
-                'name' => $this->session->get('user_name'),
-                'email' => $this->session->get('user_email'),
-                'role' => $this->session->get('user_role')
-            ]
-        ];
+        // Decide which dashboard to show based on role, but keep URL as /dashboard
+        $role = strtolower((string) $this->session->get('user_role'));
 
-        return view('auth/dashboard', $data);
+        switch ($role) {
+            case 'admin':
+                // Render admin dashboard without changing URL
+                return (new \App\Controllers\AdminController())->dashboard();
+
+            case 'instructor':
+            case 'teacher':
+                // Render teacher dashboard without changing URL
+                return (new \App\Controllers\TeacherController())->dashboard();
+
+            case 'student':
+                // Render student dashboard without changing URL
+                return (new \App\Controllers\StudentController())->dashboard();
+            default:
+                // Fallback: show the generic auth dashboard with basic user info
+                $data = [
+                    'user' => [
+                        'id' => $this->session->get('user_id'),
+                        'name' => $this->session->get('user_name'),
+                        'email' => $this->session->get('user_email'),
+                        'role' => $this->session->get('user_role')
+                    ]
+                ];
+
+                return view('auth/dashboard', $data);
+        }
     }
 
     /**
