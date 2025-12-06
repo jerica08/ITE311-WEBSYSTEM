@@ -50,6 +50,7 @@ $routes->get('admin/users/create', 'AdminController::createUserForm');
 $routes->post('admin/users/store', 'AdminController::storeUser');
 
 // Teacher course management
+$routes->get('teacher/courses', 'TeacherController::myCourses');
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
 $routes->get('teacher/courses/(:num)', 'TeacherController::showCourse/$1');
 $routes->get('teacher/courses/(:num)/edit', 'TeacherController::editCourse/$1');

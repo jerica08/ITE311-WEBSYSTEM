@@ -81,6 +81,51 @@ class TeacherController extends BaseController
         return view('teacher', $data);
     }
 
+    public function myCourses()
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+        $db = Database::connect();
+
+        // Same courses list as in dashboard
+        $courses = [];
+        try {
+            if ($db->tableExists('courses')) {
+                $builder = $db->table('courses')
+                    ->select('id, title, code, unit, created_at, instructor_id');
+                if ($userId > 0) {
+                    $builder->where('instructor_id', $userId);
+                }
+                $coursesRows = $builder->orderBy('created_at', 'DESC')->get()->getResultArray();
+                foreach ($coursesRows as $r) {
+                    $courses[] = [
+                        'id'         => $r['id'] ?? null,
+                        'title'      => $r['title'] ?? '-',
+                        'code'       => $r['code'] ?? '-',
+                        'unit'       => $r['unit'] ?? '-',
+                        'created_at' => $r['created_at'] ?? '-',
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            $courses = [];
+        }
+
+        return view('teacher/my_courses', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'courses' => $courses,
+        ]);
+    }
+
     public function showCourse($id)
     {
         $session = session();

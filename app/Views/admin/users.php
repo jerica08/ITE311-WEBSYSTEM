@@ -64,12 +64,12 @@
                                 <td><?= esc($u['role']) ?></td>
                                 <td><?= esc($u['created_at'] ?? '') ?></td>
                                 <td>
-                                    <a href="<?= site_url('admin/users/edit/' . $u['id']) ?>" class="btn btn-sm btn-primary me-1">
+                                    <a href="<?= site_url('admin/users/edit/' . $u['id']) ?>" class="btn btn-sm btn-outline-primary me-1">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <form action="<?= site_url('admin/users/delete/' . $u['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                         <?= csrf_field() ?>
-                                        <button type="submit" class="btn btn-sm btn-danger">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
                                             <i class="bi bi-trash"></i> Delete
                                         </button>
                                     </form>

@@ -39,7 +39,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                     <a href="<?= site_url('admin/courses') ?>">Course Management</a>
                 <?php elseif ($role === 'teacher' || $role === 'instructor'): ?>
                     <a href="<?= site_url('dashboard') ?>">Dashboard</a>
-                    <a href="#">My Courses</a>
+                    <a href="<?= site_url('teacher/courses') ?>" class="<?= (strpos(uri_string(), 'teacher/courses') === 0 ? 'active' : '') ?>">My Courses</a>
                     <a href="#">Assignments</a>
                 <?php elseif ($role === 'student'): ?>
                     <a href="<?= site_url('dashboard') ?>">Dashboard</a>
