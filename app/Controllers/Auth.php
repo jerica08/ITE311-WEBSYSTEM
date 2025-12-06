@@ -3,17 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\StudentModel;
 use CodeIgniter\Controller;
 
 class Auth extends Controller
 {
     protected $userModel;
+    protected $studentModel;
     protected $session;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
-        $this->session = \Config\Services::session();
+        $this->userModel    = new UserModel();
+        $this->studentModel = new StudentModel();
+        $this->session      = \Config\Services::session();
         helper(['form', 'url']);
     }
 
@@ -51,6 +54,19 @@ class Auth extends Controller
 
                 // Save user to database
                 if ($this->userModel->save($userData)) {
+                    // Get the newly inserted user ID
+                    $userId = $this->userModel->getInsertID();
+
+                    // Also create related student record
+                    try {
+                        $this->studentModel->insert([
+                            'user_id' => $userId,
+                            'email'   => $this->request->getPost('email'),
+                        ]);
+                    } catch (\Throwable $e) {
+                        // Optional: log error but do not block registration
+                    }
+
                     $this->session->setFlashdata('success', 'Registration successful! Please login.');
                     return redirect()->to('/login');
                 } else {

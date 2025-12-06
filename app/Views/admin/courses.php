@@ -107,6 +107,8 @@
                         <th>Title</th>
                         <th style="width:140px;">Instructor ID</th>
                         <th style="width:180px;">Created</th>
+                        <th style="width:140px;">View Students</th>
+                        <th style="width:160px;">Upload Materials</th>
                         <th style="width:240px;">Actions</th>
                     </tr>
                 </thead>
@@ -119,7 +121,13 @@
                                 <td><?= esc($c['title'] ?? '') ?></td>
                                 <td><?= esc($c['instructor_id'] ?? '') ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
-                                <td class="d-flex gap-1">
+                                <td>
+                                    <a class="btn btn-sm btn-outline-success w-100" href="<?= site_url('admin/courses/' . $cid . '/students') ?>">View Students</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-warning w-100" href="<?= site_url('admin/courses/' . $cid . '/materials') ?>">Upload Materials</a>
+                                </td>
+                                <td class="d-flex flex-wrap gap-1">
                                     <a class="btn btn-sm btn-outline-secondary" href="<?= site_url('admin/courses/' . $cid) ?>">View</a>
                                     <a class="btn btn-sm btn-outline-primary" href="<?= site_url('admin/courses/' . $cid . '/edit') ?>">Edit</a>
                                     <form method="post" action="<?= site_url('admin/courses/' . $cid . '/delete') ?>" onsubmit="return confirm('Delete this course?');">
@@ -131,7 +139,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="text-muted">No courses found.</td>
+                            <td colspan="7" class="text-muted">No courses found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

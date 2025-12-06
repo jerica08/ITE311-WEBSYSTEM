@@ -37,6 +37,9 @@ $routes->get('admin/courses/(:num)/edit', 'AdminController::editCourse/$1');
 $routes->post('admin/courses/(:num)/update', 'AdminController::updateCourse/$1');
 $routes->post('admin/courses/(:num)/delete', 'AdminController::deleteCourse/$1');
 
+// Admin view students enrolled in a course
+$routes->get('admin/courses/(:num)/students', 'AdminController::courseStudents/$1');
+
 // Admin user management actions
 $routes->get('admin/users/edit/(:num)', 'AdminController::editUser/$1');
 $routes->post('admin/users/update/(:num)', 'AdminController::updateUser/$1');

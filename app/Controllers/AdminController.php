@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\StudentModel;
 use App\Models\CourseModel;
 use Config\Database;
 
@@ -15,7 +16,8 @@ class AdminController extends BaseController
             return redirect()->to('/auth/login');
         }
 
-        $userModel = new UserModel();
+        $userModel    = new UserModel();
+        $studentModel = new StudentModel();
         $db = Database::connect();
 
         // Totals
@@ -132,6 +134,22 @@ class AdminController extends BaseController
                 'password' => password_hash($password, PASSWORD_DEFAULT),
                 'role'     => $role,
             ]);
+
+            // If this new user is a student, also create a record in students table
+            if (strtolower($role) === 'student') {
+                $userId = $userModel->getInsertID();
+
+                if ($userId) {
+                    try {
+                        $studentModel->insert([
+                            'user_id' => $userId,
+                            'email'   => $email,
+                        ]);
+                    } catch (\Throwable $e) {
+                        // Optionally log, but don't block user creation in admin
+                    }
+                }
+            }
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Failed to create user. The email may already be in use.');
         }
@@ -239,6 +257,49 @@ class AdminController extends BaseController
                 'role'  => $session->get('role'),
             ],
             'course' => $course,
+        ]);
+    }
+
+    public function courseStudents($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $db = Database::connect();
+
+        // Load course
+        $course = $db->table('courses')->where('id', (int) $id)->get()->getRowArray();
+        if (!$course) {
+            return redirect()->to('/admin/courses')->with('error', 'Course not found.');
+        }
+
+        // Fetch enrolled students for this course
+        $students = [];
+        try {
+            if ($db->tableExists('enrollments')) {
+                $builder = $db->table('enrollments e')
+                    ->select('u.id as user_id, u.name, u.email, u.created_at as enrolled_at')
+                    ->join('users u', 'u.id = e.user_id', 'inner')
+                    ->where('e.course_id', (int) $id)
+                    ->where('u.role', 'student')
+                    ->orderBy('u.name', 'ASC');
+
+                $students = $builder->get()->getResultArray();
+            }
+        } catch (\Throwable $e) {
+            $students = [];
+        }
+
+        return view('admin/course_students', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'course'   => $course,
+            'students' => $students,
         ]);
     }
 
