@@ -22,12 +22,31 @@ class StudentController extends BaseController
 
         $userId = (int) ($session->get('user_id') ?? 0);
 
-        // Enrolled courses via EnrollmentModel join
+        // Enrolled courses via EnrollmentModel join (filtered by course date window)
         $enrolledCourses = [];
         try {
             $enrollmentModel = new EnrollmentModel();
             if ($userId > 0) {
                 $enrolledCourses = $enrollmentModel->getUserEnrollments($userId);
+
+                // Filter out courses that are outside their active date range
+                $today = date('Y-m-d');
+                $enrolledCourses = array_values(array_filter($enrolledCourses, static function (array $c) use ($today): bool {
+                    $start = isset($c['start_date']) && $c['start_date'] !== null && $c['start_date'] !== ''
+                        ? substr((string) $c['start_date'], 0, 10)
+                        : null;
+                    $end = isset($c['end_date']) && $c['end_date'] !== null && $c['end_date'] !== ''
+                        ? substr((string) $c['end_date'], 0, 10)
+                        : null;
+
+                    if ($start !== null && $today < $start) {
+                        return false; // not started yet
+                    }
+                    if ($end !== null && $today > $end) {
+                        return false; // already ended
+                    }
+                    return true;
+                }));
             }
         } catch (\Throwable $e) {
             $enrolledCourses = [];
@@ -39,9 +58,16 @@ class StudentController extends BaseController
             $db = Database::connect();
             if ($db->tableExists('courses')) {
                 $builder = $db->table('courses c')
-                    ->select('c.id, c.title, c.code, c.unit, c.academic_year, u.name AS instructor_name')
+                    ->select('c.id, c.title, c.code, c.unit, c.academic_year, c.start_date, c.end_date, u.name AS instructor_name')
                     ->join('users u', 'u.id = c.instructor_id', 'left');
 
+                // Only currently active courses (by date window)
+                $today = date('Y-m-d');
+                $escapedToday = $db->escape($today);
+                $builder->where("(c.start_date IS NULL OR c.start_date <= $escapedToday)", null, false);
+                $builder->where("(c.end_date IS NULL OR c.end_date >= $escapedToday)", null, false);
+
+                // Exclude courses already enrolled
                 $enrolledIds = array_column($enrolledCourses, 'id');
                 if (!empty($enrolledIds)) {
                     $builder->whereNotIn('c.id', $enrolledIds);

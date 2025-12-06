@@ -47,16 +47,40 @@ class Course extends BaseController
                 ->setJSON(['status' => 'error', 'message' => 'Invalid course_id']);
         }
 
-        // Ensure course exists
+        // Ensure course exists and is within its active date range
         $db = Database::connect();
+        $course = null;
         try {
-            $courseExists = $db->table('courses')->where('id', $courseId)->countAllResults() > 0;
+            $course = $db->table('courses')
+                ->select('id, start_date, end_date')
+                ->where('id', $courseId)
+                ->get()->getRowArray();
         } catch (\Throwable $e) {
-            $courseExists = false;
+            $course = null;
         }
-        if (!$courseExists) {
+
+        if (!$course) {
             return $this->response->setStatusCode(404)
                 ->setJSON(['status' => 'error', 'message' => 'Course not found']);
+        }
+
+        // Check availability window
+        $today = date('Y-m-d');
+        $startDate = isset($course['start_date']) && $course['start_date'] !== null && $course['start_date'] !== ''
+            ? substr((string) $course['start_date'], 0, 10)
+            : null;
+        $endDate = isset($course['end_date']) && $course['end_date'] !== null && $course['end_date'] !== ''
+            ? substr((string) $course['end_date'], 0, 10)
+            : null;
+
+        if ($startDate !== null && $today < $startDate) {
+            return $this->response->setStatusCode(400)
+                ->setJSON(['status' => 'error', 'message' => 'This course is not yet open for enrollment.']);
+        }
+
+        if ($endDate !== null && $today > $endDate) {
+            return $this->response->setStatusCode(400)
+                ->setJSON(['status' => 'error', 'message' => 'Enrollment for this course has ended.']);
         }
 
         $enrollmentModel = new EnrollmentModel();
