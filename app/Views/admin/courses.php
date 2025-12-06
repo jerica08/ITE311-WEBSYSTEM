@@ -125,7 +125,7 @@
                                     <a class="btn btn-sm btn-outline-success w-100" href="<?= site_url('admin/courses/' . $cid . '/students') ?>">View Students</a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-warning w-100" href="<?= site_url('admin/courses/' . $cid . '/materials') ?>">Upload Materials</a>
+                                    <a class="btn btn-sm btn-outline-warning w-100" href="<?= site_url('admin/course/' . $cid . '/upload') ?>">Upload Materials</a>
                                 </td>
                                 <td class="d-flex flex-wrap gap-1">
                                     <a class="btn btn-sm btn-outline-secondary" href="<?= site_url('admin/courses/' . $cid) ?>">View</a>

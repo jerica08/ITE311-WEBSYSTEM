@@ -183,7 +183,10 @@
                             <ul class="list-group list-group-flush">
                                 <?php foreach ($materials as $m): ?>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span><i class="bi bi-file-earmark-text me-2"></i><?= esc($m['file_name'] ?? 'File') ?></span>
+                                        <div>
+                                            <div><i class="bi bi-file-earmark-text me-2"></i><?= esc($m['file_name'] ?? 'File') ?></div>
+                                            <div class="small text-muted">Uploaded: <?= esc($m['created_at'] ?? '-') ?></div>
+                                        </div>
                                         <a class="btn btn-sm btn-outline-primary" href="<?= site_url('materials/download/' . (int)($m['id'] ?? 0)) ?>">
                                             <i class="bi bi-download me-1"></i>Download
                                         </a>

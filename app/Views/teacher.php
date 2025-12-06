@@ -166,34 +166,48 @@
             <table class="table table-sm align-middle mb-0">
                 <thead>
                     <tr>
-                        <th>Course</th>
+                        <th style="width:60px;">#</th>
+                        <th>Title</th>
                         <th style="width:160px;">Subject Code</th>
                         <th style="width:100px;">Unit</th>
-                        <th style="width:160px;">Action</th>
+                        <th style="width:180px;">Created</th>
+                        <th style="width:140px;">View Students</th>
+                        <th style="width:160px;">Upload Materials</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($courses ?? [])): ?>
-                        <?php foreach ($courses as $c): ?>
+                        <?php foreach ($courses as $i => $c): ?>
+                            <?php $cid = (int)($c['id'] ?? 0); ?>
                             <tr>
+                                <td><?= $i+1 ?></td>
                                 <td><?= esc($c['title'] ?? '-') ?></td>
                                 <td><?= esc($c['code'] ?? '-') ?></td>
                                 <td><?= esc($c['unit'] ?? '-') ?></td>
+                                <td><?= esc($c['created_at'] ?? '-') ?></td>
                                 <td>
-                                    <?php $cid = (int)($c['id'] ?? 0); ?>
                                     <?php if ($cid > 0): ?>
-                                        <a class="btn btn-sm btn-outline-primary" href="<?= site_url('materials/upload/' . $cid) ?>">
-                                            <i class="bi bi-upload me-1"></i>Upload Material
+                                        <a class="btn btn-sm btn-outline-success w-100" href="<?= site_url('teacher/courses/' . $cid . '/students') ?>">
+                                            View Students
                                         </a>
                                     <?php else: ?>
-                                        <span class="text-muted">No course ID</span>
+                                        <span class="text-muted">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($cid > 0): ?>
+                                        <a class="btn btn-sm btn-outline-warning w-100" href="<?= site_url('materials/upload/' . $cid) ?>">
+                                            Upload Materials
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="text-muted">-</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-muted">You are not assigned to any courses yet.</td>
+                            <td colspan="8" class="text-muted">You are not assigned to any courses yet.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

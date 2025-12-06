@@ -24,18 +24,19 @@ class TeacherController extends BaseController
         $courses = [];
         try {
             if ($db->tableExists('courses')) {
-                $builder = $db->table('courses')->select('id, title, instructor_id');
+                $builder = $db->table('courses')
+                    ->select('id, title, code, unit, created_at, instructor_id');
                 if ($userId > 0) {
                     $builder->where('instructor_id', $userId);
                 }
-                $coursesRows = $builder->orderBy('id', 'DESC')->get()->getResultArray();
+                $coursesRows = $builder->orderBy('created_at', 'DESC')->get()->getResultArray();
                 foreach ($coursesRows as $r) {
                     $courses[] = [
-                        'id'    => $r['id'] ?? null,
-                        'term'  => $r['term'] ?? '-',
-                        'title' => $r['title'] ?? '-',
-                        'code'  => $r['code'] ?? '-',
-                        'unit'  => $r['unit'] ?? '-',
+                        'id'         => $r['id'] ?? null,
+                        'title'      => $r['title'] ?? '-',
+                        'code'       => $r['code'] ?? '-',
+                        'unit'       => $r['unit'] ?? '-',
+                        'created_at' => $r['created_at'] ?? '-',
                     ];
                 }
             }
@@ -78,6 +79,136 @@ class TeacherController extends BaseController
         ];
 
         return view('teacher', $data);
+    }
+
+    public function showCourse($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+        $courseModel = new \App\Models\CourseModel();
+        $course = $courseModel->where('instructor_id', $userId)->find((int) $id);
+        if (!$course) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Course not found or you are not the instructor.');
+        }
+
+        return view('admin/course_view', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'course' => $course,
+        ]);
+    }
+
+    public function courseStudents($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+        $db = Database::connect();
+
+        // Load course and ensure it belongs to this teacher
+        $course = $db->table('courses')
+            ->where('id', (int) $id)
+            ->where('instructor_id', $userId)
+            ->get()->getRowArray();
+
+        if (!$course) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Course not found or you are not the instructor.');
+        }
+
+        // Fetch enrolled students for this course
+        $students = [];
+        try {
+            if ($db->tableExists('enrollments')) {
+                $builder = $db->table('enrollments e')
+                    ->select('u.id as user_id, u.name, u.email, u.created_at as enrolled_at')
+                    ->join('users u', 'u.id = e.user_id', 'inner')
+                    ->where('e.course_id', (int) $id)
+                    ->where('u.role', 'student')
+                    ->orderBy('u.name', 'ASC');
+
+                $students = $builder->get()->getResultArray();
+            }
+        } catch (\Throwable $e) {
+            $students = [];
+        }
+
+        return view('teacher/course_students', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'course'   => $course,
+            'students' => $students,
+        ]);
+    }
+
+    public function editCourse($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/auth/login');
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+
+        $courseModel = new \App\Models\CourseModel();
+        $course = $courseModel->where('instructor_id', $userId)->find((int) $id);
+        if (!$course) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Course not found or you are not the instructor.');
+        }
+
+        $userModel = new UserModel();
+        $teachers = $userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
+
+        return view('admin/course_edit', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'course'   => $course,
+            'teachers' => $teachers,
+        ]);
+    }
+
+    public function deleteCourse($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/teacher/dashboard');
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+        $courseModel = new \App\Models\CourseModel();
+
+        // Ensure course belongs to this teacher
+        $course = $courseModel->where('instructor_id', $userId)->find((int) $id);
+        if (!$course) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Course not found or you are not the instructor.');
+        }
+
+        $courseModel->delete((int) $id);
+
+        return redirect()->to('/teacher/dashboard')->with('success', 'Course deleted successfully.');
     }
 
     public function createCourse()

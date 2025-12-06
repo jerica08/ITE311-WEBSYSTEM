@@ -51,6 +51,10 @@ $routes->post('admin/users/store', 'AdminController::storeUser');
 
 // Teacher course management
 $routes->post('teacher/courses/create', 'TeacherController::createCourse');
+$routes->get('teacher/courses/(:num)', 'TeacherController::showCourse/$1');
+$routes->get('teacher/courses/(:num)/edit', 'TeacherController::editCourse/$1');
+$routes->post('teacher/courses/(:num)/delete', 'TeacherController::deleteCourse/$1');
+$routes->get('teacher/courses/(:num)/students', 'TeacherController::courseStudents/$1');
 
 // Materials management
 $routes->get('materials/upload/(:num)', 'Materials::upload/$1');
