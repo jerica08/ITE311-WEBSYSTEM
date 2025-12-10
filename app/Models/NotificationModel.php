@@ -9,7 +9,7 @@ class NotificationModel extends Model
     protected $table            = 'notifications';
     protected $primaryKey       = 'id';
     protected $returnType       = 'array';
-    protected $allowedFields    = ['user_id', 'message', 'is_read', 'created_at'];
+    protected $allowedFields    = ['user_id', 'title', 'message', 'type', 'related_id', 'is_read', 'created_at'];
 
     protected $useTimestamps    = false;
 

@@ -109,6 +109,9 @@
                         <th>Course</th>
                         <th style="width:160px;">Subject Code</th>
                         <th style="width:100px;">Unit</th>
+                        <th style="width:120px;">Year Level</th>
+                        <th style="width:120px;">Department</th>
+                        <th style="width:140px;">Academic Year</th>
                         <th style="width:180px;">Enrolled On</th>
                     </tr>
                 </thead>
@@ -119,18 +122,80 @@
                                 <td><?= esc($c['title'] ?? '-') ?></td>
                                 <td><?= esc($c['code'] ?? '-') ?></td>
                                 <td><?= esc($c['unit'] ?? '-') ?></td>
+                                <td><?= esc($c['course_level'] ?? '-') ?></td>
+                                <td><?= esc($c['department'] ?? '-') ?></td>
+                                <td><?= esc($c['academic_year'] ?? '-') ?></td>
                                 <td><?= esc($c['enrollment_date'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-muted">No enrolled courses.</td>
+                            <td colspan="7" class="text-muted">No enrolled courses.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
+        <!-- Pending Enrollments -->
+        <div class="mb-2 section-title"><i class="bi bi-clock-history me-2"></i>Pending Enrollments</div>
+        <div class="table-wrap mb-4">
+            <table class="table table-sm align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th style="width:160px;">Subject Code</th>
+                        <th style="width:100px;">Unit</th>
+                        <th style="width:120px;">Year Level</th>
+                        <th style="width:120px;">Department</th>
+                        <th style="width:140px;">Academic Year</th>
+                        <th style="width:180px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="pending-tbody">
+                    <?php 
+                    // Get pending enrollments for this student
+                    $pendingEnrollments = [];
+                    try {
+                        $enrollmentModel = new \App\Models\EnrollmentModel();
+                        $userId = (int) (session()->get('user_id') ?? 0);
+                        if ($userId > 0) {
+                            $pendingEnrollments = $enrollmentModel
+                                ->select('courses.*, enrollments.enrollment_date, enrollments.enrollment_status')
+                                ->join('courses', 'courses.id = enrollments.course_id')
+                                ->where('enrollments.user_id', $userId)
+                                ->where('enrollments.enrollment_status', 'pending')
+                                ->orderBy('enrollments.enrollment_date', 'DESC')
+                                ->findAll();
+                        }
+                    } catch (\Throwable $e) {
+                        $pendingEnrollments = [];
+                    }
+                    ?>
+                    <?php if (!empty($pendingEnrollments)): ?>
+                        <?php foreach ($pendingEnrollments as $c): ?>
+                            <tr>
+                                <td><?= esc($c['title'] ?? '-') ?></td>
+                                <td><?= esc($c['code'] ?? '-') ?></td>
+                                <td><?= esc($c['unit'] ?? '-') ?></td>
+                                <td><?= esc($c['course_level'] ?? '-') ?></td>
+                                <td><?= esc($c['department'] ?? '-') ?></td>
+                                <td><?= esc($c['academic_year'] ?? '-') ?></td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-clock me-1"></i>Waiting for approval
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-3">No pending enrollments.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Available Courses -->
         <div class="mb-2 section-title"><i class="bi bi-journal-bookmark-fill me-2"></i>Available Courses</div>
@@ -141,6 +206,8 @@
                         <th>Course</th>
                         <th style="width:160px;">Subject Code</th>
                         <th style="width:100px;">Unit</th>
+                        <th style="width:120px;">Year Level</th>
+                        <th style="width:120px;">Department</th>
                         <th style="width:180px;">Instructor</th>
                         <th style="width:140px;">Academic Year</th>
                         <th style="width:140px;">Action</th>
@@ -153,6 +220,8 @@
                                 <td><?= esc($ac['title'] ?? '-') ?></td>
                                 <td><?= esc($ac['code'] ?? '-') ?></td>
                                 <td><?= esc($ac['unit'] ?? '-') ?></td>
+                                <td><?= esc($ac['course_level'] ?? '-') ?></td>
+                                <td><?= esc($ac['department'] ?? '-') ?></td>
                                 <td><?= esc($ac['instructor_name'] ?? '-') ?></td>
                                 <td><?= esc($ac['academic_year'] ?? '-') ?></td>
                                 <td>
@@ -164,7 +233,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="text-muted">No available courses to enroll.</td>
+                            <td colspan="8" class="text-muted">No available courses to enroll.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -286,26 +355,27 @@
                     course_id: courseId,
                     [tokenName]: tokenHash,
                 }).done(function(data, textStatus, jqXHR) {
-                    // On success: add to enrolled list and disable button
-                    if (jqXHR.status === 201 && data && data.status === 'success') {
+                    // On success: handle pending enrollment
+                    if (data && data.status === 'success') {
                         const $row = $btn.closest('tr');
                         const title = $row.find('td').eq(0).text();
-                        const code  = $row.find('td').eq(1).text();
-                        const unit  = $row.find('td').eq(2).text();
+                        const code = $row.find('td').eq(1).text();
+                        const unit = $row.find('td').eq(2).text();
+                        const level = $row.find('td').eq(3).text();
+                        const dept = $row.find('td').eq(4).text();
+                        const year = $row.find('td').eq(6).text();
 
-                        // Append new enrolled row
-                        const now = new Date();
-                        const stamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
-                        $('#enrolled-tbody').append(
-                            `<tr><td>${$('<div>').text(title).html()}</td><td>${$('<div>').text(code).html()}</td><td>${$('<div>').text(unit).html()}</td><td>${stamp}</td></tr>`
+                        // Add to pending enrollments
+                        $('#pending-tbody').prepend(
+                            `<tr><td>${$('<div>').text(title).html()}</td><td>${$('<div>').text(code).html()}</td><td>${$('<div>').text(unit).html()}</td><td>${$('<div>').text(level).html()}</td><td>${$('<div>').text(dept).html()}</td><td>${$('<div>').text(year).html()}</td><td><span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>Waiting for approval</span></td></tr>`
                         );
 
                         // Remove available row
                         $('#course-row-' + courseId).remove();
 
                         // Show alert
-                        $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                          'Enrolled in ' + $('<div>').text(title).html() + ' successfully.' +
+                        $('<div class="alert alert-info alert-dismissible fade show" role="alert">' +
+                          data.message + 
                           '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
                           '</div>').insertBefore($('.section-title').first());
                     } else if (jqXHR.status === 409) {

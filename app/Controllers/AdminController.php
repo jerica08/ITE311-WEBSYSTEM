@@ -171,7 +171,7 @@ class AdminController extends BaseController
         try {
             if ($db->tableExists('courses')) {
                 $courses = $db->table('courses')
-                    ->select('id, title, code, unit, course_level, department, course_start_date, course_end_date, enrollment_start_date, enrollment_end_date, class_schedule, academic_year, start_date, end_date, instructor_id, created_at')
+                    ->select('id, title, code, unit, course_level, department, course_start_date, course_end_date, enrollment_start_date, enrollment_end_date, class_schedule, academic_year, start_date, end_date, instructor_id, status, created_at')
                     ->orderBy('created_at', 'DESC')
                     ->get()->getResultArray();
             }
@@ -226,14 +226,28 @@ class AdminController extends BaseController
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
         $courseLevel = trim((string) ($this->request->getPost('course_level') ?? ''));
         $department = trim((string) ($this->request->getPost('department') ?? ''));
+        $program = trim((string) ($this->request->getPost('program') ?? ''));
+        $semester = trim((string) ($this->request->getPost('semester') ?? ''));
         $courseStartDate = trim((string) ($this->request->getPost('course_start_date') ?? ''));
         $courseEndDate = trim((string) ($this->request->getPost('course_end_date') ?? ''));
         $enrollmentStartDate = trim((string) ($this->request->getPost('enrollment_start_date') ?? ''));
         $enrollmentEndDate = trim((string) ($this->request->getPost('enrollment_end_date') ?? ''));
-        $classSchedule = trim((string) ($this->request->getPost('class_schedule') ?? ''));
+        
+        // Process class schedule from days and time inputs
+        $classDays = $this->request->getPost('class_days') ?? [];
+        $startTime = trim((string) ($this->request->getPost('start_time') ?? ''));
+        $endTime = trim((string) ($this->request->getPost('end_time') ?? ''));
+        $classSchedule = '';
+        if (!empty($classDays) && is_array($classDays)) {
+            $days = implode(', ', $classDays);
+            if ($startTime && $endTime) {
+                $classSchedule = $days . ', ' . $startTime . ' - ' . $endTime;
+            } else {
+                $classSchedule = $days;
+            }
+        }
+        
         $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
-        $startDate = (string) ($this->request->getPost('start_date') ?? '');
-        $endDate = (string) ($this->request->getPost('end_date') ?? '');
         $instructorId = (int) ($this->request->getPost('instructor_id') ?? 0);
 
         if ($title === '') {
@@ -251,22 +265,26 @@ class AdminController extends BaseController
                 'unit'  => $unit > 0 ? $unit : null,
                 'course_level' => $courseLevel !== '' ? $courseLevel : null,
                 'department' => $department !== '' ? $department : null,
+                'program' => $program !== '' ? $program : null,
+                'semester' => $semester !== '' ? $semester : null,
                 'course_start_date' => $courseStartDate !== '' ? $courseStartDate : null,
                 'course_end_date' => $courseEndDate !== '' ? $courseEndDate : null,
                 'enrollment_start_date' => $enrollmentStartDate !== '' ? $enrollmentStartDate : null,
                 'enrollment_end_date' => $enrollmentEndDate !== '' ? $enrollmentEndDate : null,
                 'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
                 'academic_year' => $academicYear !== '' ? $academicYear : null,
-                'start_date' => $startDate !== '' ? $startDate : null,
-                'end_date' => $endDate !== '' ? $endDate : null,
                 'instructor_id' => $instructorId,
+                'status' => 'draft', // New courses start as draft
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $db->table('courses')->insert($data);
             return redirect()->to('/admin/courses')->with('success', 'Course created successfully.');
         } catch (\Throwable $e) {
-            return redirect()->to('/admin/courses')->with('error', 'Failed to create course.');
+            // Log the actual error for debugging
+            log_message('error', 'Course creation failed: ' . $e->getMessage());
+            log_message('error', 'Data being inserted: ' . json_encode($data));
+            return redirect()->to('/admin/courses')->with('error', 'Failed to create course: ' . $e->getMessage());
         }
     }
 
@@ -381,14 +399,27 @@ class AdminController extends BaseController
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
         $courseLevel = trim((string) ($this->request->getPost('course_level') ?? ''));
         $department = trim((string) ($this->request->getPost('department') ?? ''));
+        $program = trim((string) ($this->request->getPost('program') ?? ''));
+        $semester = trim((string) ($this->request->getPost('semester') ?? ''));
         $courseStartDate = trim((string) ($this->request->getPost('course_start_date') ?? ''));
         $courseEndDate = trim((string) ($this->request->getPost('course_end_date') ?? ''));
         $enrollmentStartDate = trim((string) ($this->request->getPost('enrollment_start_date') ?? ''));
         $enrollmentEndDate = trim((string) ($this->request->getPost('enrollment_end_date') ?? ''));
-        $classSchedule = trim((string) ($this->request->getPost('class_schedule') ?? ''));
+        
+        // Process class schedule from days and time inputs
+        $classDays = $this->request->getPost('class_days') ?? [];
+        $startTime = trim((string) ($this->request->getPost('start_time') ?? ''));
+        $endTime = trim((string) ($this->request->getPost('end_time') ?? ''));
+        $classSchedule = '';
+        if (!empty($classDays) && is_array($classDays)) {
+            $days = implode(', ', $classDays);
+            if ($startTime && $endTime) {
+                $classSchedule = $days . ', ' . $startTime . ' - ' . $endTime;
+            } else {
+                $classSchedule = $days;
+            }
+        }
         $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
-        $startDate = (string) ($this->request->getPost('start_date') ?? '');
-        $endDate = (string) ($this->request->getPost('end_date') ?? '');
         $instructorId = (int) ($this->request->getPost('instructor_id') ?? 0);
 
         if ($title === '') {
@@ -401,20 +432,100 @@ class AdminController extends BaseController
             'unit'  => $unit > 0 ? $unit : null,
             'course_level' => $courseLevel !== '' ? $courseLevel : null,
             'department' => $department !== '' ? $department : null,
+            'program' => $program !== '' ? $program : null,
+            'semester' => $semester !== '' ? $semester : null,
             'course_start_date' => $courseStartDate !== '' ? $courseStartDate : null,
             'course_end_date' => $courseEndDate !== '' ? $courseEndDate : null,
             'enrollment_start_date' => $enrollmentStartDate !== '' ? $enrollmentStartDate : null,
             'enrollment_end_date' => $enrollmentEndDate !== '' ? $enrollmentEndDate : null,
             'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
             'academic_year' => $academicYear !== '' ? $academicYear : null,
-            'start_date' => $startDate !== '' ? $startDate : null,
-            'end_date' => $endDate !== '' ? $endDate : null,
-            'instructor_id' => $instructorId > 0 ? $instructorId : null,
+            'instructor_id' => $instructorId,
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
+        $courseModel = new CourseModel();
         $courseModel->update((int) $id, $data);
-
+        
         return redirect()->to('/admin/courses')->with('success', 'Course updated successfully.');
+    }
+
+    public function approveCourse($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $db = Database::connect();
+        $db->table('courses')->where('id', (int) $id)->update(['status' => 'published']);
+        
+        return redirect()->to('/admin/courses')->with('success', 'Course approved and published successfully.');
+    }
+
+    public function rejectCourse($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $db = Database::connect();
+        $db->table('courses')->where('id', (int) $id)->update(['status' => 'archived']);
+        
+        return redirect()->to('/admin/courses')->with('success', 'Course rejected and archived.');
+    }
+
+    public function pendingEnrollments()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $enrollmentModel = new EnrollmentModel();
+        $pendingEnrollments = $enrollmentModel
+            ->select('enrollments.*, courses.title as course_title, courses.code as course_code, users.name as student_name, users.email as student_email')
+            ->join('courses', 'courses.id = enrollments.course_id')
+            ->join('users', 'users.id = enrollments.user_id')
+            ->where('enrollments.enrollment_status', 'pending')
+            ->orderBy('enrollments.created_at', 'DESC')
+            ->findAll();
+
+        return view('admin/pending_enrollments', [
+            'user' => [
+                'name'  => $session->get('name'),
+                'email' => $session->get('email'),
+                'role'  => $session->get('role'),
+            ],
+            'pendingEnrollments' => $pendingEnrollments,
+        ]);
+    }
+
+    public function approveEnrollment($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $enrollmentModel = new EnrollmentModel();
+        $enrollmentModel->update((int) $id, ['enrollment_status' => 'approved']);
+        
+        return redirect()->to('/admin/pending-enrollments')->with('success', 'Enrollment approved successfully.');
+    }
+
+    public function rejectEnrollment($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        $enrollmentModel = new EnrollmentModel();
+        $enrollmentModel->update((int) $id, ['enrollment_status' => 'rejected']);
+        
+        return redirect()->to('/admin/pending-enrollments')->with('success', 'Enrollment rejected successfully.');
     }
 
     public function deleteCourse($id)

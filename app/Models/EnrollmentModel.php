@@ -17,6 +17,7 @@ class EnrollmentModel extends Model
     protected $allowedFields    = [
         'user_id',
         'course_id',
+        'enrollment_status',
         'enrollment_date',
         'created_at',
         'updated_at',
@@ -67,7 +68,7 @@ class EnrollmentModel extends Model
      */
     public function getUserEnrollments(int $user_id): array
     {
-        return $this->select('courses.*, enrollments.enrollment_date')
+        return $this->select('courses.*, enrollments.enrollment_date, enrollments.enrollment_status')
             ->join('courses', 'courses.id = enrollments.course_id')
             ->where('enrollments.user_id', $user_id)
             ->orderBy('enrollments.enrollment_date', 'DESC')

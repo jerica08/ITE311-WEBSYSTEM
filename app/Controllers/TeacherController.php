@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\EnrollmentModel;
+use App\Models\NotificationModel;
 use Config\Database;
 
 class TeacherController extends BaseController
@@ -20,7 +22,7 @@ class TeacherController extends BaseController
 
         $db = Database::connect();
 
-        // Courses taught by this teacher
+        // Courses taught by this teacher (only published courses)
         $courses = [];
         try {
             if ($db->tableExists('courses')) {
@@ -29,6 +31,7 @@ class TeacherController extends BaseController
                 if ($userId > 0) {
                     $builder->where('instructor_id', $userId);
                 }
+                $builder->where('status', 'published'); // Only show published courses
                 $coursesRows = $builder->orderBy('created_at', 'DESC')->get()->getResultArray();
                 foreach ($coursesRows as $r) {
                     $courses[] = [
@@ -44,6 +47,24 @@ class TeacherController extends BaseController
             }
         } catch (\Throwable $e) {
             $courses = [];
+        }
+
+        // Pending enrollments for this teacher's courses
+        $pendingEnrollments = [];
+        try {
+            $enrollmentModel = new EnrollmentModel();
+            if ($userId > 0) {
+                $pendingEnrollments = $enrollmentModel
+                    ->select('enrollments.*, courses.title as course_title, courses.code as course_code, users.name as student_name, users.email as student_email')
+                    ->join('courses', 'courses.id = enrollments.course_id')
+                    ->join('users', 'users.id = enrollments.user_id')
+                    ->where('enrollments.enrollment_status', 'pending')
+                    ->where('courses.instructor_id', $userId)
+                    ->orderBy('enrollments.created_at', 'DESC')
+                    ->findAll();
+            }
+        } catch (\Throwable $e) {
+            $pendingEnrollments = [];
         }
 
         // Recent assignment submissions (notifications)
@@ -78,9 +99,72 @@ class TeacherController extends BaseController
             ],
             'courses'     => $courses,
             'submissions' => $submissions,
+            'pendingEnrollments' => $pendingEnrollments,
         ];
 
         return view('teacher', $data);
+    }
+
+    public function approveEnrollment($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $enrollmentModel = new EnrollmentModel();
+        $enrollment = $enrollmentModel->find((int) $id);
+        
+        if (!$enrollment) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Enrollment not found.');
+        }
+
+        // Verify this enrollment is for a course taught by this teacher
+        $db = Database::connect();
+        $course = $db->table('courses')
+            ->select('instructor_id')
+            ->where('id', $enrollment['course_id'])
+            ->get()->getRowArray();
+
+        if (!$course || $course['instructor_id'] != $session->get('user_id')) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'You can only approve enrollments for your courses.');
+        }
+
+        $enrollmentModel->update((int) $id, ['enrollment_status' => 'approved']);
+        
+        return redirect()->to('/teacher/dashboard')->with('success', 'Enrollment approved successfully.');
+    }
+
+    public function rejectEnrollment($id)
+    {
+        $session = session();
+        $role = strtolower((string) $session->get('role'));
+        if (!$session->get('isLoggedIn') || !in_array($role, ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $enrollmentModel = new EnrollmentModel();
+        $enrollment = $enrollmentModel->find((int) $id);
+        
+        if (!$enrollment) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'Enrollment not found.');
+        }
+
+        // Verify this enrollment is for a course taught by this teacher
+        $db = Database::connect();
+        $course = $db->table('courses')
+            ->select('instructor_id')
+            ->where('id', $enrollment['course_id'])
+            ->get()->getRowArray();
+
+        if (!$course || $course['instructor_id'] != $session->get('user_id')) {
+            return redirect()->to('/teacher/dashboard')->with('error', 'You can only reject enrollments for your courses.');
+        }
+
+        $enrollmentModel->update((int) $id, ['enrollment_status' => 'rejected']);
+        
+        return redirect()->to('/teacher/dashboard')->with('success', 'Enrollment rejected successfully.');
     }
 
     public function myCourses()

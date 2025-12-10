@@ -125,6 +125,7 @@
                         <th style="width:100px;">Code</th>
                         <th style="width:100px;">Level</th>
                         <th style="width:100px;">Department</th>
+                        <th style="width:100px;">Status</th>
                         <th style="width:140px;">Instrct. ID</th>
                         <th style="width:180px;">Created</th>
                         <th style="width:140px;">View Students</th>
@@ -142,6 +143,17 @@
                                 <td><?= esc($c['code'] ?? '') ?></td>
                                 <td><?= esc($c['course_level'] ?? '-') ?></td>
                                 <td><?= esc($c['department'] ?? '-') ?></td>
+                                <td>
+                                    <?php 
+                                    $status = $c['status'] ?? 'draft';
+                                    if ($status === 'published'): ?>
+                                        <span class="badge bg-success">Published</span>
+                                    <?php elseif ($status === 'draft'): ?>
+                                        <span class="badge bg-warning text-dark">Draft</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary">Archived</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= esc($c['instructor_id'] ?? '') ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
                                 <td>
@@ -150,7 +162,11 @@
                                 <td>
                                     <a class="btn btn-sm btn-outline-warning m-0" href="<?= site_url('admin/course/' . $cid . '/upload') ?>">Upload Materials</a>
                                 </td>
-                                <td class="d-flex gap-1 align-items-center">
+                                <td class="d-flex gap-1 align-items-center flex-wrap">
+                                    <?php if ($status === 'draft'): ?>
+                                        <a class="btn btn-sm btn-success m-0" href="<?= site_url('admin/courses/' . $cid . '/approve') ?>" onclick="return confirm('Approve this course?')">Approve</a>
+                                        <a class="btn btn-sm btn-danger m-0" href="<?= site_url('admin/courses/' . $cid . '/reject') ?>" onclick="return confirm('Reject this course?')">Reject</a>
+                                    <?php endif; ?>
                                     <a class="btn btn-sm btn-outline-secondary m-0" href="<?= site_url('admin/courses/' . $cid) ?>">View</a>
                                     <a class="btn btn-sm btn-outline-primary m-0" href="<?= site_url('admin/courses/' . $cid . '/edit') ?>">Edit</a>
                                     <form method="post" action="<?= site_url('admin/courses/' . $cid . '/delete') ?>" onsubmit="return confirm('Delete this course?');" class="m-0">
@@ -347,6 +363,12 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Unit</label>
                                         <input type="number" name="unit" class="form-control" min="0" max="10">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Academic Year</label>
+                                        <input type="text" name="academic_year" class="form-control" placeholder="e.g., 2025-2026">
                                     </div>
                                 </div>
                             </div>

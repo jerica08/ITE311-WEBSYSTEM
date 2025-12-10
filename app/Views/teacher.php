@@ -115,6 +115,57 @@
             </div>
         </div>
 
+        <!-- Pending Enrollments -->
+        <div class="mb-2 section-title"><i class="bi bi-person-check me-2"></i>Pending Enrollment Requests</div>
+        <div class="table-wrap mb-4">
+            <table class="table table-sm align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Code</th>
+                        <th>Requested On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($pendingEnrollments ?? [])): ?>
+                        <?php foreach ($pendingEnrollments as $enrollment): ?>
+                            <tr>
+                                <td><?= esc($enrollment['student_name'] ?? '') ?></td>
+                                <td><?= esc($enrollment['student_email'] ?? '') ?></td>
+                                <td><?= esc($enrollment['course_title'] ?? '') ?></td>
+                                <td><?= esc($enrollment['course_code'] ?? '') ?></td>
+                                <td><?= esc($enrollment['created_at'] ?? '') ?></td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="<?= site_url('teacher/approve-enrollment/' . (int)($enrollment['id'] ?? 0)) ?>" 
+                                           class="btn btn-sm btn-success" 
+                                           onclick="return confirm('Approve this enrollment request?')">
+                                            <i class="bi bi-check-circle"></i> Approve
+                                        </a>
+                                        <a href="<?= site_url('teacher/reject-enrollment/' . (int)($enrollment['id'] ?? 0)) ?>" 
+                                           class="btn btn-sm btn-danger" 
+                                           onclick="return confirm('Reject this enrollment request?')">
+                                            <i class="bi bi-x-circle"></i> Reject
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mt-2 mb-0">No pending enrollment requests.</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
         <!-- Action Buttons -->
         <div class="d-flex gap-3 mb-3">
             <button class="btn btn-dark-gold w-50" type="button" data-bs-toggle="collapse" data-bs-target="#createCourseForm" aria-expanded="false" aria-controls="createCourseForm">

@@ -25,6 +25,12 @@ $routes->get('/profile', 'Profile::index');
 // Course actions
 $routes->post('course/enroll', 'Course::enroll');
 
+// Teacher dashboard and enrollment approval
+$routes->get('teacher', 'TeacherController::dashboard');
+$routes->get('teacher/dashboard', 'TeacherController::dashboard');
+$routes->get('teacher/approve-enrollment/(:num)', 'TeacherController::approveEnrollment/$1');
+$routes->get('teacher/reject-enrollment/(:num)', 'TeacherController::rejectEnrollment/$1');
+
 // Admin dashboard & management
 $routes->get('admin', 'AdminController::dashboard');
 $routes->get('admin/dashboard', 'AdminController::dashboard');
@@ -32,11 +38,13 @@ $routes->get('admin/users', 'AdminController::users');
 $routes->get('admin/courses', 'AdminController::courses');
 $routes->post('admin/courses/create', 'AdminController::createCourse');
 
-// Admin course CRUD
+// Admin course CRUD and approval
 $routes->get('admin/courses/(:num)', 'AdminController::showCourse/$1');
 $routes->get('admin/courses/(:num)/edit', 'AdminController::editCourse/$1');
 $routes->post('admin/courses/(:num)/update', 'AdminController::updateCourse/$1');
 $routes->post('admin/courses/(:num)/delete', 'AdminController::deleteCourse/$1');
+$routes->get('admin/courses/(:num)/approve', 'AdminController::approveCourse/$1');
+$routes->get('admin/courses/(:num)/reject', 'AdminController::rejectCourse/$1');
 
 // Admin department management
 $routes->post('admin/departments/create', 'AdminController::createDepartment');
@@ -46,6 +54,11 @@ $routes->post('admin/departments/(:num)/delete', 'AdminController::deleteDepartm
 $routes->post('admin/programs/create', 'AdminController::createProgram');
 $routes->post('admin/programs/(:num)/delete', 'AdminController::deleteProgram/$1');
 $routes->get('admin/programs/by-department', 'AdminController::getProgramsByDepartment');
+
+// Admin enrollment approval
+$routes->get('admin/pending-enrollments', 'AdminController::pendingEnrollments');
+$routes->get('admin/approve-enrollment/(:num)', 'AdminController::approveEnrollment/$1');
+$routes->get('admin/reject-enrollment/(:num)', 'AdminController::rejectEnrollment/$1');
 
 // Admin view students enrolled in a course
 $routes->get('admin/courses/(:num)/students', 'AdminController::courseStudents/$1');

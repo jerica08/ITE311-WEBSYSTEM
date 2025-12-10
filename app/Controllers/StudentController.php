@@ -29,22 +29,14 @@ class StudentController extends BaseController
             if ($userId > 0) {
                 $enrolledCourses = $enrollmentModel->getUserEnrollments($userId);
 
-                // Filter out courses that are outside their active date range
-                $today = date('Y-m-d');
-                $enrolledCourses = array_values(array_filter($enrolledCourses, static function (array $c) use ($today): bool {
-                    $start = isset($c['start_date']) && $c['start_date'] !== null && $c['start_date'] !== ''
-                        ? substr((string) $c['start_date'], 0, 10)
-                        : null;
-                    $end = isset($c['end_date']) && $c['end_date'] !== null && $c['end_date'] !== ''
-                        ? substr((string) $c['end_date'], 0, 10)
-                        : null;
-
-                    if ($start !== null && $today < $start) {
-                        return false; // not started yet
+                // Filter to only show approved enrollments (temporarily removing date filtering)
+                $enrolledCourses = array_values(array_filter($enrolledCourses, static function (array $c): bool {
+                    // Only show approved courses
+                    if (!isset($c['enrollment_status']) || $c['enrollment_status'] !== 'approved') {
+                        return false;
                     }
-                    if ($end !== null && $today > $end) {
-                        return false; // already ended
-                    }
+                    
+                    // Temporarily skip date filtering to ensure approved courses show up
                     return true;
                 }));
             }
@@ -58,19 +50,34 @@ class StudentController extends BaseController
             $db = Database::connect();
             if ($db->tableExists('courses')) {
                 $builder = $db->table('courses c')
-                    ->select('c.id, c.title, c.code, c.unit, c.academic_year, c.start_date, c.end_date, u.name AS instructor_name')
+                    ->select('c.id, c.title, c.code, c.unit, c.course_level, c.department, c.academic_year, c.course_start_date, c.course_end_date, u.name AS instructor_name')
                     ->join('users u', 'u.id = c.instructor_id', 'left');
 
-                // Only currently active courses (by date window)
-                $today = date('Y-m-d');
-                $escapedToday = $db->escape($today);
-                $builder->where("(c.start_date IS NULL OR c.start_date <= $escapedToday)", null, false);
-                $builder->where("(c.end_date IS NULL OR c.end_date >= $escapedToday)", null, false);
+                // Temporarily remove date filtering to show all courses
+                // $today = date('Y-m-d');
+                // $escapedToday = $db->escape($today);
+                // $builder->where("(c.course_start_date IS NULL OR c.course_start_date <= $escapedToday)", null, false);
+                // $builder->where("(c.course_end_date IS NULL OR c.course_end_date >= $escapedToday)", null, false);
 
-                // Exclude courses already enrolled
+                // Exclude courses already enrolled (including pending and approved ones)
                 $enrolledIds = array_column($enrolledCourses, 'id');
-                if (!empty($enrolledIds)) {
-                    $builder->whereNotIn('c.id', $enrolledIds);
+                // Also get pending enrollments to exclude them from available courses
+                $pendingEnrollments = $enrollmentModel
+                    ->where('user_id', $userId)
+                    ->where('enrollment_status', 'pending')
+                    ->findAll();
+                $pendingIds = array_column($pendingEnrollments, 'course_id');
+                
+                // Also get approved enrollments to exclude them from available courses
+                $approvedEnrollments = $enrollmentModel
+                    ->where('user_id', $userId)
+                    ->where('enrollment_status', 'approved')
+                    ->findAll();
+                $approvedIds = array_column($approvedEnrollments, 'course_id');
+                
+                $excludeIds = array_merge($enrolledIds, $pendingIds, $approvedIds);
+                if (!empty($excludeIds)) {
+                    $builder->whereNotIn('c.id', $excludeIds);
                 }
 
                 $availableCourses = $builder->orderBy('c.id', 'DESC')->get()->getResultArray();
