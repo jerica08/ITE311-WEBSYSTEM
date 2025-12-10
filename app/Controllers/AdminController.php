@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\StudentModel;
 use App\Models\CourseModel;
+use App\Models\DepartmentModel;
+use App\Models\ProgramModel;
 use Config\Database;
 
 class AdminController extends BaseController
@@ -169,7 +171,7 @@ class AdminController extends BaseController
         try {
             if ($db->tableExists('courses')) {
                 $courses = $db->table('courses')
-                    ->select('id, title, code, unit, academic_year, start_date, end_date, instructor_id, created_at')
+                    ->select('id, title, code, unit, course_level, department, course_start_date, course_end_date, enrollment_start_date, enrollment_end_date, class_schedule, academic_year, start_date, end_date, instructor_id, created_at')
                     ->orderBy('created_at', 'DESC')
                     ->get()->getResultArray();
             }
@@ -180,6 +182,21 @@ class AdminController extends BaseController
         $userModel = new UserModel();
         $teachers = $userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
 
+        // Get departments and programs
+        $departmentModel = new DepartmentModel();
+        $programModel = new ProgramModel();
+        
+        $departments = [];
+        $programs = [];
+        
+        try {
+            $departments = $departmentModel->orderBy('department_name', 'ASC')->findAll();
+            $programs = $programModel->orderBy('program_name', 'ASC')->findAll();
+        } catch (\Throwable $e) {
+            $departments = [];
+            $programs = [];
+        }
+
         return view('admin/courses', [
             'user'     => [
                 'name'  => $session->get('name'),
@@ -188,6 +205,8 @@ class AdminController extends BaseController
             ],
             'courses'  => $courses,
             'teachers' => $teachers,
+            'departments' => $departments,
+            'programs' => $programs,
         ]);
     }
 
@@ -205,6 +224,13 @@ class AdminController extends BaseController
         $title = trim((string) $this->request->getPost('title'));
         $code  = trim((string) ($this->request->getPost('code') ?? ''));
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $courseLevel = trim((string) ($this->request->getPost('course_level') ?? ''));
+        $department = trim((string) ($this->request->getPost('department') ?? ''));
+        $courseStartDate = trim((string) ($this->request->getPost('course_start_date') ?? ''));
+        $courseEndDate = trim((string) ($this->request->getPost('course_end_date') ?? ''));
+        $enrollmentStartDate = trim((string) ($this->request->getPost('enrollment_start_date') ?? ''));
+        $enrollmentEndDate = trim((string) ($this->request->getPost('enrollment_end_date') ?? ''));
+        $classSchedule = trim((string) ($this->request->getPost('class_schedule') ?? ''));
         $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
         $startDate = (string) ($this->request->getPost('start_date') ?? '');
         $endDate = (string) ($this->request->getPost('end_date') ?? '');
@@ -223,6 +249,13 @@ class AdminController extends BaseController
                 'title' => $title,
                 'code'  => $code !== '' ? $code : null,
                 'unit'  => $unit > 0 ? $unit : null,
+                'course_level' => $courseLevel !== '' ? $courseLevel : null,
+                'department' => $department !== '' ? $department : null,
+                'course_start_date' => $courseStartDate !== '' ? $courseStartDate : null,
+                'course_end_date' => $courseEndDate !== '' ? $courseEndDate : null,
+                'enrollment_start_date' => $enrollmentStartDate !== '' ? $enrollmentStartDate : null,
+                'enrollment_end_date' => $enrollmentEndDate !== '' ? $enrollmentEndDate : null,
+                'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
                 'academic_year' => $academicYear !== '' ? $academicYear : null,
                 'start_date' => $startDate !== '' ? $startDate : null,
                 'end_date' => $endDate !== '' ? $endDate : null,
@@ -346,6 +379,13 @@ class AdminController extends BaseController
         $title = trim((string) $this->request->getPost('title'));
         $code  = trim((string) ($this->request->getPost('code') ?? ''));
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $courseLevel = trim((string) ($this->request->getPost('course_level') ?? ''));
+        $department = trim((string) ($this->request->getPost('department') ?? ''));
+        $courseStartDate = trim((string) ($this->request->getPost('course_start_date') ?? ''));
+        $courseEndDate = trim((string) ($this->request->getPost('course_end_date') ?? ''));
+        $enrollmentStartDate = trim((string) ($this->request->getPost('enrollment_start_date') ?? ''));
+        $enrollmentEndDate = trim((string) ($this->request->getPost('enrollment_end_date') ?? ''));
+        $classSchedule = trim((string) ($this->request->getPost('class_schedule') ?? ''));
         $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
         $startDate = (string) ($this->request->getPost('start_date') ?? '');
         $endDate = (string) ($this->request->getPost('end_date') ?? '');
@@ -359,6 +399,13 @@ class AdminController extends BaseController
             'title' => $title,
             'code'  => $code !== '' ? $code : null,
             'unit'  => $unit > 0 ? $unit : null,
+            'course_level' => $courseLevel !== '' ? $courseLevel : null,
+            'department' => $department !== '' ? $department : null,
+            'course_start_date' => $courseStartDate !== '' ? $courseStartDate : null,
+            'course_end_date' => $courseEndDate !== '' ? $courseEndDate : null,
+            'enrollment_start_date' => $enrollmentStartDate !== '' ? $enrollmentStartDate : null,
+            'enrollment_end_date' => $enrollmentEndDate !== '' ? $enrollmentEndDate : null,
+            'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
             'academic_year' => $academicYear !== '' ? $academicYear : null,
             'start_date' => $startDate !== '' ? $startDate : null,
             'end_date' => $endDate !== '' ? $endDate : null,
@@ -440,6 +487,145 @@ class AdminController extends BaseController
         $userModel->skipValidation(true)->update((int) $id, $dataToUpdate);
 
         return redirect()->to('/admin/users')->with('success', 'User updated successfully.');
+    }
+
+    // Department Management Methods
+    public function createDepartment()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/courses');
+        }
+
+        $departmentName = trim((string) $this->request->getPost('department_name'));
+        $departmentCode = trim((string) ($this->request->getPost('department_code') ?? ''));
+        $description = trim((string) ($this->request->getPost('description') ?? ''));
+
+        if ($departmentName === '') {
+            return redirect()->to('/admin/courses')->with('error', 'Department name is required.');
+        }
+
+        $departmentModel = new DepartmentModel();
+
+        try {
+            $data = [
+                'department_name' => $departmentName,
+                'department_code' => $departmentCode !== '' ? $departmentCode : null,
+                'description' => $description !== '' ? $description : null,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            $departmentModel->insert($data);
+            return redirect()->to('/admin/courses')->with('success', 'Department created successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/courses')->with('error', 'Failed to create department.');
+        }
+    }
+
+    public function deleteDepartment($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/courses');
+        }
+
+        $departmentModel = new DepartmentModel();
+
+        try {
+            $departmentModel->delete((int) $id);
+            return redirect()->to('/admin/courses')->with('success', 'Department deleted successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/courses')->with('error', 'Failed to delete department.');
+        }
+    }
+
+    // Program Management Methods
+    public function createProgram()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/courses');
+        }
+
+        $programName = trim((string) $this->request->getPost('program_name'));
+        $programCode = trim((string) ($this->request->getPost('program_code') ?? ''));
+        $department = trim((string) $this->request->getPost('department'));
+        $description = trim((string) ($this->request->getPost('description') ?? ''));
+        $duration = (int) ($this->request->getPost('duration') ?? 4);
+
+        if ($programName === '' || $department === '') {
+            return redirect()->to('/admin/courses')->with('error', 'Program name and department are required.');
+        }
+
+        $programModel = new ProgramModel();
+
+        try {
+            $data = [
+                'program_name' => $programName,
+                'program_code' => $programCode !== '' ? $programCode : null,
+                'department' => $department,
+                'description' => $description !== '' ? $description : null,
+                'duration' => $duration > 0 ? $duration : 4,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            $programModel->insert($data);
+            return redirect()->to('/admin/courses')->with('success', 'Program created successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/courses')->with('error', 'Failed to create program.');
+        }
+    }
+
+    public function deleteProgram($id)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return redirect()->to('/auth/login');
+        }
+
+        if (!$this->request->is('post')) {
+            return redirect()->to('/admin/courses');
+        }
+
+        $programModel = new ProgramModel();
+
+        try {
+            $programModel->delete((int) $id);
+            return redirect()->to('/admin/courses')->with('success', 'Program deleted successfully.');
+        } catch (\Throwable $e) {
+            return redirect()->to('/admin/courses')->with('error', 'Failed to delete program.');
+        }
+    }
+
+    // API method to get programs by department (for dynamic loading)
+    public function getProgramsByDepartment()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || strtolower((string) $session->get('role')) !== 'admin') {
+            return $this->response->setJSON(['error' => 'Unauthorized']);
+        }
+
+        $department = $this->request->getGet('department');
+        if (!$department) {
+            return $this->response->setJSON([]);
+        }
+
+        $programModel = new ProgramModel();
+        $programs = $programModel->getProgramsByDepartment($department);
+
+        return $this->response->setJSON($programs);
     }
 
     public function deleteUser($id)

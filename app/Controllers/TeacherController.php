@@ -25,7 +25,7 @@ class TeacherController extends BaseController
         try {
             if ($db->tableExists('courses')) {
                 $builder = $db->table('courses')
-                    ->select('id, title, code, unit, created_at, instructor_id');
+                    ->select('id, title, code, unit, course_level, department, created_at, instructor_id');
                 if ($userId > 0) {
                     $builder->where('instructor_id', $userId);
                 }
@@ -36,6 +36,8 @@ class TeacherController extends BaseController
                         'title'      => $r['title'] ?? '-',
                         'code'       => $r['code'] ?? '-',
                         'unit'       => $r['unit'] ?? '-',
+                        'course_level' => $r['course_level'] ?? '-',
+                        'department'   => $r['department'] ?? '-',
                         'created_at' => $r['created_at'] ?? '-',
                     ];
                 }
@@ -97,7 +99,7 @@ class TeacherController extends BaseController
         try {
             if ($db->tableExists('courses')) {
                 $builder = $db->table('courses')
-                    ->select('id, title, code, unit, created_at, instructor_id');
+                    ->select('id, title, code, unit, course_level, department, created_at, instructor_id');
                 if ($userId > 0) {
                     $builder->where('instructor_id', $userId);
                 }
@@ -108,6 +110,8 @@ class TeacherController extends BaseController
                         'title'      => $r['title'] ?? '-',
                         'code'       => $r['code'] ?? '-',
                         'unit'       => $r['unit'] ?? '-',
+                        'course_level' => $r['course_level'] ?? '-',
+                        'department'   => $r['department'] ?? '-',
                         'created_at' => $r['created_at'] ?? '-',
                     ];
                 }
@@ -271,6 +275,13 @@ class TeacherController extends BaseController
         $title = trim((string) $this->request->getPost('title'));
         $code  = trim((string) ($this->request->getPost('code') ?? ''));
         $unit  = (int) ($this->request->getPost('unit') ?? 0);
+        $courseLevel = trim((string) ($this->request->getPost('course_level') ?? ''));
+        $department = trim((string) ($this->request->getPost('department') ?? ''));
+        $courseStartDate = trim((string) ($this->request->getPost('course_start_date') ?? ''));
+        $courseEndDate = trim((string) ($this->request->getPost('course_end_date') ?? ''));
+        $enrollmentStartDate = trim((string) ($this->request->getPost('enrollment_start_date') ?? ''));
+        $enrollmentEndDate = trim((string) ($this->request->getPost('enrollment_end_date') ?? ''));
+        $classSchedule = trim((string) ($this->request->getPost('class_schedule') ?? ''));
         $academicYear = trim((string) ($this->request->getPost('academic_year') ?? ''));
         $startDate = (string) ($this->request->getPost('start_date') ?? '');
         $endDate = (string) ($this->request->getPost('end_date') ?? '');
@@ -286,6 +297,13 @@ class TeacherController extends BaseController
                 'title' => $title,
                 'code'  => $code !== '' ? $code : null,
                 'unit'  => $unit > 0 ? $unit : null,
+                'course_level' => $courseLevel !== '' ? $courseLevel : null,
+                'department' => $department !== '' ? $department : null,
+                'course_start_date' => $courseStartDate !== '' ? $courseStartDate : null,
+                'course_end_date' => $courseEndDate !== '' ? $courseEndDate : null,
+                'enrollment_start_date' => $enrollmentStartDate !== '' ? $enrollmentStartDate : null,
+                'enrollment_end_date' => $enrollmentEndDate !== '' ? $enrollmentEndDate : null,
+                'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
                 'academic_year' => $academicYear !== '' ? $academicYear : null,
                 'start_date' => $startDate !== '' ? $startDate : null,
                 'end_date' => $endDate !== '' ? $endDate : null,

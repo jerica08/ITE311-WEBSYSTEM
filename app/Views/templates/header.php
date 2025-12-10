@@ -54,6 +54,9 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                     </a>
                     <div id="notifMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width:320px; max-height:360px; overflow:auto;"></div>
                 </div>
+                <a href="<?= site_url('profile') ?>" class="btn btn-sm btn-outline-light ms-2 <?= (uri_string() === 'profile' ? 'active' : '') ?>" title="Profile">
+                    <i class="bi bi-person-circle"></i>
+                </a>
                 <a href="<?= site_url('logout') ?>" class="btn btn-sm logout-btn ms-2">Logout</a>
             <?php endif; ?>
         </div>

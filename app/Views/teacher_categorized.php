@@ -84,6 +84,16 @@
         .table thead th {
              background:#f8f9fa; 
             }
+        .form-section { 
+            border-radius:10px; 
+            overflow:hidden; 
+            box-shadow:0 8px 16px rgba(0,0,0,.08); 
+            background:#fff; 
+            margin-bottom:1.5rem; 
+        }
+        .form-section .card-body { 
+            padding:1.5rem; 
+        }
     </style>
 </head>
 <body>
@@ -128,34 +138,27 @@
                 <div class="card-body">
                     <form method="post" action="<?= site_url('teacher/courses/create') ?>">
                         <?= csrf_field() ?>
+
                         <!-- Course Information Section -->
                         <div class="mb-4">
                             <div class="section-title"><i class="bi bi-info-circle me-2"></i>Course Information</div>
                             <div class="card-body">
                                 <div class="row g-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Course Title<span class="text-danger">*</span></label>
                                         <input type="text" name="title" class="form-control" required>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-label">Course Code</label>
                                         <input type="text" name="code" class="form-control" placeholder="e.g., SCI101">
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label">Department</label>
-                                        <select name="department" class="form-select">
-                                            <option value="">Select department</option>
-                                            <option value="College of Business Education">College of Business Education</option>
-                                            <option value="College of Engineering and Technologies">College of Engineering and Technologies</option>
-                                            <option value="College of Arts and Science">College of Arts and Science</option>
-                                            <option value="College of Criminal Justice">College of Criminal Justice</option>
-                                            <option value="College of Teacher Education">College of Teacher Education</option>
-                                            <option value="College of Allied Health Sciences">College of Allied Health Sciences</option>
-                                        </select>
+                                        <label class="form-label">Units</label>
+                                        <input type="number" name="unit" class="form-control" min="0" max="10">
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Program</label>
-                                        <input type="text" name="program" class="form-control" placeholder="e.g., Bachelor of Science in Computer Science">
+                                    <div class="col-12">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="description" class="form-control" rows="3" placeholder="Enter course description..."></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +185,7 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="form-label">Year Level</label>
+                                        <label class="form-label">Course Level</label>
                                         <select name="course_level" class="form-select">
                                             <option value="">Select level</option>
                                             <option value="1st Year">1st Year</option>
@@ -192,17 +195,22 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Semester</label>
-                                        <select name="semester" class="form-select">
-                                            <option value="">Select semester</option>
-                                            <option value="1st Semester">1st Semester</option>
-                                            <option value="2nd Semester">2nd Semester</option>
-                                            <option value="Summer">Summer</option>
+                                        <label class="form-label">Department</label>
+                                        <select name="department" class="form-select">
+                                            <option value="">Select department</option>
+                                            <option value="Mathematics">Mathematics</option>
+                                            <option value="Science">Science</option>
+                                            <option value="English">English</option>
+                                            <option value="Filipino">Filipino</option>
+                                            <option value="Social Studies">Social Studies</option>
+                                            <option value="Physical Education">Physical Education</option>
+                                            <option value="Arts">Arts</option>
+                                            <option value="Technology">Technology</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Unit</label>
-                                        <input type="number" name="unit" class="form-control" min="0" max="10">
+                                        <label class="form-label">Academic Year</label>
+                                        <input type="text" name="academic_year" class="form-control" placeholder="e.g., 2024-2025">
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +222,7 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <h6 class="text-muted mb-3">Course Dates</h6>
+                                        <h6 class="text-muted mb-3">Course Duration</h6>
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">Course Start Date</label>
@@ -227,7 +235,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <h6 class="text-muted mb-3">Enrollment Dates</h6>
+                                        <h6 class="text-muted mb-3">Enrollment Period</h6>
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">Enrollment Start Date</label>
@@ -240,12 +248,13 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label class="form-label">Class Schedule</label>
+                                        <label class="form-label">Class Schedule (optional)</label>
                                         <input type="text" name="class_schedule" class="form-control" placeholder="e.g., Tues & Thurs, 1:00 PM - 3:00 PM">
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary" style="background-color:#DAA520;border:none;color:#000">Create Course</button>
                             <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#createCourseForm">Cancel</button>

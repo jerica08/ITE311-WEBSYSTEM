@@ -18,6 +18,7 @@ $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::login');
 $routes->get('/logout', 'Auth::logout');
 $routes->get('/dashboard', 'Auth::dashboard');
+$routes->get('/profile', 'Profile::index');
 
 // (No /auth/... routes; primary URLs are non-prefixed)
 
@@ -36,6 +37,15 @@ $routes->get('admin/courses/(:num)', 'AdminController::showCourse/$1');
 $routes->get('admin/courses/(:num)/edit', 'AdminController::editCourse/$1');
 $routes->post('admin/courses/(:num)/update', 'AdminController::updateCourse/$1');
 $routes->post('admin/courses/(:num)/delete', 'AdminController::deleteCourse/$1');
+
+// Admin department management
+$routes->post('admin/departments/create', 'AdminController::createDepartment');
+$routes->post('admin/departments/(:num)/delete', 'AdminController::deleteDepartment/$1');
+
+// Admin program management
+$routes->post('admin/programs/create', 'AdminController::createProgram');
+$routes->post('admin/programs/(:num)/delete', 'AdminController::deleteProgram/$1');
+$routes->get('admin/programs/by-department', 'AdminController::getProgramsByDepartment');
 
 // Admin view students enrolled in a course
 $routes->get('admin/courses/(:num)/students', 'AdminController::courseStudents/$1');
