@@ -136,7 +136,7 @@
     </style>
 </head>
 <body>
-    <?= view('templates/header') ?>
+    <?= view('templates/header', ['title' => 'Assignments - Student Dashboard']) ?>
 
     <div class="container my-4">
 

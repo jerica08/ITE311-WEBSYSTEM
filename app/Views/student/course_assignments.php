@@ -157,7 +157,7 @@
     </style>
 </head>
 <body>
-    <?= view('templates/header') ?>
+    <?= view('templates/header', ['title' => esc($course['title'] ?? '') . ' Assignments - Student Dashboard']) ?>
 
     <div class="container my-4">
         <!-- Success/Error Messages -->

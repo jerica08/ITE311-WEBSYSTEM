@@ -137,5 +137,10 @@ $routes->get('student/assignments', 'StudentController::assignments');
 $routes->get('student/course/(:num)', 'StudentController::course');
 $routes->get('student/course/(:num)/assignments', 'StudentController::courseAssignments/$1');
 $routes->post('student/course/(:num)/assignments/submit', 'StudentController::submitAssignment');
+
+// Student notifications
+$routes->get('student/notifications', 'StudentController::getNotifications');
+$routes->post('student/notifications/mark-read/(:num)', 'StudentController::markNotificationRead/$1');
+$routes->post('student/notifications/mark-all-read', 'StudentController::markAllNotificationsRead');
 $routes->get('student/course/(:num)/answer/(:num)', 'StudentController::answerAssignment/$1/$2');
 $routes->post('student/submitAssignment', 'StudentController::submitAssignment');

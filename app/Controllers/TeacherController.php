@@ -262,7 +262,9 @@ class TeacherController extends BaseController
             return redirect()->to('/teacher/dashboard')->with('error', 'You can only approve enrollments for your courses.');
         }
 
-        $enrollmentModel->update((int) $id, ['enrollment_status' => 'approved']);
+        $result = $enrollmentModel->update((int) $id, ['enrollment_status' => 'approved']);
+        
+        log_message('info', 'ENROLLMENT APPROVED: ID ' . $id . ' by teacher ' . $session->get('user_id') . '. Update result: ' . $result);
         
         // Create notification for student
         try {
@@ -289,8 +291,10 @@ class TeacherController extends BaseController
                     'created_at'  => date('Y-m-d H:i:s'),
                 ];
                 
-                $notificationModel->insert($notificationData);
-                log_message('info', 'APPROVAL NOTIFICATION: Sent to student ' . $enrollment['user_id'] . ' for course ' . $enrollment['course_id']);
+                $result = $notificationModel->insert($notificationData);
+                log_message('info', 'APPROVAL NOTIFICATION: Sent to student ' . $enrollment['user_id'] . ' for course ' . $enrollment['course_id'] . '. Result: ' . $result);
+            } else {
+                log_message('error', 'APPROVAL NOTIFICATION: Missing student or course details. Student: ' . json_encode($studentDetails) . ', Course: ' . json_encode($courseDetails));
             }
         } catch (\Throwable $e) {
             log_message('error', 'Failed to create approval notification: ' . $e->getMessage());

@@ -4,11 +4,32 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\EnrollmentModel;
-use App\Models\MaterialModel;
+use App\Models\NotificationModel;
 use Config\Database;
 
 class StudentController extends BaseController
 {
+    /**
+     * Get notification data for student (helper method)
+     */
+    private function getNotificationData($userId)
+    {
+        $notifications = [];
+        $unreadCount = 0;
+        try {
+            $notificationModel = new NotificationModel();
+            $notifications = $notificationModel->getNotificationsForUser($userId);
+            $unreadCount = $notificationModel->getUnreadCount($userId);
+        } catch (\Throwable $e) {
+            $notifications = [];
+            $unreadCount = 0;
+        }
+        return [
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ];
+    }
+
     public function dashboard()
     {
         $session = session();
@@ -170,6 +191,9 @@ class StudentController extends BaseController
             $assignmentsByCourse = [];
         }
 
+        // Get notifications for this student
+        $notificationData = $this->getNotificationData($userId);
+
         $data = [
             'user' => [
                 'name'  => $session->get('name'),
@@ -179,6 +203,8 @@ class StudentController extends BaseController
             'enrolledCourses' => $enrolledCourses,
             'availableCourses' => $availableCourses,
             'assignmentsByCourse' => $assignmentsByCourse,
+            'notifications' => $notificationData['notifications'],
+            'unreadCount' => $notificationData['unreadCount'],
         ];
 
         return view('student', $data);
@@ -329,13 +355,18 @@ class StudentController extends BaseController
             $assignmentsByCourse = [];
         }
 
+        // Get notifications for this student
+        $notificationData = $this->getNotificationData($userId);
+
         return view('student/assignments', [
             'user' => [
                 'name'  => $session->get('name'),
                 'email' => $session->get('email'),
                 'role'  => $session->get('role'),
             ],
-            'assignmentsByCourse' => $assignmentsByCourse
+            'assignmentsByCourse' => $assignmentsByCourse,
+            'notifications' => $notificationData['notifications'],
+            'unreadCount' => $notificationData['unreadCount'],
         ]);
     }
 
@@ -415,6 +446,9 @@ class StudentController extends BaseController
             $assignments = [];
         }
 
+        // Get notifications for this student
+        $notificationData = $this->getNotificationData($userId);
+
         return view('student/course_assignments', [
             'user' => [
                 'name'  => $session->get('name'),
@@ -422,7 +456,9 @@ class StudentController extends BaseController
                 'role'  => $session->get('role'),
             ],
             'course' => $course,
-            'assignments' => $assignments
+            'assignments' => $assignments,
+            'notifications' => $notificationData['notifications'],
+            'unreadCount' => $notificationData['unreadCount'],
         ]);
     }
 
@@ -776,6 +812,96 @@ class StudentController extends BaseController
             log_message('error', 'MY_CLASSES ERROR: ' . $e->getMessage());
             log_message('error', 'MY_CLASSES ERROR TRACE: ' . $e->getTraceAsString());
             return redirect()->to('/student/dashboard')->with('error', 'Failed to load your classes.');
+        }
+    }
+
+    /**
+     * Get notifications for student (AJAX)
+     */
+    public function getNotifications()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || !in_array(strtolower((string) $session->get('role')), ['student', 'user'], true)) {
+            return $this->response->setJSON(['error' => 'Unauthorized']);
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+        
+        try {
+            $notificationModel = new NotificationModel();
+            $notifications = $notificationModel->getNotificationsForUser($userId);
+            $unreadCount = $notificationModel->getUnreadCount($userId);
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'notifications' => $notifications,
+                'unread_count' => $unreadCount
+            ]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Student notification fetch error: ' . $e->getMessage());
+            return $this->response->setJSON(['error' => 'Failed to fetch notifications']);
+        }
+    }
+
+    /**
+     * Mark notification as read (AJAX)
+     */
+    public function markNotificationRead($notificationId = null)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || !in_array(strtolower((string) $session->get('role')), ['student', 'user'], true)) {
+            return $this->response->setJSON(['error' => 'Unauthorized']);
+        }
+
+        // Get notification ID from method parameter
+        $notificationId = (int) $notificationId;
+        $userId = (int) ($session->get('user_id') ?? 0);
+
+        if ($notificationId <= 0) {
+            return $this->response->setJSON(['error' => 'Invalid notification ID']);
+        }
+
+        try {
+            $notificationModel = new NotificationModel();
+            
+            // Verify notification belongs to this user
+            $notification = $notificationModel->find($notificationId);
+            if (!$notification || $notification['user_id'] != $userId) {
+                return $this->response->setJSON(['error' => 'Notification not found']);
+            }
+
+            $notificationModel->update($notificationId, ['is_read' => 1]);
+            
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Student mark notification read error: ' . $e->getMessage());
+            return $this->response->setJSON(['error' => 'Failed to mark notification as read']);
+        }
+    }
+
+    /**
+     * Mark all notifications as read (AJAX)
+     */
+    public function markAllNotificationsRead()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || !in_array(strtolower((string) $session->get('role')), ['student', 'user'], true)) {
+            return $this->response->setJSON(['error' => 'Unauthorized']);
+        }
+
+        $userId = (int) ($session->get('user_id') ?? 0);
+
+        try {
+            $notificationModel = new NotificationModel();
+            $notificationModel
+                ->where(['user_id' => $userId, 'is_read' => 0])
+                ->set(['is_read' => 1])
+                ->update();
+            
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Student mark all notifications read error: ' . $e->getMessage());
+            return $this->response->setJSON(['error' => 'Failed to mark all notifications as read']);
         }
     }
 }

@@ -89,14 +89,12 @@
     <div class="container my-4">
         <!-- Welcome Card -->
         <div class="card welcome-card mb-4 px-3 py-3">
-            <div class="row align-items-center g-3">
-                <div class="col">
-                    <h5 class="mb-1">Welcome to your Dashboard, <?= esc($user['name'] ?? '') ?>!</h5>
-                    <div class="small">
-                        Kawas National University Learning Management System<br>
-                        Role: <?= esc(ucfirst((string)($user['role'] ?? ''))) ?> · Email: <?= esc($user['email'] ?? '') ?>
-                    </div>
-                </div>
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="bi bi-person-circle me-1"></i><?= esc($user['name']) ?></span>
+            </div>
+            <div class="small">
+                Kawas National University Learning Management System<br>
+                Role: <?= esc(ucfirst((string)($user['role'] ?? ''))) ?> · Email: <?= esc($user['email'] ?? '') ?>
             </div>
         </div>
 
@@ -132,66 +130,6 @@
                     <?php else: ?>
                         <tr>
                             <td colspan="7" class="text-muted">No enrolled courses.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pending Enrollments -->
-        <div class="mb-2 section-title"><i class="bi bi-clock-history me-2"></i>Pending Enrollments</div>
-        <div class="table-wrap mb-4">
-            <table class="table table-sm align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th style="width:160px;">Subject Code</th>
-                        <th style="width:100px;">Unit</th>
-                        <th style="width:120px;">Year Level</th>
-                        <th style="width:120px;">Department</th>
-                        <th style="width:140px;">Academic Year</th>
-                        <th style="width:180px;">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="pending-tbody">
-                    <?php 
-                    // Get pending enrollments for this student
-                    $pendingEnrollments = [];
-                    try {
-                        $enrollmentModel = new \App\Models\EnrollmentModel();
-                        $userId = (int) (session()->get('user_id') ?? 0);
-                        if ($userId > 0) {
-                            $pendingEnrollments = $enrollmentModel
-                                ->select('courses.*, enrollments.enrollment_date, enrollments.enrollment_status')
-                                ->join('courses', 'courses.id = enrollments.course_id')
-                                ->where('enrollments.user_id', $userId)
-                                ->where('enrollments.enrollment_status', 'pending')
-                                ->orderBy('enrollments.enrollment_date', 'DESC')
-                                ->findAll();
-                        }
-                    } catch (\Throwable $e) {
-                        $pendingEnrollments = [];
-                    }
-                    ?>
-                    <?php if (!empty($pendingEnrollments)): ?>
-                        <?php foreach ($pendingEnrollments as $c): ?>
-                            <tr>
-                                <td><?= esc($c['title'] ?? '-') ?></td>
-                                <td><?= esc($c['code'] ?? '-') ?></td>
-                                <td><?= esc($c['unit'] ?? '-') ?></td>
-                                <td><?= esc($c['course_level'] ?? '-') ?></td>
-                                <td><?= esc($c['department'] ?? '-') ?></td>
-                                <td><?= esc($c['academic_year'] ?? '-') ?></td>
-                                <td>
-                                    <span class="badge bg-warning text-dark">
-                                        <i class="bi bi-clock me-1"></i>Waiting for approval
-                                    </span>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7" class="text-center text-muted py-3">No pending enrollments.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

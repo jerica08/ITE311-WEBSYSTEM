@@ -13,6 +13,24 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     .logout-btn { background:#E74C3C; color:#fff; border:none; padding:.35rem .7rem; border-radius:.3rem; }
     .notif-badge { background:#DC3545; color:#fff; border-radius:999px; padding:0 .45rem; font-size:.75rem; margin-left:.25rem; }
     .dropdown-menu.show { display:block; }
+    #notifMenu { 
+        z-index: 9999; 
+        position: absolute; 
+        top: 100%; 
+        right: 0; 
+        margin-top: 0.25rem;
+        pointer-events: auto !important;
+    }
+    #notifMenu .dropdown-item {
+        pointer-events: auto !important;
+        cursor: pointer;
+    }
+    #notifMenu button {
+        pointer-events: auto !important;
+        z-index: 10000;
+        position: relative;
+    }
+    .dropdown.position-relative { position: relative !important; }
 </style>
 
 <div class="topbar">
@@ -50,7 +68,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                     <a href="<?= site_url('/') ?>">Home</a>
                 <?php endif; ?>
                 <div class="dropdown position-relative">
-                    <a href="#" id="notifDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                    <a href="#" id="notifDropdown" role="button" aria-expanded="false">
                         Notifications <span id="notifBadge" class="badge bg-danger d-none">0</span>
                     </a>
                     <div id="notifMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width:320px; max-height:360px; overflow:auto;"></div>
@@ -87,8 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const notifToggleEl = document.getElementById('notifDropdown');
     const notifMenuEl   = document.getElementById('notifMenu');
     const notifBadgeEl  = document.getElementById('notifBadge');
-    const notifUrl      = '<?= site_url('notifications') ?>';
-    const markUrlBase   = '<?= site_url('notifications/mark_read') ?>';
+    const notifUrl      = '<?= ($role === 'student' || $role === 'user') ? site_url('student/notifications') : site_url('teacher/notifications') ?>';
+    const markUrlBase   = '<?= ($role === 'student' || $role === 'user') ? site_url('student/notifications/mark-read') : site_url('teacher/notifications/mark-read') ?>';
     const userId        = '<?= $session->get('user_id') ?? '' ?>';
     let csrfName        = '<?= csrf_token() ?>';
     let csrfHash        = '<?= csrf_hash() ?>';
@@ -98,24 +116,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const hasBootstrapDropdown = typeof bootstrap !== 'undefined' && bootstrap.Dropdown;
-    let dropdownInstance = null;
-
-    if (hasBootstrapDropdown) {
-        dropdownInstance = new bootstrap.Dropdown(notifToggleEl, { autoClose: 'outside' });
-        notifToggleEl.addEventListener('show.bs.dropdown', handleToggleOpen);
-    } else {
-        notifToggleEl.addEventListener('click', function (e) {
-            e.preventDefault();
-            toggleMenu();
-        });
-        document.addEventListener('click', function (e) {
-            if (!notifMenuEl.contains(e.target) && !notifToggleEl.contains(e.target)) {
-                notifMenuEl.classList.remove('show');
-                notifToggleEl.setAttribute('aria-expanded', 'false');
-            }
-        });
-    }
+    // Simple dropdown initialization
+    notifToggleEl.addEventListener('click', function (e) {
+        e.preventDefault();
+        toggleMenu();
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!notifMenuEl.contains(e.target) && !notifToggleEl.contains(e.target)) {
+            notifMenuEl.classList.remove('show');
+            notifToggleEl.setAttribute('aria-expanded', 'false');
+        }
+    });
 
     function toggleMenu() {
         const willShow = !notifMenuEl.classList.contains('show');
@@ -126,10 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function handleToggleOpen() {
-        fetchNotifications();
-    }
-
+    
     function fetchNotifications() {
         fetch(notifUrl, {
             headers: {

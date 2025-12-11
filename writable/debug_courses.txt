@@ -1,2 +1,2 @@
-Courses count: 2
-First course: {"id":"19","title":"System Analysis and Design","code":"SAD301","unit":"3","course_level":"3rd Year","department":"College of Engineering and Technology","program":"BS in Information Technology","class_schedule":"Wednesday, Thursday, 16:00 - 19:00","created_at":"2025-12-11 04:28:56","status":"published"}
+Courses count: 1
+First course: {"id":"20","title":"Platform Technology","code":"PT301","unit":"3","course_level":"3rd Year","department":"College of Engineering and Technology","program":"-","class_schedule":"Friday, Saturday, 13:00 - 15:00","created_at":"2025-12-11 06:22:14","status":"published"}
