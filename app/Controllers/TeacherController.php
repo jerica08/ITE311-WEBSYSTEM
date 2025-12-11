@@ -215,14 +215,14 @@ class TeacherController extends BaseController
                 'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
                 'academic_year' => $academicYear !== '' ? $academicYear : null,
                 'instructor_id' => $instructorId,
-                'status' => 'draft',
+                'status' => 'published',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             
             $db->table('courses')->insert($data);
             
-            return redirect()->to('/teacher/dashboard')->with('success', 'Course created successfully. It is currently in draft status and requires admin approval.');
+            return redirect()->to('/teacher/dashboard')->with('success', 'Course created and published successfully! Students can now enroll.');
         } catch (\Throwable $e) {
             // Log the actual error for debugging
             log_message('error', 'Course creation failed: ' . $e->getMessage());
