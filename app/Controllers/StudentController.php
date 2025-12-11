@@ -86,30 +86,89 @@ class StudentController extends BaseController
             $availableCourses = [];
         }
 
-        // Materials for enrolled courses
-        $materialsByCourse = [];
+        // Get assignments for enrolled courses
+        $assignmentsByCourse = [];
         try {
-            $courseIds = array_column($enrolledCourses, 'id');
-            if (!empty($courseIds)) {
-                $materialModel = new MaterialModel();
-                $materials = $materialModel->whereIn('course_id', $courseIds)
-                    ->orderBy('id', 'DESC')
-                    ->findAll();
-                foreach ($materials as $m) {
-                    $cid = (int) ($m['course_id'] ?? 0);
-                    if (!isset($materialsByCourse[$cid])) {
-                        $materialsByCourse[$cid] = [];
+            if (!empty($enrolledCourses)) {
+                $courseIds = array_column($enrolledCourses, 'id');
+                
+                if (!empty($courseIds)) {
+                    // Get assignments for these courses
+                    $assignments = $db->table('assignments')
+                        ->select('assignments.*, courses.title as course_title, courses.code as course_code')
+                        ->join('courses', 'courses.id = assignments.course_id')
+                        ->whereIn('assignments.course_id', $courseIds)
+                        ->where('assignments.status', 'active')
+                        ->orderBy('assignments.due_date', 'ASC')
+                        ->get()->getResultArray();
+
+                    // Group assignments by course
+                    foreach ($assignments as $assignment) {
+                        $courseId = $assignment['course_id'];
+                        if (!isset($assignmentsByCourse[$courseId])) {
+                            $assignmentsByCourse[$courseId] = [
+                                'course_title' => $assignment['course_title'],
+                                'course_code' => $assignment['course_code'],
+                                'assignments' => [],
+                                'total_assignments' => 0,
+                                'submitted_assignments' => 0,
+                                'completion_status' => 'pending'
+                            ];
+                        }
+                        
+                        // Check if student has submitted this assignment
+                        $submission = $db->table('submissions')
+                            ->where('user_id', $userId)
+                            ->where('assignment_id', $assignment['id'])
+                            ->get()
+                            ->getRow();
+                            
+                        if ($submission) {
+                            $assignment['status'] = 'submitted';
+                            $assignment['submitted_at'] = $submission->submission_date;
+                            $assignment['grade'] = $submission->grade;
+                            $assignment['graded_at'] = $submission->graded_at;
+                            $assignment['feedback'] = $submission->feedback;
+                            
+                            // Update status to graded if grade exists
+                            if ($submission->grade !== null) {
+                                $assignment['status'] = 'graded';
+                            }
+                            
+                            // Increment submitted count
+                            $assignmentsByCourse[$courseId]['submitted_assignments']++;
+                        } else {
+                            $dueDate = $assignment['due_date'] ?? '';
+                            if ($dueDate && strtotime($dueDate) < strtotime('now')) {
+                                $assignment['status'] = 'overdue';
+                            } else {
+                                $assignment['status'] = 'pending';
+                            }
+                        }
+                        
+                        // Increment total assignments count
+                        $assignmentsByCourse[$courseId]['total_assignments']++;
+                        
+                        $assignmentsByCourse[$courseId]['assignments'][] = $assignment;
                     }
-                    $materialsByCourse[$cid][] = $m;
+                    
+                    // Calculate completion status for each course
+                    foreach ($assignmentsByCourse as $courseId => &$courseData) {
+                        if ($courseData['total_assignments'] > 0) {
+                            if ($courseData['submitted_assignments'] === $courseData['total_assignments']) {
+                                $courseData['completion_status'] = 'completed';
+                            } elseif ($courseData['submitted_assignments'] > 0) {
+                                $courseData['completion_status'] = 'in_progress';
+                            } else {
+                                $courseData['completion_status'] = 'pending';
+                            }
+                        }
+                    }
                 }
             }
         } catch (\Throwable $e) {
-            $materialsByCourse = [];
+            $assignmentsByCourse = [];
         }
-
-        // Placeholder datasets for other sections
-        $deadlines   = [];
-        $grades      = [];
 
         $data = [
             'user' => [
@@ -119,9 +178,7 @@ class StudentController extends BaseController
             ],
             'enrolledCourses' => $enrolledCourses,
             'availableCourses' => $availableCourses,
-            'materialsByCourse' => $materialsByCourse,
-            'deadlines'   => $deadlines,
-            'grades'      => $grades,
+            'assignmentsByCourse' => $assignmentsByCourse,
         ];
 
         return view('student', $data);

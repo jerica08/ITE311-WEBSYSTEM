@@ -241,100 +241,94 @@
             </table>
         </div>
 
-        <!-- Course Materials -->
-        <div class="mb-2 section-title"><i class="bi bi-folder-symlink-fill me-2"></i>Course Materials</div>
-        <div class="table-wrap mb-4 p-3">
-            <?php if (!empty($enrolledCourses ?? [])): ?>
-                <?php foreach ($enrolledCourses as $course): ?>
-                    <?php $cid = (int)($course['id'] ?? 0); $materials = $materialsByCourse[$cid] ?? []; ?>
+        <!-- Assignments -->
+        <div class="mb-2 section-title"><i class="bi bi-journal-text-fill me-2"></i>Assignments</div>
+        <div class="table-wrap mb-4">
+            <?php if (!empty($assignmentsByCourse ?? [])): ?>
+                <?php foreach ($assignmentsByCourse as $courseId => $courseData): ?>
                     <div class="mb-3">
-                        <div class="fw-semibold mb-2"><?= esc($course['title'] ?? 'Course') ?> <span class="text-muted">(<?= esc($course['code'] ?? '') ?>)</span></div>
-                        <?php if (!empty($materials)): ?>
-                            <ul class="list-group list-group-flush">
-                                <?php foreach ($materials as $m): ?>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <div><i class="bi bi-file-earmark-text me-2"></i><?= esc($m['file_name'] ?? 'File') ?></div>
-                                            <div class="small text-muted">Uploaded: <?= esc($m['created_at'] ?? '-') ?></div>
-                                        </div>
-                                        <a class="btn btn-sm btn-outline-primary" href="<?= site_url('materials/download/' . (int)($m['id'] ?? 0)) ?>">
-                                            <i class="bi bi-download me-1"></i>Download
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <div class="text-muted small">No materials available for this course.</div>
-                        <?php endif; ?>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="text-primary mb-0">
+                                <?= esc($courseData['course_title']) ?> 
+                                <small class="text-muted">(<?= esc($courseData['course_code']) ?>)</small>
+                            </h6>
+                            <div>
+                                <?php 
+                                $completionStatus = $courseData['completion_status'] ?? 'pending';
+                                $submittedCount = $courseData['submitted_assignments'] ?? 0;
+                                $totalCount = $courseData['total_assignments'] ?? 0;
+                                ?>
+                                <?php if ($completionStatus === 'completed'): ?>
+                                    <span class="badge bg-success text-white">
+                                        <i class="bi bi-check-circle me-1"></i>Completed
+                                    </span>
+                                <?php elseif ($completionStatus === 'in_progress'): ?>
+                                    <span class="badge bg-info text-white">
+                                        <i class="bi bi-clock me-1"></i>In Progress (<?= $submittedCount ?>/<?= $totalCount ?>)
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Assignment Title</th>
+                                        <th style="width:120px;">Due Date</th>
+                                        <th style="width:100px;">Status</th>
+                                        <th style="width:100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($courseData['assignments'])): ?>
+                                        <?php foreach ($courseData['assignments'] as $assignment): ?>
+                                            <?php 
+                                            $status = $assignment['status'] ?? 'pending';
+                                            $dueDate = $assignment['due_date'] ?? '';
+                                            ?>
+                                            <tr>
+                                                <td><?= esc($assignment['title'] ?? '') ?></td>
+                                                <td>
+                                                    <small class="<?= $status === 'overdue' ? 'text-danger' : 'text-muted' ?>">
+                                                        <?= $dueDate ? date('M j, Y', strtotime($dueDate)) : 'No due date' ?>
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <?php if ($status === 'submitted'): ?>
+                                                        <span class="badge bg-success text-white">Submitted</span>
+                                                    <?php elseif ($status === 'graded'): ?>
+                                                        <span class="badge bg-info text-white">Graded</span>
+                                                    <?php elseif ($status === 'overdue'): ?>
+                                                        <span class="badge bg-danger text-white">Overdue</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <a href="<?= site_url('student/course/' . $courseId . '/assignments') ?>" 
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="4" class="text-muted">No assignments posted for this course.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="text-muted">No enrolled courses to show materials.</div>
+                <div class="text-center p-4 text-muted">
+                    <i class="bi bi-journal-text" style="font-size: 2rem;"></i>
+                    <p class="mb-0">No assignments available yet.</p>
+                    <small>Assignments posted by your teachers will appear here.</small>
+                </div>
             <?php endif; ?>
-        </div>
-
-        <!-- Upcoming Deadlines -->
-        <div class="mb-2 section-title"><i class="bi bi-alarm-fill me-2"></i>Upcoming Deadlines</div>
-        <div class="table-wrap mb-4">
-            <table class="table table-sm align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width:160px;">Due Date</th>
-                        <th>Course</th>
-                        <th>Item</th>
-                        <th style="width:120px;">Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($deadlines ?? [])): ?>
-                        <?php foreach ($deadlines as $d): ?>
-                            <tr>
-                                <td><?= esc($d['due'] ?? '-') ?></td>
-                                <td><?= esc($d['course'] ?? '-') ?></td>
-                                <td><?= esc($d['item'] ?? '-') ?></td>
-                                <td><?= esc($d['type'] ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4" class="text-muted">No upcoming deadlines.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Recent Grades / Feedback -->
-        <div class="mb-2 section-title"><i class="bi bi-clipboard2-check-fill me-2"></i>Recent Grades / Feedback</div>
-        <div class="table-wrap">
-            <table class="table table-sm align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width:160px;">Date</th>
-                        <th>Course</th>
-                        <th>Item</th>
-                        <th style="width:120px;">Grade</th>
-                        <th>Feedback</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($grades ?? [])): ?>
-                        <?php foreach ($grades as $g): ?>
-                            <tr>
-                                <td><?= esc($g['date'] ?? '-') ?></td>
-                                <td><?= esc($g['course'] ?? '-') ?></td>
-                                <td><?= esc($g['item'] ?? '-') ?></td>
-                                <td><?= esc($g['grade'] ?? '-') ?></td>
-                                <td><?= esc($g['feedback'] ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="text-muted">No grades or feedback yet.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
         </div>
     </div>
 

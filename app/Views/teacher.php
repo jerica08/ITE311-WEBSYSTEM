@@ -453,7 +453,10 @@
                                 <td><?= esc($s['assignment_title'] ?? '-') ?></td>
                                 <td><?= esc($s['status'] ?? '-') ?></td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="<?= site_url('teacher/submissions/view/' . (int)($s['id'] ?? 0)) ?>" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

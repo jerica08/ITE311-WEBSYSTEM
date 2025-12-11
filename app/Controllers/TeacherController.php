@@ -91,13 +91,18 @@ class TeacherController extends BaseController
         try {
             if ($db->tableExists('submissions')) {
                 $subsRows = $db->table('submissions')
-                    ->select('*')
-                    ->orderBy('created_at', 'DESC')
+                    ->select('submissions.*, users.name as student_name, courses.title as course_title, assignments.title as assignment_title')
+                    ->join('users', 'users.id = submissions.user_id')
+                    ->join('courses', 'courses.id = submissions.course_id')
+                    ->join('assignments', 'assignments.id = submissions.assignment_id')
+                    ->where('courses.instructor_id', $userId)
+                    ->orderBy('submissions.created_at', 'DESC')
                     ->limit(5)
                     ->get()->getResultArray();
 
                 foreach ($subsRows as $s) {
                     $submissions[] = [
+                        'id'              => $s['id'] ?? null,
                         'submitted_at'    => $s['created_at'] ?? $s['submitted_at'] ?? '-',
                         'student_name'    => $s['student_name'] ?? '-',
                         'course_title'    => $s['course_title'] ?? '-',
@@ -1075,6 +1080,51 @@ class TeacherController extends BaseController
 
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'Failed to download file.');
+        }
+    }
+
+    /**
+     * View individual submission details
+     */
+    public function viewSubmission($submissionId)
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || !in_array(strtolower((string) $session->get('role')), ['teacher', 'instructor'], true)) {
+            return redirect()->to('/login');
+        }
+
+        $submissionId = (int) $submissionId;
+        $userId = (int) $session->get('user_id');
+        $db = Database::connect();
+
+        try {
+            // Get submission details with all related information
+            $submission = $db->table('submissions')
+                ->select('submissions.*, users.name as student_name, users.email as student_email, courses.title as course_title, courses.code as course_code, assignments.title as assignment_title, assignments.description as assignment_description, assignments.due_date as assignment_due_date')
+                ->join('users', 'users.id = submissions.user_id')
+                ->join('assignments', 'assignments.id = submissions.assignment_id')
+                ->join('courses', 'courses.id = assignments.course_id')
+                ->where('submissions.id', $submissionId)
+                ->where('courses.instructor_id', $userId) // Verify teacher owns this course
+                ->get()
+                ->getRow();
+
+            if (!$submission) {
+                return redirect()->to('/teacher/dashboard')->with('error', 'Submission not found or you do not have permission to view it.');
+            }
+
+            return view('teacher/view_submission', [
+                'user' => [
+                    'name'  => $session->get('name'),
+                    'email' => $session->get('email'),
+                    'role'  => $session->get('role'),
+                ],
+                'submission' => $submission
+            ]);
+
+        } catch (\Throwable $e) {
+            log_message('error', 'Error viewing submission: ' . $e->getMessage());
+            return redirect()->to('/teacher/dashboard')->with('error', 'Failed to load submission details.');
         }
     }
 

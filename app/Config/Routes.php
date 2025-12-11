@@ -49,6 +49,7 @@ $routes->post('teacher/assignments/update/(:num)', 'TeacherController::updateAss
 $routes->post('teacher/assignments/delete/(:num)', 'TeacherController::deleteAssignment/$1');
 $routes->get('teacher/assignments/download/(:num)', 'TeacherController::downloadAssignmentAttachment/$1');
 $routes->get('teacher/submissions/download/(:num)', 'TeacherController::downloadSubmissionAttachment/$1');
+$routes->get('teacher/submissions/view/(:num)', 'TeacherController::viewSubmission/$1');
 
 // Admin dashboard & management
 $routes->get('admin', 'AdminController::dashboard');
