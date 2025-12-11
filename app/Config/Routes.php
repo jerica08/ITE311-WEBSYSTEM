@@ -30,6 +30,7 @@ $routes->get('teacher', 'TeacherController::dashboard');
 $routes->get('teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('teacher/approve-enrollment/(:num)', 'TeacherController::approveEnrollment/$1');
 $routes->get('teacher/reject-enrollment/(:num)', 'TeacherController::rejectEnrollment/$1');
+$routes->get('teacher/get-programs-by-department', 'TeacherController::getProgramsByDepartment');
 
 // Teacher notifications
 $routes->get('teacher/notifications', 'TeacherController::getNotifications');

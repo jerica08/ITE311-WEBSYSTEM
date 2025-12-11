@@ -492,49 +492,58 @@
 
     <!-- Department and Program Dropdown Functionality for Teacher Course Creation -->
     <script>
-        const teacherDepartments = <?= json_encode($departments ?? []) ?>;
-        const teacherPrograms = <?= json_encode($programs ?? []) ?>;
-
-        // Populate department dropdown
-        function populateTeacherDepartments() {
-            const select = document.getElementById('teacherDepartmentSelect');
-            if (select) {
-                select.innerHTML = '<option value="">Select department</option>';
-                
-                teacherDepartments.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept.department_name;
-                    option.textContent = dept.department_name;
-                    select.appendChild(option);
-                });
-            }
-        }
-
-        // Populate programs based on selected department
+        // Populate programs based on selected department using AJAX
         function populateTeacherProgramsByDepartment(department) {
             const programSelect = document.getElementById('teacherProgramSelect');
             if (!programSelect) return;
             
-            // Clear existing options except placeholder
-            programSelect.innerHTML = '<option value="">Select program</option>';
+            // Clear existing options except placeholder and show loading
+            programSelect.innerHTML = '<option value="">Loading programs...</option>';
             
-            if (department && teacherPrograms.length > 0) {
-                // Filter programs by selected department
-                const filteredPrograms = teacherPrograms.filter(prog => prog.department_name === department);
-                
-                filteredPrograms.forEach(prog => {
-                    const option = document.createElement('option');
-                    option.value = prog.program_name;
-                    option.textContent = prog.program_name;
-                    programSelect.appendChild(option);
-                });
+            if (department) {
+                // Fetch programs via AJAX
+                fetch(`<?= site_url('teacher/get-programs-by-department') ?>?department=${encodeURIComponent(department)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear existing options except placeholder
+                        programSelect.innerHTML = '<option value="">Select program</option>';
+                        
+                        if (data.success && data.programs && data.programs.length > 0) {
+                            data.programs.forEach(prog => {
+                                const option = document.createElement('option');
+                                option.value = prog.program_name;
+                                option.textContent = prog.program_name;
+                                programSelect.appendChild(option);
+                            });
+                        } else {
+                            // No programs found for this department
+                            const option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No programs available';
+                            option.disabled = true;
+                            programSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching programs:', error);
+                        // Clear existing options except placeholder
+                        programSelect.innerHTML = '<option value="">Select program</option>';
+                        
+                        // Show error option
+                        const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'Error loading programs';
+                        option.disabled = true;
+                        programSelect.appendChild(option);
+                    });
+            } else {
+                // No department selected, reset to placeholder
+                programSelect.innerHTML = '<option value="">Select program</option>';
             }
         }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            populateTeacherDepartments();
-            
             // Add change event listener to department select
             const departmentSelect = document.getElementById('teacherDepartmentSelect');
             if (departmentSelect) {

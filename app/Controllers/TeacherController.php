@@ -423,6 +423,45 @@ class TeacherController extends BaseController
         }
     }
 
+    /**
+     * AJAX endpoint to fetch programs by department
+     */
+    public function getProgramsByDepartment()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn') || !in_array(strtolower((string) $session->get('role')), ['teacher', 'instructor'], true)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        $department = trim((string) $this->request->getGet('department'));
+        
+        if ($department === '') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Department is required']);
+        }
+
+        $db = Database::connect();
+        $programs = [];
+        
+        try {
+            if ($db->tableExists('programs')) {
+                $programs = $db->table('programs')
+                    ->select('program_name, program_code, department')
+                    ->where('department', $department)
+                    ->orderBy('program_name', 'ASC')
+                    ->get()
+                    ->getResultArray();
+            }
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'programs' => $programs
+            ]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Error fetching programs by department: ' . $e->getMessage());
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to fetch programs']);
+        }
+    }
+
     public function markAllNotificationsRead()
     {
         $session = session();
