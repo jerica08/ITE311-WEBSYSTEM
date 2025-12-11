@@ -669,6 +669,9 @@ class StudentController extends BaseController
         $userId = (int) ($session->get('user_id') ?? 0);
         $db = Database::connect();
 
+        // Get search parameter
+        $search = $this->request->getGet('search') ?? '';
+
         try {
             log_message('debug', 'MY_CLASSES DEBUG: User ID: ' . $userId);
             
@@ -679,8 +682,17 @@ class StudentController extends BaseController
                     ->select('courses.id, courses.title, courses.code, courses.unit, courses.course_level, courses.department, courses.program, courses.class_schedule, courses.academic_year, courses.course_start_date, courses.course_end_date, enrollments.enrollment_status, enrollments.created_at as enrolled_at')
                     ->join('courses', 'courses.id = enrollments.course_id')
                     ->where('enrollments.user_id', $userId)
-                    ->where('enrollments.enrollment_status', 'approved')
-                    ->orderBy('courses.title', 'ASC');
+                    ->where('enrollments.enrollment_status', 'approved');
+
+                // Apply search filter
+                if (!empty($search)) {
+                    $query->groupStart()
+                          ->like('courses.title', $search)
+                          ->orLike('courses.code', $search)
+                          ->groupEnd();
+                }
+
+                $query->orderBy('courses.title', 'ASC');
                 
                 log_message('debug', 'MY_CLASSES DEBUG: Query: ' . $db->getLastQuery());
                 
@@ -699,7 +711,8 @@ class StudentController extends BaseController
                     'email' => $session->get('email'),
                     'role'  => $session->get('role'),
                 ],
-                'classes' => $enrolledClasses
+                'classes' => $enrolledClasses,
+                'search' => $search
             ]);
 
         } catch (\Throwable $e) {

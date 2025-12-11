@@ -73,19 +73,45 @@
     <?= view('templates/header') ?>
 
     <div class="container my-4">
+        <!-- Search Section -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <form method="GET" action="<?= site_url('student/my-classes') ?>" id="filterForm">
+                    <div class="row g-3 align-items-center">
+                        <!-- Search Input -->
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control border-start-0" 
+                                       id="search" 
+                                       name="search" 
+                                       placeholder="Search title or code"
+                                       value="<?= esc($search ?? '') ?>">
+                            </div>
+                        </div>
+                        
+                        <!-- Apply Button -->
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-dark w-100">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- My Classes Header -->
         <div class="section-title mb-4">
             <i class="bi bi-calendar-week me-2"></i>My Classes
-            <div class="float-end">
-                <span class="badge bg-dark text-white">
-                    <?= count($classes ?? []) ?> Classes Enrolled
-                </span>
-            </div>
         </div>
 
         <!-- Classes Grid -->
         <?php if (!empty($classes ?? [])): ?>
-            <div class="row">
+            <div class="row" id="classesGrid">
                 <?php foreach ($classes as $class): ?>
                     <div class="col-lg-6 col-xl-4 mb-4">
                         <div class="card class-card h-100">
@@ -173,27 +199,61 @@
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <!-- Empty State -->
-            <div class="empty-state">
-                <div class="card border-0 bg-white shadow-sm">
-                    <div class="card-body">
-                        <i class="bi bi-inbox"></i>
-                        <h4 class="text-muted">No Classes Enrolled</h4>
-                        <p class="text-muted">
-                            You haven't enrolled in any classes yet. 
-                            Visit the course catalog to find and enroll in courses.
-                        </p>
-                        <a href="<?= site_url('student/dashboard') ?>" 
-                           class="btn btn-primary">
-                            <i class="bi bi-search me-2"></i>Browse Courses
-                        </a>
+            <?php if (!empty($search ?? '')): ?>
+                <!-- No Results Found After Filtering -->
+                <div class="empty-state">
+                    <div class="card border-0 bg-white shadow-sm">
+                        <div class="card-body">
+                            <i class="bi bi-search"></i>
+                            <h4 class="text-muted">No Classes Found</h4>
+                            <p class="text-muted">
+                                No classes match your search criteria. Try adjusting your filters or search terms.
+                            </p>
+                            <a href="<?= site_url('student/my-classes') ?>" class="btn btn-primary">
+                                <i class="bi bi-x-circle me-2"></i>Clear Filters
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="card border-0 bg-white shadow-sm">
+                        <div class="card-body">
+                            <i class="bi bi-inbox"></i>
+                            <h4 class="text-muted">No Classes Enrolled</h4>
+                            <p class="text-muted">
+                                You haven't enrolled in any classes yet. 
+                                Visit the course catalog to find and enroll in courses.
+                            </p>
+                            <a href="<?= site_url('student/dashboard') ?>" 
+                               class="btn btn-primary">
+                                <i class="bi bi-search me-2"></i>Browse Courses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Manual Search -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const filterForm = document.getElementById('filterForm');
+            
+            // Allow Enter key to submit the search form
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filterForm.submit();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
