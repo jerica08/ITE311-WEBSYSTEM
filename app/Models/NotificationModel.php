@@ -22,7 +22,7 @@ class NotificationModel extends Model
     {
         return $this->where(['user_id' => $userId, 'is_read' => 0])
             ->orderBy('created_at', 'DESC')
-            ->findAll(5);
+            ->findAll(10); // Increased from 5 to 10
     }
 
     public function markAsRead(int $notificationId): bool

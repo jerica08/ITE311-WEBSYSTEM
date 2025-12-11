@@ -31,6 +31,24 @@ $routes->get('teacher/dashboard', 'TeacherController::dashboard');
 $routes->get('teacher/approve-enrollment/(:num)', 'TeacherController::approveEnrollment/$1');
 $routes->get('teacher/reject-enrollment/(:num)', 'TeacherController::rejectEnrollment/$1');
 
+// Teacher notifications
+$routes->get('teacher/notifications', 'TeacherController::getNotifications');
+$routes->post('teacher/notifications/mark-read', 'TeacherController::markNotificationRead');
+$routes->post('teacher/notifications/mark-all-read', 'TeacherController::markAllNotificationsRead');
+
+// Teacher assignments
+$routes->get('teacher/assignments', 'TeacherController::assignments');
+$routes->post('teacher/createAssignment', 'TeacherController::createAssignment');
+$routes->get('teacher/assignments/view/(:num)', 'TeacherController::viewSubmissions/$1');
+$routes->get('teacher/assignments/grade/(:num)', 'TeacherController::gradeAssignment/$1');
+$routes->post('teacher/assignments/saveGrade', 'TeacherController::saveGrade');
+$routes->post('teacher/saveGrade', 'TeacherController::saveGrade');
+$routes->get('teacher/assignments/edit/(:num)', 'TeacherController::editAssignment/$1');
+$routes->post('teacher/assignments/update/(:num)', 'TeacherController::updateAssignment/$1');
+$routes->post('teacher/assignments/delete/(:num)', 'TeacherController::deleteAssignment/$1');
+$routes->get('teacher/assignments/download/(:num)', 'TeacherController::downloadAssignmentAttachment/$1');
+$routes->get('teacher/submissions/download/(:num)', 'TeacherController::downloadSubmissionAttachment/$1');
+
 // Admin dashboard & management
 $routes->get('admin', 'AdminController::dashboard');
 $routes->get('admin/dashboard', 'AdminController::dashboard');
@@ -48,12 +66,20 @@ $routes->get('admin/courses/(:num)/reject', 'AdminController::rejectCourse/$1');
 
 // Admin department management
 $routes->post('admin/departments/create', 'AdminController::createDepartment');
+$routes->get('admin/departments/(:num)', 'AdminController::showDepartment/$1');
+$routes->get('admin/departments/(:num)/edit', 'AdminController::editDepartment/$1');
+$routes->post('admin/departments/(:num)/update', 'AdminController::updateDepartment/$1');
 $routes->post('admin/departments/(:num)/delete', 'AdminController::deleteDepartment/$1');
 
-// Admin program management
+// Admin programs management
 $routes->post('admin/programs/create', 'AdminController::createProgram');
-$routes->post('admin/programs/(:num)/delete', 'AdminController::deleteProgram/$1');
+$routes->get('admin/programs/(:num)', 'AdminController::showProgram/$1');
+$routes->get('admin/programs/(:num)/edit', 'AdminController::editProgram/$1');
+$routes->post('admin/programs/(:num)/update', 'AdminController::updateProgram/$1');
 $routes->get('admin/programs/by-department', 'AdminController::getProgramsByDepartment');
+
+// Admin recent activities API
+$routes->get('admin/recent-activities', 'AdminController::getRecentActivities');
 
 // Admin enrollment approval
 $routes->get('admin/pending-enrollments', 'AdminController::pendingEnrollments');
@@ -100,3 +126,13 @@ $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1
 //Search Route
 $routes->get('/course', 'Course::search');
 $routes->match(['get', 'post'], '/courses/search', 'Course::search');
+
+// Student routes
+$routes->get('student', 'StudentController::dashboard');
+$routes->get('student/dashboard', 'StudentController::dashboard');
+$routes->get('student/my-classes', 'StudentController::myClasses');
+$routes->get('student/course/(:num)', 'StudentController::course');
+$routes->get('student/course/(:num)/assignments', 'StudentController::assignments');
+$routes->post('student/course/(:num)/assignments/submit', 'StudentController::submitAssignment');
+$routes->get('student/course/(:num)/answer/(:num)', 'StudentController::answerAssignment/$1/$2');
+$routes->post('student/submitAssignment', 'StudentController::submitAssignment');

@@ -116,6 +116,13 @@
         </div>
 
         <!-- Courses Table -->
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0"><i class="bi bi-mortarboard me-2"></i>Courses</div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" id="courseSearch" class="form-control form-control-sm" placeholder="Search courses..." style="width:250px;">
+                <button class="btn btn-sm btn-outline-secondary" onclick="clearCourseSearch()">Clear</button>
+            </div>
+        </div>
         <div class="table-wrap mb-4">
             <table class="table table-sm align-middle mb-0">
                 <thead>
@@ -126,14 +133,14 @@
                         <th style="width:100px;">Level</th>
                         <th style="width:100px;">Department</th>
                         <th style="width:100px;">Status</th>
-                        <th style="width:140px;">Instrct. ID</th>
+                        <th style="width:140px;">Instructor</th>
                         <th style="width:180px;">Created</th>
                         <th style="width:140px;">View Students</th>
                         <th style="width:160px;">Upload Materials</th>
                         <th style="width:160px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="courseTableBody">
                     <?php if (!empty($courses ?? [])): ?>
                         <?php foreach ($courses as $i => $c): ?>
                             <?php $cid = (int)($c['id'] ?? 0); ?>
@@ -154,7 +161,7 @@
                                         <span class="badge bg-secondary">Archived</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= esc($c['instructor_id'] ?? '') ?></td>
+                                <td><?= esc($c['instructor_name'] ?? 'Not Assigned') ?></td>
                                 <td><?= esc($c['created_at'] ?? '') ?></td>
                                 <td>
                                     <a class="btn btn-sm btn-outline-success m-0" href="<?= site_url('admin/courses/' . $cid . '/students') ?>">View Students</a>
@@ -163,10 +170,6 @@
                                     <a class="btn btn-sm btn-outline-warning m-0" href="<?= site_url('admin/course/' . $cid . '/upload') ?>">Upload Materials</a>
                                 </td>
                                 <td class="d-flex gap-1 align-items-center flex-wrap">
-                                    <?php if ($status === 'draft'): ?>
-                                        <a class="btn btn-sm btn-success m-0" href="<?= site_url('admin/courses/' . $cid . '/approve') ?>" onclick="return confirm('Approve this course?')">Approve</a>
-                                        <a class="btn btn-sm btn-danger m-0" href="<?= site_url('admin/courses/' . $cid . '/reject') ?>" onclick="return confirm('Reject this course?')">Reject</a>
-                                    <?php endif; ?>
                                     <a class="btn btn-sm btn-outline-secondary m-0" href="<?= site_url('admin/courses/' . $cid) ?>">View</a>
                                     <a class="btn btn-sm btn-outline-primary m-0" href="<?= site_url('admin/courses/' . $cid . '/edit') ?>">Edit</a>
                                     <form method="post" action="<?= site_url('admin/courses/' . $cid . '/delete') ?>" onsubmit="return confirm('Delete this course?');" class="m-0">
@@ -186,7 +189,13 @@
         </div>
 
         <!-- Departments Table -->
-        <div class="mb-2 section-title"><i class="bi bi-building me-2"></i>Departments</div>
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0"><i class="bi bi-building me-2"></i>Departments</div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" id="departmentSearch" class="form-control form-control-sm" placeholder="Search departments..." style="width:250px;">
+                <button class="btn btn-sm btn-outline-secondary" onclick="clearDepartmentSearch()">Clear</button>
+            </div>
+        </div>
         <div class="table-wrap mb-4">
             <table class="table table-sm align-middle mb-0">
                 <thead>
@@ -199,7 +208,7 @@
                         <th style="width:160px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="departmentTableBody">
                     <?php if (!empty($departments ?? [])): ?>
                         <?php foreach ($departments as $i => $dept): ?>
                             <?php $deptId = (int)($dept['id'] ?? 0); ?>
@@ -229,7 +238,13 @@
         </div>
 
         <!-- Programs Table -->
-        <div class="mb-2 section-title"><i class="bi bi-book me-2"></i>Programs</div>
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0"><i class="bi bi-book me-2"></i>Programs</div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" id="programSearch" class="form-control form-control-sm" placeholder="Search programs..." style="width:250px;">
+                <button class="btn btn-sm btn-outline-secondary" onclick="clearProgramSearch()">Clear</button>
+            </div>
+        </div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
                 <thead>
@@ -243,7 +258,7 @@
                         <th style="width:160px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="programTableBody">
                     <?php if (!empty($programs ?? [])): ?>
                         <?php foreach ($programs as $i => $prog): ?>
                             <?php $progId = (int)($prog['id'] ?? 0); ?>
@@ -547,16 +562,30 @@
     </div>
 
     <script>
-        // Load departments into dropdowns
+        // Debug: Show data on page
         const departments = <?= json_encode($departments ?? []) ?>;
         const programs = <?= json_encode($programs ?? []) ?>;
         
+        // Debug: Log data to console
+        console.log('Departments loaded:', departments);
+        console.log('Programs loaded:', programs);
+        
+        // Debug: Show data on page (remove this in production)
+        if (departments.length === 0) {
+            console.warn('No departments found in database!');
+        }
+        if (programs.length === 0) {
+            console.warn('No programs found in database!');
+        }
+        
         // Populate department dropdowns
         function populateDepartments() {
+            console.log('populateDepartments called');
             const departmentSelects = ['departmentSelect', 'programDepartmentSelect'];
             
             departmentSelects.forEach(selectId => {
                 const select = document.getElementById(selectId);
+                console.log('Found select element:', selectId, select);
                 if (select) {
                     // Clear existing options except placeholder
                     select.innerHTML = '<option value="">Select department</option>';
@@ -567,6 +596,7 @@
                         option.value = dept.department_name;
                         option.textContent = dept.department_name;
                         select.appendChild(option);
+                        console.log('Added department:', dept.department_name);
                     });
                 }
             });
@@ -593,9 +623,31 @@
             }
         }
         
-        // Initialize on page load
+        // Initialize on page load and immediately
+        populateDepartments();
+        
         document.addEventListener('DOMContentLoaded', function() {
             populateDepartments();
+            
+            // Handle department form submission (normal form submission for testing)
+            const addDepartmentForm = document.getElementById('addDepartmentForm');
+            if (addDepartmentForm) {
+                // Temporarily disable AJAX to test normal form submission
+                // addDepartmentForm.addEventListener('submit', function(e) {
+                //     e.preventDefault();
+                //     ... AJAX code ...
+                // });
+                
+                // For now, let form submit normally
+                console.log('Department form will submit normally');
+            }
+            
+            // Handle program form submission (normal form submission for testing)
+            const addProgramForm = document.getElementById('addProgramForm');
+            if (addProgramForm) {
+                // Temporarily disable AJAX to test normal form submission
+                console.log('Program form will submit normally');
+            }
             
             // Add event listeners
             const departmentSelect = document.getElementById('departmentSelect');
@@ -612,6 +664,95 @@
                 });
             }
         });
+    </script>
+    
+    <script>
+    // Search functionality for courses, departments, and programs
+    document.addEventListener('DOMContentLoaded', function() {
+        // Course search
+        const courseSearch = document.getElementById('courseSearch');
+        if (courseSearch) {
+            courseSearch.addEventListener('input', function() {
+                performSearch('course', this.value);
+            });
+        }
+        
+        // Department search
+        const departmentSearch = document.getElementById('departmentSearch');
+        if (departmentSearch) {
+            departmentSearch.addEventListener('input', function() {
+                performSearch('department', this.value);
+            });
+        }
+        
+        // Program search
+        const programSearch = document.getElementById('programSearch');
+        if (programSearch) {
+            programSearch.addEventListener('input', function() {
+                performSearch('program', this.value);
+            });
+        }
+    });
+    
+    function performSearch(type, searchTerm) {
+        // For real-time search, we'll use client-side filtering for better UX
+        // But also provide server-side search capability for larger datasets
+        
+        let tbodyId;
+        switch(type) {
+            case 'course':
+                tbodyId = 'courseTableBody';
+                break;
+            case 'department':
+                tbodyId = 'departmentTableBody';
+                break;
+            case 'program':
+                tbodyId = 'programTableBody';
+                break;
+        }
+        
+        const tbody = document.getElementById(tbodyId);
+        if (!tbody) return;
+        
+        const rows = tbody.getElementsByTagName('tr');
+        const searchLower = searchTerm.toLowerCase();
+        
+        for (let row of rows) {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchLower) ? '' : 'none';
+        }
+        
+        // If search is empty, show all rows
+        if (searchTerm === '') {
+            for (let row of rows) {
+                row.style.display = '';
+            }
+        }
+    }
+    
+    function clearCourseSearch() {
+        const searchInput = document.getElementById('courseSearch');
+        if (searchInput) {
+            searchInput.value = '';
+            performSearch('course', '');
+        }
+    }
+    
+    function clearDepartmentSearch() {
+        const searchInput = document.getElementById('departmentSearch');
+        if (searchInput) {
+            searchInput.value = '';
+            performSearch('department', '');
+        }
+    }
+    
+    function clearProgramSearch() {
+        const searchInput = document.getElementById('programSearch');
+        if (searchInput) {
+            searchInput.value = '';
+            performSearch('program', '');
+        }
+    }
     </script>
 </body>
 </html>

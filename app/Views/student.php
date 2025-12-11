@@ -111,6 +111,7 @@
                         <th style="width:100px;">Unit</th>
                         <th style="width:120px;">Year Level</th>
                         <th style="width:120px;">Department</th>
+                        <th style="width:150px;">Class Schedule</th>
                         <th style="width:140px;">Academic Year</th>
                         <th style="width:180px;">Enrolled On</th>
                     </tr>

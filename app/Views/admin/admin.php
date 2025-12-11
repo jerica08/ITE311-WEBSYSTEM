@@ -133,37 +133,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Recent Activity -->
-        <div class="mb-2 section-title"><i class="bi bi-info-circle me-2"></i>Recent Activity</div>
-        <div class="table-wrap">
-            <table class="table table-sm align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width:200px;">Date/Time</th>
-                        <th>User</th>
-                        <th style="width:180px;">Action</th>
-                        <th style="width:180px;">Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php if (!empty($recentUsers)): ?>
-                    <?php foreach ($recentUsers as $ru): ?>
-                        <tr>
-                            <td><?= esc($ru['created_at']) ?></td>
-                            <td><?= esc($ru['name']) ?></td>
-                            <td>User Registered</td>
-                            <td>Role: <?= esc($ru['role']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="text-muted">No recent activity.</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
     </div>
 </body>
 </html>

@@ -114,6 +114,7 @@ class Course extends BaseController
         ]);
 
         log_message('debug', 'Enrollment insert result: ' . $insertId);
+        log_message('info', 'ENROLLMENT CREATED: User ' . $userId . ' enrolled in course ' . $courseId . ' with ID ' . $insertId);
 
         if ($insertId === false) {
             log_message('error', 'Failed to insert enrollment record');
@@ -133,32 +134,43 @@ class Course extends BaseController
             
             log_message('debug', 'Course details: ' . json_encode($courseDetails));
             
-            if ($courseDetails && $courseDetails['instructor_id']) {
+            if ($courseDetails && !empty($courseDetails['instructor_id'])) {
                 log_message('debug', 'Instructor found: ' . $courseDetails['instructor_id']);
-                $notificationModel = new NotificationModel();
+                
+                // Get student name for notification
+                $studentDetails = $db->table('users')
+                    ->select('name')
+                    ->where('id', $userId)
+                    ->get()->getRowArray();
+                
+                $studentName = $studentDetails['name'] ?? 'A student';
+                
+                $notificationModel = new \App\Models\NotificationModel();
                 $notificationData = [
-                    'user_id' => $courseDetails['instructor_id'],
-                    'title' => 'New Enrollment Request',
-                    'message' => 'A student has requested enrollment in ' . $courseDetails['title'],
-                    'type' => 'enrollment_request',
-                    'related_id' => $insertId,
-                    'created_at' => date('Y-m-d H:i:s'),
+                    'user_id'    => (int) $courseDetails['instructor_id'],
+                    'title'       => 'New Enrollment Request',
+                    'message'     => 'Student requests to enroll in your course: ' . $courseDetails['title'],
+                    'type'        => 'enrollment_request',
+                    'related_id'  => $insertId,
+                    'is_read'     => 0,
+                    'created_at'  => date('Y-m-d H:i:s'),
                 ];
+                
                 log_message('debug', 'Notification data: ' . json_encode($notificationData));
                 
-                $notificationResult = $notificationModel->insert($notificationData);
-                log_message('debug', 'Notification insert result: ' . $notificationResult);
+                $notificationInsert = $notificationModel->insert($notificationData);
+                log_message('debug', 'Notification insert result: ' . $notificationInsert);
                 
-                if ($notificationResult) {
-                    log_message('debug', 'Notification sent to instructor');
+                if ($notificationInsert) {
+                    log_message('info', 'NOTIFICATION CREATED: Student ' . $studentName . ' enrollment notification sent to instructor ' . $courseDetails['instructor_id']);
                 } else {
-                    log_message('error', 'Failed to insert notification');
+                    log_message('error', 'Failed to create notification for instructor');
                 }
             } else {
-                log_message('warning', 'No instructor assigned to course ID: ' . $courseId);
+                log_message('warning', 'No instructor found for course ' . $courseId);
             }
         } catch (\Throwable $e) {
-            log_message('error', 'Failed to create notification: ' . $e->getMessage());
+            log_message('error', 'Notification creation error: ' . $e->getMessage());
         }
 
         log_message('debug', 'Returning success response');

@@ -12,6 +12,7 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     .menu a.active, .menu a:hover { background: rgba(0,0,0,.15); }
     .logout-btn { background:#E74C3C; color:#fff; border:none; padding:.35rem .7rem; border-radius:.3rem; }
     .notif-badge { background:#DC3545; color:#fff; border-radius:999px; padding:0 .45rem; font-size:.75rem; margin-left:.25rem; }
+    .dropdown-menu.show { display:block; }
 </style>
 
 <div class="topbar">
@@ -38,18 +39,18 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
                     <a href="<?= site_url('admin/users') ?>">User Management</a>
                     <a href="<?= site_url('admin/courses') ?>">Course Management</a>
                 <?php elseif ($role === 'teacher' || $role === 'instructor'): ?>
-                    <a href="<?= site_url('dashboard') ?>">Dashboard</a>
+                    <a href="<?= site_url('teacher/dashboard') ?>" class="<?= (uri_string() === 'teacher/dashboard' ? 'active' : '') ?>">Dashboard</a>
                     <a href="<?= site_url('teacher/courses') ?>" class="<?= (strpos(uri_string(), 'teacher/courses') === 0 ? 'active' : '') ?>">My Courses</a>
-                    <a href="#">Assignments</a>
+                    <a href="<?= site_url('teacher/assignments') ?>" class="<?= (strpos(uri_string(), 'teacher/assignments') === 0 ? 'active' : '') ?>">Assignments</a>
                 <?php elseif ($role === 'student'): ?>
                     <a href="<?= site_url('dashboard') ?>">Dashboard</a>
-                    <a href="#">My Classes</a>
-                    <a href="#">Grades</a>
+                    <a href="<?= site_url('student/my-classes') ?>" class="<?= (uri_string() === 'student/my-classes' ? 'active' : '') ?>">My Classes</a>
+                    <a href="<?= site_url('student/assignments') ?>" class="<?= (strpos(uri_string(), 'student/assignments') === 0 ? 'active' : '') ?>">Assignments</a>
                 <?php else: ?>
                     <a href="<?= site_url('/') ?>">Home</a>
                 <?php endif; ?>
-                <div class="dropdown">
-                    <a href="#" id="notifDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="dropdown position-relative">
+                    <a href="#" id="notifDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
                         Notifications <span id="notifBadge" class="badge bg-danger d-none">0</span>
                     </a>
                     <div id="notifMenu" class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width:320px; max-height:360px; overflow:auto;"></div>
@@ -78,89 +79,175 @@ $name      = (string) ($session->get('name') ?? $session->get('user_name') ?? ''
     <?php endif; ?>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-(function(){
-  // Wait for jQuery to be available before initializing
+document.addEventListener('DOMContentLoaded', function () {
+    const notifToggleEl = document.getElementById('notifDropdown');
+    const notifMenuEl   = document.getElementById('notifMenu');
+    const notifBadgeEl  = document.getElementById('notifBadge');
+    const notifUrl      = '<?= site_url('notifications') ?>';
+    const markUrlBase   = '<?= site_url('notifications/mark_read') ?>';
+    const userId        = '<?= $session->get('user_id') ?? '' ?>';
+    let csrfName        = '<?= csrf_token() ?>';
+    let csrfHash        = '<?= csrf_hash() ?>';
+    let refreshTimer    = null;
 
-  var __csrfName = '<?= csrf_token() ?>';
-  var __csrfHash = '<?= csrf_hash() ?>';
+    if (!notifToggleEl || !notifMenuEl || !userId) {
+        return;
+    }
 
-  function updateBadge(count){
-    var $badge = $('#notifBadge');
-    count = parseInt(count || 0, 10);
-    if(count > 0){
-      $badge.text(count).removeClass('d-none');
+    const hasBootstrapDropdown = typeof bootstrap !== 'undefined' && bootstrap.Dropdown;
+    let dropdownInstance = null;
+
+    if (hasBootstrapDropdown) {
+        dropdownInstance = new bootstrap.Dropdown(notifToggleEl, { autoClose: 'outside' });
+        notifToggleEl.addEventListener('show.bs.dropdown', handleToggleOpen);
     } else {
-      $badge.text('0').addClass('d-none');
-    }
-  }
-
-  function renderList(items){
-    var $menu = $('#notifMenu');
-    $menu.empty();
-    if(!items || !items.length){
-      $menu.append('<div class="dropdown-item text-muted">No notifications</div>');
-      return;
-    }
-    items.forEach(function(n){
-      var $item = $('<div class="dropdown-item p-0"></div>');
-      var $alert = $('<div class="alert alert-info m-2 mb-0 d-flex justify-content-between align-items-start"></div>');
-      var $text = $('<div class="me-2"></div>').text(n.message);
-      var $btn = $('<button type="button" class="btn btn-sm btn-outline-secondary">Mark as Read</button>');
-      $btn.on('click', function(){
-        var data = {}; data[__csrfName] = __csrfHash;
-        $.post('<?= site_url('notifications/mark_read') ?>' + '/' + n.id, data, function(r){
-          if(r && r.success){
-            // Optimistic UI update
-            $item.remove();
-            var current = parseInt($('#notifBadge').text() || '0', 10) || 0;
-            updateBadge(Math.max(0, current - 1));
-            // Refresh from server to ensure perfect sync (handles any duplicates or server-side filters)
-            fetchNotifications();
-            if(r.csrf_token && r.csrf_hash){
-              __csrfName = r.csrf_token; __csrfHash = r.csrf_hash;
+        notifToggleEl.addEventListener('click', function (e) {
+            e.preventDefault();
+            toggleMenu();
+        });
+        document.addEventListener('click', function (e) {
+            if (!notifMenuEl.contains(e.target) && !notifToggleEl.contains(e.target)) {
+                notifMenuEl.classList.remove('show');
+                notifToggleEl.setAttribute('aria-expanded', 'false');
             }
-          }
-        }).fail(function(){ /* optionally show error */ });
-      });
-      $alert.append($text).append($btn);
-      $item.append($alert);
-      $menu.append($item);
-    });
-  }
+        });
+    }
 
-  function fetchNotifications(){
-    $.get('<?= site_url('notifications') ?>', function(res){
-      if(!res || res.success !== true) return;
-      updateBadge(res.unread_count || 0);
-      renderList(res.notifications || []);
-      if(res.csrf_token && res.csrf_hash){
-        __csrfName = res.csrf_token; __csrfHash = res.csrf_hash;
-      }
-    });
-  }
+    function toggleMenu() {
+        const willShow = !notifMenuEl.classList.contains('show');
+        notifMenuEl.classList.toggle('show');
+        notifToggleEl.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+        if (willShow) {
+            fetchNotifications();
+        }
+    }
 
-  function initNotif(){
-    var $ = window.jQuery;
-    if(!$) return false;
-    $(function(){
-      fetchNotifications();
-      $('#notifDropdown').on('show.bs.dropdown', fetchNotifications);
-      setInterval(fetchNotifications, 60000);
-    });
-    return true;
-  }
+    function handleToggleOpen() {
+        fetchNotifications();
+    }
 
-  if(!initNotif()){
-    var __notifTries = 0;
-    var __notifTimer = setInterval(function(){
-      __notifTries++;
-      if(initNotif()){
-        clearInterval(__notifTimer);
-      } else if(__notifTries > 60){ // ~30s max
-        clearInterval(__notifTimer);
-      }
-    }, 500);
-  }
-})();
+    function fetchNotifications() {
+        fetch(notifUrl, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.ok ? response.json() : Promise.reject(response.statusText))
+        .then(data => {
+            if (data && data.success) {
+                if (typeof data.unread_count !== 'undefined') {
+                    updateBadge(data.unread_count);
+                }
+                if (data.csrf_token && data.csrf_hash) {
+                    csrfName = data.csrf_token;
+                    csrfHash = data.csrf_hash;
+                }
+                renderNotifications(data.notifications || []);
+            } else {
+                renderNotifications([]);
+                updateBadge(0);
+            }
+        })
+        .catch(() => {
+            renderNotifications([]);
+            updateBadge(0);
+        });
+    }
+
+    function updateBadge(count) {
+        if (!notifBadgeEl) return;
+        const value = parseInt(count, 10) || 0;
+        if (value > 0) {
+            notifBadgeEl.textContent = value;
+            notifBadgeEl.classList.remove('d-none');
+        } else {
+            notifBadgeEl.classList.add('d-none');
+        }
+    }
+
+    function renderNotifications(list) {
+        notifMenuEl.innerHTML = '';
+        if (!list || list.length === 0) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'dropdown-item text-muted';
+            emptyState.textContent = 'No notifications';
+            notifMenuEl.appendChild(emptyState);
+            return;
+        }
+
+        list.forEach(notification => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item py-2';
+
+            const message = document.createElement('div');
+            message.textContent = notification.message || 'Notification';
+            message.className = 'fw-semibold';
+
+            const meta = document.createElement('div');
+            meta.className = 'small text-muted';
+            if (notification.created_at) {
+                const date = new Date(notification.created_at);
+                meta.textContent = isNaN(date.getTime()) ? notification.created_at : date.toLocaleString();
+            } else {
+                meta.textContent = '';
+            }
+
+            const actions = document.createElement('div');
+            actions.className = 'mt-2 d-flex justify-content-end';
+
+            const markBtn = document.createElement('button');
+            markBtn.type = 'button';
+            markBtn.className = 'btn btn-sm btn-outline-secondary';
+            markBtn.textContent = 'Mark as read';
+            markBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                markAsRead(notification.id);
+            });
+
+            actions.appendChild(markBtn);
+            item.appendChild(message);
+            if (meta.textContent) {
+                item.appendChild(meta);
+            }
+            item.appendChild(actions);
+
+            notifMenuEl.appendChild(item);
+        });
+    }
+
+    function markAsRead(id) {
+        if (!id) return;
+        const formData = new FormData();
+        formData.append(csrfName, csrfHash);
+
+        fetch(`${markUrlBase}/${id}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.ok ? response.json() : Promise.reject(response.statusText))
+        .then(data => {
+            if (data) {
+                if (data.csrf_token && data.csrf_hash) {
+                    csrfName = data.csrf_token;
+                    csrfHash = data.csrf_hash;
+                }
+                fetchNotifications();
+            }
+        })
+        .catch(() => {
+            // Ignore errors silently for now
+        });
+    }
+
+    fetchNotifications();
+    refreshTimer = setInterval(fetchNotifications, 60000);
+});
 </script>

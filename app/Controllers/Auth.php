@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\StudentModel;
+use App\Models\ActivityLogModel;
 use CodeIgniter\Controller;
 
 class Auth extends Controller
@@ -122,6 +123,9 @@ class Auth extends Controller
                     ];
                     $this->session->set($sessionData);
 
+                    // Log login activity
+                    $this->logActivity('User Login', $user['name'] . ' logged in to the system');
+
                     $this->session->setFlashdata('success', 'Welcome back, ' . $user['name'] . '!');
 
                     // Go through the generic dashboard route
@@ -142,8 +146,19 @@ class Auth extends Controller
      */
     public function logout()
     {
+        // Get user info before destroying session for logging
+        $userName = $this->session->get('user_name');
+        
         // Destroy session
         $this->session->destroy();
+        
+        // Log logout activity (use a new session instance for logging)
+        $session = \Config\Services::session();
+        $session->start();
+        
+        if ($userName) {
+            $this->logActivity('User Logout', $userName . ' logged out from the system');
+        }
         
         $this->session->setFlashdata('success', 'You have been logged out successfully.');
         return redirect()->to('/login');
@@ -204,6 +219,26 @@ class Auth extends Controller
      */
     private function hasRole($role)
     {
-        return $this->session->get('user_role') === $role;
+        return strtolower((string) $this->session->get('user_role')) === strtolower($role);
+    }
+
+    /**
+     * Helper method to log activities
+     */
+    private function logActivity($action, $details = null)
+    {
+        $activityLogModel = new ActivityLogModel();
+        
+        $userId = $this->session->get('user_id');
+        $userName = $this->session->get('user_name');
+        $ipAddress = $this->request ? $this->request->getIPAddress() : null;
+        $userAgent = $this->request ? $this->request->getUserAgent() : null;
+        
+        try {
+            $activityLogModel->logActivity($userId, $userName, $action, $details, $ipAddress, $userAgent);
+        } catch (\Throwable $e) {
+            // Log error but don't break the main functionality
+            log_message('error', 'Failed to log activity: ' . $e->getMessage());
+        }
     }
 }

@@ -18,7 +18,68 @@
     <?= view('templates/header', ['title' => 'My Courses']) ?>
 
     <div class="container my-4">
-        <div class="mb-2 section-title"><i class="bi bi-journal-text me-2"></i>My Courses</div>
+        <!-- Pending Enrollments Section -->
+        <?php if (!empty($pendingEnrollments ?? [])): ?>
+            <div class="mb-4">
+                <div class="mb-2 section-title"><i class="bi bi-person-check me-2"></i>Pending Student Enrollments</div>
+                <div class="table-wrap mb-4">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Enrollment Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($pendingEnrollments as $i => $enrollment): ?>
+                                <tr>
+                                    <td><?= esc($enrollment['student_name'] ?? '') ?></td>
+                                    <td><?= esc($enrollment['student_email'] ?? '') ?></td>
+                                    <td><?= esc($enrollment['course_title'] ?? '') ?> (<?= esc($enrollment['course_code'] ?? '') ?>)</td>
+                                    <td><?= esc($enrollment['created_at'] ?? '') ?></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-success me-1" href="<?= site_url('teacher/approve-enrollment/' . ($enrollment['id'] ?? 0)) ?>">Approve</a>
+                                        <a class="btn btn-sm btn-danger" href="<?= site_url('teacher/reject-enrollment/' . ($enrollment['id'] ?? 0)) ?>">Reject</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- My Courses Section -->
+        <div class="mb-2 section-title d-flex justify-content-between align-items-center flex-wrap">
+            <div><i class="bi bi-journal-text me-2"></i>My Courses</div>
+            <form class="d-flex align-items-center gap-2 mt-2 mt-sm-0" method="get" action="<?= current_url() ?>">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text"
+                           name="q"
+                           class="form-control"
+                           placeholder="Search title or code"
+                           value="<?= esc($filters['q'] ?? '') ?>">
+                </div>
+                <select name="level" class="form-select form-select-sm" style="min-width: 140px;">
+                    <option value="all">All Levels</option>
+                    <?php if (!empty($courseLevels ?? [])): ?>
+                        <?php foreach ($courseLevels as $level): ?>
+                            <option value="<?= esc($level) ?>" <?= (($filters['level'] ?? '') === $level) ? 'selected' : '' ?>>
+                                <?= esc($level) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+                <?php if (!empty($filters['q'] ?? '') || (!empty($filters['level']) && ($filters['level'] ?? '') !== 'all')): ?>
+                    <a href="<?= current_url() ?>" class="btn btn-sm btn-outline-secondary">Reset</a>
+                <?php endif; ?>
+                <button type="submit" class="btn btn-sm btn-dark">Apply</button>
+            </form>
+        </div>
         <div class="table-wrap mb-4">
             <table class="table table-sm align-middle mb-0">
                 <thead>

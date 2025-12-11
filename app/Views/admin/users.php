@@ -36,11 +36,15 @@
     </div>
 
     <div class="container my-4">
-        <div class="mb-2 section-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-people-fill me-2"></i>Users</span>
-            <a href="<?= site_url('admin/users/create') ?>" class="btn btn-sm btn-success">
-                <i class="bi bi-person-plus-fill"></i> Add User
-            </a>
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0"><i class="bi bi-people-fill me-2"></i>Users</div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" id="userSearch" class="form-control form-control-sm" placeholder="Search users..." style="width:250px;">
+                <button class="btn btn-sm btn-outline-secondary" onclick="clearUserSearch()">Clear</button>
+                <a href="<?= site_url('admin/users/create') ?>" class="btn btn-sm btn-success">
+                    <i class="bi bi-person-plus-fill"></i> Add User
+                </a>
+            </div>
         </div>
         <div class="table-wrap">
             <table class="table table-sm align-middle mb-0">
@@ -54,7 +58,7 @@
                         <th style="width:160px;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="userTableBody">
                     <?php if (!empty($users ?? [])): ?>
                         <?php foreach ($users as $i => $u): ?>
                             <tr>
@@ -87,3 +91,43 @@
     </div>
 </body>
 </html>
+
+<script>
+// Search functionality for users
+document.addEventListener('DOMContentLoaded', function() {
+    const userSearch = document.getElementById('userSearch');
+    if (userSearch) {
+        userSearch.addEventListener('input', function() {
+            performUserSearch(this.value);
+        });
+    }
+});
+
+function performUserSearch(searchTerm) {
+    const tbody = document.getElementById('userTableBody');
+    if (!tbody) return;
+    
+    const rows = tbody.getElementsByTagName('tr');
+    const searchLower = searchTerm.toLowerCase();
+    
+    for (let row of rows) {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchLower) ? '' : 'none';
+    }
+    
+    // If search is empty, show all rows
+    if (searchTerm === '') {
+        for (let row of rows) {
+            row.style.display = '';
+        }
+    }
+}
+
+function clearUserSearch() {
+    const searchInput = document.getElementById('userSearch');
+    if (searchInput) {
+        searchInput.value = '';
+        performUserSearch('');
+    }
+}
+</script>
