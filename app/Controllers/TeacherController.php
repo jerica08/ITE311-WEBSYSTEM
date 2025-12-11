@@ -222,7 +222,7 @@ class TeacherController extends BaseController
             
             $db->table('courses')->insert($data);
             
-            return redirect()->to('/teacher/dashboard')->with('success', 'Course created successfully.');
+            return redirect()->to('/teacher/dashboard')->with('success', 'Course created successfully. It is currently in draft status and requires admin approval.');
         } catch (\Throwable $e) {
             // Log the actual error for debugging
             log_message('error', 'Course creation failed: ' . $e->getMessage());
@@ -507,11 +507,14 @@ class TeacherController extends BaseController
             if ($db->tableExists('courses')) {
                 // Build base query for teacher's courses
                 $builder = $db->table('courses')
-                    ->select('id, title, code, unit, course_level, department, created_at, instructor_id');
+                    ->select('id, title, code, unit, course_level, department, program, class_schedule, created_at, instructor_id, status');
 
                 if ($userId > 0) {
                     $builder->where('instructor_id', $userId);
                 }
+                
+                // Show both draft and published courses (not archived)
+                $builder->where('status !=', 'archived');
 
                 if ($searchTerm !== '') {
                     $builder->groupStart()
@@ -525,6 +528,11 @@ class TeacherController extends BaseController
                 }
 
                 $coursesRows = $builder->orderBy('created_at', 'DESC')->get()->getResultArray();
+                
+                // Debug: Log the query and results
+                log_message('info', 'MY COURSES - TEACHER ID: ' . $userId);
+                log_message('info', 'MY COURSES - QUERY: ' . $db->getLastQuery());
+                log_message('info', 'MY COURSES - COURSES FOUND: ' . count($coursesRows));
 
                 foreach ($coursesRows as $r) {
                     $courses[] = [
@@ -534,23 +542,37 @@ class TeacherController extends BaseController
                         'unit'          => $r['unit'] ?? '-',
                         'course_level'  => $r['course_level'] ?? '-',
                         'department'    => $r['department'] ?? '-',
+                        'program'       => $r['program'] ?? '-',
+                        'class_schedule'=> $r['class_schedule'] ?? '-',
                         'created_at'    => $r['created_at'] ?? '-',
+                        'status'        => $r['status'] ?? 'draft',
                     ];
                 }
+                
+                // Debug: Log after building courses array
+                log_message('info', 'MY COURSES - AFTER BUILDING ARRAY: ' . count($courses));
 
-                // Fetch available course levels for filter dropdown
-                $levelsQuery = $db->table('courses')
-                    ->select('DISTINCT course_level')
-                    ->where('instructor_id', $userId)
-                    ->orderBy('course_level', 'ASC')
-                    ->get()
-                    ->getResultArray();
+                // Fetch available course levels for filter dropdown (isolated try-catch)
+                $availableLevels = [];
+                try {
+                    $levelsQuery = $db->table('courses')
+                        ->select('DISTINCT course_level')
+                        ->where('instructor_id', $userId)
+                        ->where('course_level IS NOT NULL')
+                        ->where('course_level !=', '')
+                        ->orderBy('course_level', 'ASC')
+                        ->get()
+                        ->getResultArray();
 
-                foreach ($levelsQuery as $lvl) {
-                    $val = trim((string) ($lvl['course_level'] ?? ''));
-                    if ($val !== '') {
-                        $availableLevels[] = $val;
+                    foreach ($levelsQuery as $lvl) {
+                        $val = trim((string) ($lvl['course_level'] ?? ''));
+                        if ($val !== '') {
+                            $availableLevels[] = $val;
+                        }
                     }
+                } catch (\Throwable $levelsException) {
+                    log_message('error', 'LEVELS QUERY EXCEPTION: ' . $levelsException->getMessage());
+                    // Don't reset courses array - just keep levels empty
                 }
             }
         } catch (\Throwable $e) {
@@ -558,6 +580,15 @@ class TeacherController extends BaseController
             $availableLevels = [];
         }
 
+        // Debug: Log what's being passed to view
+        log_message('info', 'VIEW DATA - Courses count: ' . count($courses));
+        log_message('info', 'VIEW DATA - First course: ' . json_encode($courses[0] ?? 'No courses'));
+        log_message('info', 'VIEW DATA - Available levels: ' . json_encode($availableLevels));
+        
+        // Force debug - write to a file
+        file_put_contents(WRITEPATH . 'debug_courses.txt', "Courses count: " . count($courses) . "\n");
+        file_put_contents(WRITEPATH . 'debug_courses.txt', "First course: " . json_encode($courses[0] ?? 'No courses') . "\n", FILE_APPEND);
+        
         return view('teacher/my_courses', [
             'user' => [
                 'name'  => $session->get('name'),

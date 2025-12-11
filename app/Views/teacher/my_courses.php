@@ -85,12 +85,14 @@
                 <thead>
                     <tr>
                         <th style="width:60px;">#</th>
-                        <th>Title</th>
-                        <th style="width:160px;">Subject Code</th>
-                        <th style="width:100px;">Unit</th>
-                        <th style="width:180px;">Created</th>
-                        <th style="width:140px;">View Students</th>
-                        <th style="width:160px;">Upload Materials</th>
+                        <th>Course Title</th>
+                        <th style="width:120px;">Code</th>
+                        <th style="width:80px;">Unit</th>
+                        <th style="width:120px;">Level</th>
+                        <th style="width:140px;">Department</th>
+                        <th style="width:100px;">Status</th>
+                        <th style="width:120px;">View Students</th>
+                        <th style="width:140px;">Upload Materials</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,14 +101,25 @@
                             <?php $cid = (int)($c['id'] ?? 0); ?>
                             <tr>
                                 <td><?= $i+1 ?></td>
-                                <td><?= esc($c['title'] ?? '-') ?></td>
+                                <td>
+                                    <div class="fw-bold"><?= esc($c['title'] ?? '-') ?></div>
+                                    <small class="text-muted">Created: <?= esc($c['created_at'] ?? '-') ?></small>
+                                </td>
                                 <td><?= esc($c['code'] ?? '-') ?></td>
                                 <td><?= esc($c['unit'] ?? '-') ?></td>
-                                <td><?= esc($c['created_at'] ?? '-') ?></td>
+                                <td><?= esc($c['course_level'] ?? '-') ?></td>
+                                <td><?= esc($c['department'] ?? '-') ?></td>
+                                <td>
+                                    <?php 
+                                    $status = $c['status'] ?? 'draft';
+                                    $badgeClass = $status === 'published' ? 'bg-success' : 'bg-secondary';
+                                    ?>
+                                    <span class="badge <?= $badgeClass ?>"><?= esc(ucfirst($status)) ?></span>
+                                </td>
                                 <td>
                                     <?php if ($cid > 0): ?>
                                         <a class="btn btn-sm btn-outline-success w-100" href="<?= site_url('teacher/courses/' . $cid . '/students') ?>">
-                                            View Students
+                                            <i class="bi bi-people me-1"></i> View Students
                                         </a>
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
@@ -115,7 +128,7 @@
                                 <td>
                                     <?php if ($cid > 0): ?>
                                         <a class="btn btn-sm btn-outline-warning w-100" href="<?= site_url('materials/upload/' . $cid) ?>">
-                                            Upload Materials
+                                            <i class="bi bi-upload me-1"></i> Upload Materials
                                         </a>
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
@@ -125,7 +138,13 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="text-muted">You are not assigned to any courses yet.</td>
+                            <td colspan="9" class="text-center py-3">
+                                <i class="bi bi-journal-x text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mt-2 mb-0">You are not assigned to any courses yet.</p>
+                                <small class="text-muted">Create a new course from your dashboard to get started.</small>
+                                <br><br>
+                                <small class="text-danger">DEBUG: Courses variable is <?php echo isset($courses) ? (is_array($courses) ? 'array with ' . count($courses) . ' items' : 'not array') : 'not set'; ?></small>
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

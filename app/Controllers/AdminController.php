@@ -286,15 +286,17 @@ class AdminController extends BaseController
                 'class_schedule' => $classSchedule !== '' ? $classSchedule : null,
                 'academic_year' => $academicYear !== '' ? $academicYear : null,
                 'instructor_id' => $instructorId,
+                'status' => 'published', // Admin courses are auto-published
+                'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             
             $db->table('courses')->insert($data);
             
             // Log course creation
-            $this->logActivity('Course Created', 'Created new course: ' . $title . ' (' . $code . ')');
+            $this->logActivity('Course Created', 'Created and published new course: ' . $title . ' (' . $code . ')');
             
-            return redirect()->to('/admin/courses')->with('success', 'Course created successfully.');
+            return redirect()->to('/admin/courses')->with('success', 'Course created and published successfully.');
         } catch (\Throwable $e) {
             // Log the actual error for debugging
             log_message('error', 'Course creation failed: ' . $e->getMessage());

@@ -16,6 +16,8 @@ class CourseModel extends Model
         'unit',
         'course_level',
         'department',
+        'program',
+        'semester',
         'course_start_date',
         'course_end_date',
         'enrollment_start_date',
@@ -25,6 +27,7 @@ class CourseModel extends Model
         'start_date',
         'end_date',
         'instructor_id',
+        'status',
         'created_at',
         'updated_at',
     ];
